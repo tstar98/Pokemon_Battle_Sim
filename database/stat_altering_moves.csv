@@ -1,0 +1,22 @@
+Acid Armor,True,1,2
+Agility,True,3,2
+Amnesia,True,2,2
+Barrier,True,1,2
+Defense Curl,True,1,1
+Double Team,True,5,2
+Flash,False,4,-1
+Growl,False,0,-1
+Growth,True,2,1
+Harden,True,1,1
+Kinesis,False,4,-1
+Leer,False,1,-1
+Meditate,True,0,1
+Minimize,True,5,2
+Sand Attack,False,4,-1
+Screech,False,1,-2
+Sharpen,True,0,1
+Smokescreen,False,4,-1
+String Shot,False,3,-2
+Swords Dance,True,0,2
+Tail Whip,False,1,-1
+Withdraw,True,1,1
