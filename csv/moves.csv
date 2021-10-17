@@ -7,7 +7,7 @@
 6,Aurora Beam,ICE,Special,65,100,20,May lower opponent's Attack.,1
 7,Barrage,NORMAL,Physical,15,85,20,Hits 2-5 times in one turn.,20
 8,Barrier,PSYCHIC,Status,,,20,Sharply raises user's Defense.,14
-9,Bide,NORMAL,Physical,,,10,User takes damage for two turns then strikes back double.,11
+# 9,Bide,NORMAL,Physical,,,10,User takes damage for two turns then strikes back double.,11
 10,Bind,NORMAL,Physical,15,85,20,Traps opponent damaging them for 4-5 turns.,21
 11,Bite,NORMAL,Physical,60,100,25,May cause flinching.,3
 12,Blizzard,ICE,Special,110,70,5,May freeze opponent.,6
@@ -101,7 +101,7 @@
 100,Quick Attack,NORMAL,Physical,40,100,30,User attacks first.,0
 # 101,Rage,NORMAL,Physical,20,100,20,Raises user's Attack when hit.,1
 102,Razor Leaf,GRASS,Physical,55,95,25,High critical hit ratio.,23
-# 103,Razor Wind,NORMAL,Special,80,100,10,Charges on first turn attacks on second. High critical hit ratio.
+103,Razor Wind,NORMAL,Special,80,100,10,Charges on first turn attacks on second.,11
 104,Recover,NORMAL,Status,,,10,User recovers half its max HP.,16
 105,Reflect,PSYCHIC,Status,,,20,Halves damage from Physical attacks for 5 turns.,12
 106,Rest,PSYCHIC,Status,,,10,User sleeps for 2 turns but user is fully healed.,29

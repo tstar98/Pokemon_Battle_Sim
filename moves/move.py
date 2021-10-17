@@ -94,3 +94,12 @@ def move_factory(name):
         mt.SPLASH.value: Splash
     }
     return moves[move_id[0]](name)
+
+
+def get_learnset(pokemon_id):
+    file = open('csv/learnsets.csv', 'r')
+
+    for line in file:
+        info = line.split(',')
+        if int(info[0]) == pokemon_id:
+            return info[2:len(info)]

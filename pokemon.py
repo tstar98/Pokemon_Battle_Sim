@@ -34,10 +34,6 @@ class Pokemon:
         self.__accuracy = 0
         self.__evasion = 0
 
-    def print(self):
-        print(f'{self.__name}\t Lv. {self.__level}')
-        print(f'{self.__hp} / {self.__hp}')
-
     def __determine_stat(self, base):
         a = (base + self.__dv) * 2
         b = math.ceil(math.sqrt(self.__ev))
@@ -127,3 +123,6 @@ class Pokemon:
     @property
     def evasion(self):
         return self.__evasion
+
+    def __str__(self):
+        return f'{self.__name}\t Lv. {self.__level}\n{self.__hp} / {self.__hp}'

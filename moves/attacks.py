@@ -8,6 +8,9 @@ class Attack(Move):
     def use_move(self):
         pass
 
+    def crit(self):
+        pass
+
 
 class StatAlteringAttack(Attack):
     def __init__(self, name):
@@ -24,8 +27,25 @@ class StatAlteringAttack(Attack):
 class SetDamageAttack(Attack):
     def __init__(self, name):
         super(SetDamageAttack, self).__init__(name)
+        move = db.select(f'SELECT damage FROM set_damage_attacks WHERE name = \'{name}\';')[0]
+        self.__damage = move[0]
+        if self.__damage == 0:
+            self.__use_move = self.half_damage
+        elif self.__damage is None:
+            self.__use_move = self.ohko
+        else:
+            self.__use_move = self.set_damage
 
     def use_move(self):
+        self.__use_move()
+
+    def set_damage(self):
+        pass
+
+    def half_damage(self):
+        pass
+
+    def ohko(self):
         pass
 
 
@@ -42,6 +62,8 @@ class FlinchAttack(Attack):
 class RecoilAttack(Attack):
     def __init__(self, name):
         super(RecoilAttack, self).__init__(name)
+        move = db.select(f'SELECT recoil_percent FROM recoil_attacks WHERE name = \'{name}\';')[0]
+        self.__recoil = move[0]
 
     def use_move(self):
         pass
@@ -50,6 +72,7 @@ class RecoilAttack(Attack):
 class RecoilOnMissAttack(Attack):
     def __init__(self, name):
         super(RecoilOnMissAttack, self).__init__(name)
+        self.__recoil = 1
 
     def use_move(self):
         pass
@@ -58,6 +81,9 @@ class RecoilOnMissAttack(Attack):
 class StatusEffectAttack(Attack):
     def __init__(self, name):
         super(StatusEffectAttack, self).__init__(name)
+        move = db.select(f'SELECT chance, status_effect FROM status_effect_attacks WHERE name = \'{name}\';')[0]
+        self.__chance = move[0]
+        self.__status_effect = move[1]
 
     def use_move(self):
         pass
@@ -66,6 +92,10 @@ class StatusEffectAttack(Attack):
 class ConfusingContinuousAttack(Attack):
     def __init__(self, name):
         super(ConfusingContinuousAttack, self).__init__(name)
+        move = db.select(f'SELECT min_hits, max_hits FROM confusing_continuous_attacks WHERE name = \'{name}\';')[0]
+        self.__counter = 0
+        self.__min = move[0]
+        self.__max = move[1]
 
     def use_move(self):
         pass
@@ -74,6 +104,7 @@ class ConfusingContinuousAttack(Attack):
 class HealingAttack(Attack):
     def __init__(self, name):
         super(HealingAttack, self).__init__(name)
+        self.__percent = 50
 
     def use_move(self):
         pass
@@ -90,6 +121,9 @@ class ChargingAttack(Attack):
 class MultiAttack(Attack):
     def __init__(self, name):
         super(MultiAttack, self).__init__(name)
+        move = db.select(f'SELECT min_hits, max_hits FROM multi_attacks WHERE name = \'{name}\';')[0]
+        self.__min = move[0]
+        self.__max = move[1]
 
     def use_move(self):
         pass
@@ -106,6 +140,8 @@ class TrapAttack(Attack):
 class ConfusingAttack(Attack):
     def __init__(self, name):
         super(ConfusingAttack, self).__init__(name)
+        move = db.select(f'SELECT chance FROM confusing_attacks WHERE name = \'{name}\'')[0]
+        self.__chance = move[0]
 
     def use_move(self):
         pass
@@ -116,6 +152,10 @@ class CritAttack(Attack):
         super(CritAttack, self).__init__(name)
 
     def use_move(self):
+        super(CritAttack, self).use_move()
+        pass
+
+    def crit(self):
         pass
 
 

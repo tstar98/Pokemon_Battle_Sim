@@ -86,7 +86,7 @@ def create_tables():
         #
         # file = open('recoil_attacks.csv', 'r')
         # con.execute(
-        #     'CREATE TABLE IF NOT EXISTS recoil_attacks (name TEXT PRIMARY KEY, recoil_percent INTEGER); '
+        #     'CREATE TABLE IF NOT EXISTS
         # )
         # for line in file:
         #     d = line.split(',')
@@ -108,7 +108,7 @@ def create_tables():
         #
         # file = open('set_damage_attacks.csv', 'r')
         # con.execute(
-        #     'CREATE TABLE IF NOT EXISTS set_damage_attacks (name TEXT PRIMARY KEY, recoil_percent INTEGER); '
+        #     'CREATE TABLE IF NOT EXISTS set_damage_attacks (name TEXT PRIMARY KEY, damage INTEGER); '
         # )
         # for line in file:
         #     d = line.split(',')
@@ -137,7 +137,7 @@ def create_tables():
         # for line in file:
         #     d = line.split(',')
         #     con.execute(
-        #         'INSERT INTO stat_altering_attacks VALUES (?, ?, ?, ?);', (d[0], bool(d[1]), int(d[2]), int(d[3]))
+        #         'INSERT INTO stat_altering_moves VALUES (?, ?, ?, ?);', (d[0], bool(d[1]), int(d[2]), int(d[3]))
         #     )
         # file.close()
         #
@@ -176,24 +176,42 @@ def create_tables():
         #     )
         # file.close()
 
-        con.execute(
-            'CREATE TABLE IF NOT EXISTS attacks (name TEXT PRIMARY KEY);'
-        )
-        con.execute(
-            'INSERT INTO attacks SELECT name FROM moves WHERE move_type = 0 OR move_type = 1 OR move_type = 2 '
-            'OR move_type = 3 OR move_type = 4 OR move_type = 5 OR move_type = 6 OR move_type = 7 OR move_type = 8'
-            ' OR move_type = 9 OR move_type = 1 OR move_type = 11 OR move_type = 20 OR move_type = 21 OR move_type = 22'
-            ' OR move_type = 23 OR move_type = 24 OR move_type = 25 OR move_type = 26 OR move_type = 27'
-            ' OR move_type = 31 OR move_type = 33'
-        )
-        con.execute(
-            'CREATE TABLE IF NOT EXISTS status_moves(name TEXT PRIMARY KEY);'
-        )
-        con.execute(
-            'INSERT INTO attacks SELECT name FROM moves WHERE move_type = 12 OR move_type = 13 OR move_type = 14'
-            ' OR move_type = 15 OR move_type = 16 OR move_type = 17 OR move_type = 18 OR move_type = 19'
-            ' OR move_type = 28 OR move_type = 29 OR move_type = 30 OR move_type = 32 OR move_type = 34'
-        )
+        # con.execute(
+        #     'CREATE TABLE IF NOT EXISTS attacks (name TEXT PRIMARY KEY);'
+        # )
+        # con.execute(
+        #     'INSERT INTO attacks SELECT name FROM moves WHERE move_type = 0 OR move_type = 1 OR move_type = 2 '
+        #     'OR move_type = 3 OR move_type = 4 OR move_type = 5 OR move_type = 6 OR move_type = 7 OR move_type = 8'
+        #     ' OR move_type = 9 OR move_type = 1 OR move_type = 11 OR move_type = 20 OR move_type = 21 OR move_type = 22'
+        #     ' OR move_type = 23 OR move_type = 24 OR move_type = 25 OR move_type = 26 OR move_type = 27'
+        #     ' OR move_type = 31 OR move_type = 33'
+        # )
+        # con.execute(
+        #     'CREATE TABLE IF NOT EXISTS status_moves(name TEXT PRIMARY KEY);'
+        # )
+        # con.execute(
+        #     'INSERT INTO attacks SELECT name FROM moves WHERE move_type = 12 OR move_type = 13 OR move_type = 14'
+        #     ' OR move_type = 15 OR move_type = 16 OR move_type = 17 OR move_type = 18 OR move_type = 19'
+        #     ' OR move_type = 28 OR move_type = 29 OR move_type = 30 OR move_type = 32 OR move_type = 34'
+        # )
+        # con.execute('CREATE TABLE IF NOT EXISTS random(name TEXT PRIMARY KEY);')
+        # con.execute(
+        #     'INSERT INTO random SELECT name FROM moves WHERE name != \'Struggle\' AND name != \'Metronome\' '
+        #     'AND name != \'Mimic\';'
+        # )
+
+        # file = open('confusing_attacks.csv')
+        # con.execute(
+        #     'CREATE TABLE IF NOT EXISTS confusing_attacks(name TEXT PRIMARY KEY, chance INTEGER);'
+        # )
+        # for line in file:
+        #     d = line.split(',')
+        #     con.execute(
+        #         'INSERT INTO confusing_attacks VALUES(?,?);', (d[0], int(d[1]))
+        #     )
+
+        pass
+    pass
 
 
 def delete_table(table):
@@ -262,20 +280,34 @@ def create_csvs():
     #     file.write(f'{move[0]},\n')
 
     # file.close()
-    file = open('flinch_attacks.csv', 'w')
-    moves = select(f'SELECT name FROM moves WHERE move_type = {enums.MoveType.FLINCH_ATK.value};')
-    for move in moves:
-        file.write(f'{move[0]},\n')
+    # file = open('flinch_attacks.csv', 'w')
+    # moves = select(f'SELECT name FROM moves WHERE move_type = {enums.MoveType.FLINCH_ATK.value};')
+    # for move in moves:
+    #     file.write(f'{move[0]},\n')\
+
+    # file.close()
+    # file = open('confusing_attacks.csv', 'w')
+    # moves = select(f'SELECT name FROM moves WHERE move_type = \'{enums.MoveType.CONF_ATK.value}\';')
+    # for move in moves:
+    #     file.write(f'{move[0]}\n')
+    #
+    # file.close()
+    pass
 
 
 if __name__ == '__main__':
-    # delete_table('moves')
-    # create_tables()
+    delete_table('stat_altering_attacks')
     # create_csvs()
-
-    select('UPDATE moves SET priority = 1 WHERE name = \'Quick Attack\'')
-    moves = select('SELECT * FROM moves;')
-    for move in moves:
-        print(move)
+    create_tables()
+    # with con:
+    #     con.execute(
+    #         'INSERT INTO moves VALUES (?,?,?,?,?,?,?,?,?)',
+    #         ('Razor Wind','NORMAL','Special',80,100,10,0,'Charges on first turn attacks on second.',11)
+    #     )
+    # print(select('SELECT * FROM sqlite_master;'))
+    # print(select('SELECT * FROM moves WHERE name  = \'Razor Wind\';'))
+    # select('DELETE FROM moves WHERE name = \'Razor Wind\';')
+    # print(select('SELECT * FROM random'))
+    print(select('SELECT * FROM stat_altering_moves'))
 
     pass
