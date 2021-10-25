@@ -214,8 +214,14 @@ def create_tables():
     pass
 
 
+def update_table(query):
+    with con:
+        con.execute(query)
+
+
 def delete_table(table):
-    con.execute(f'DROP TABLE IF EXISTS {table}')
+    with con:
+        con.execute(f'DROP TABLE IF EXISTS {table}')
 
 
 def create_csvs():
@@ -296,18 +302,5 @@ def create_csvs():
 
 
 if __name__ == '__main__':
-    delete_table('stat_altering_attacks')
-    # create_csvs()
-    create_tables()
-    # with con:
-    #     con.execute(
-    #         'INSERT INTO moves VALUES (?,?,?,?,?,?,?,?,?)',
-    #         ('Razor Wind','NORMAL','Special',80,100,10,0,'Charges on first turn attacks on second.',11)
-    #     )
-    # print(select('SELECT * FROM sqlite_master;'))
-    # print(select('SELECT * FROM moves WHERE name  = \'Razor Wind\';'))
-    # select('DELETE FROM moves WHERE name = \'Razor Wind\';')
-    # print(select('SELECT * FROM random'))
-    print(select('SELECT * FROM stat_altering_moves'))
-
+    update_table('UPDATE moves SET move_type = 36 WHERE name = \'Mirror Move\';')
     pass

@@ -84,3 +84,4 @@ class MoveType(Enum):
     TRANSFORM = 34
 
     STRUGGLE = 35
+    MIRROR_MOVE = 36

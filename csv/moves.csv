@@ -90,7 +90,7 @@
 89,Pay Day,NORMAL,Physical,40,100,20,A small amount of money is gained after the battle resolves.,0
 90,Peck,FLYING,Physical,35,100,35,,0
 91,Petal Dance,GRASS,Special,120,100,10,User attacks for 2-3 turns but then becomes confused.,9
-92,Pin Missile,BUG,Physical,25,95,20,Hits 2-5 times in one turn.,20
+92,Pin Missile,BUG,Physical,25,95,2f0,Hits 2-5 times in one turn.,20
 93,Poison Gas,POISON,Status,,90,40,Poisons opponent.,15
 94,Poison Powder,POISON,Status,,75,35,Poisons opponent.,15
 95,Poison Sting,POISON,Physical,15,100,35,May poison the opponent.,6
