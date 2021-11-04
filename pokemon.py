@@ -125,4 +125,5 @@ class Pokemon:
         return self.__evasion
 
     def __str__(self):
-        return f'{self.__name}\t Lv. {self.__level}\n{self.__hp} / {self.__hp}'
+        return f'{self.__name}\t Lv. {self.__level}\n{self.__hp} / {self.__hp}' \
+               f'\n{self.__attack}\n{self.__defense}\n{self.__special}\n{self.__speed}'
