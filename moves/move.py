@@ -1,3 +1,6 @@
+import math
+import random
+
 import database.database as db
 from enums import MoveType as mt, Category
 from pubsub import Publisher
@@ -14,6 +17,17 @@ class Move(Publisher):
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         pass
+
+    def _does_hit(self, accuracy, evasion):
+        if self._accuracy is None:
+            return True
+
+        threshold = math.floor(self._accuracy * accuracy / evasion * 256)
+        if threshold < random.randint(1, 256):
+            self.publish("But it missed.")
+            return False
+
+        return True
 
     def decrement_pp(self):
         self._pp -= 1

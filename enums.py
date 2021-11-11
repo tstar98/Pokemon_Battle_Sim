@@ -85,6 +85,7 @@ class MoveType(Enum):
 
     STRUGGLE = 35
     MIRROR_MOVE = 36
+    OHKO = 37
 
 
 class Category(Enum):

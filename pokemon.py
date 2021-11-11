@@ -157,8 +157,66 @@ class Pokemon(Publisher):
         return self.__status_effect
 
     @property
-    def confused(self):
+    def is_confused(self):
         return self.__confused
+
+    @is_confused.setter
+    def is_confused(self, boolean):
+        self.__confused = boolean
+
+    def change_atk(self, stage):
+        if stage > 0 and self.__base_atk < 6:
+            self.__battle_atk += 1
+            return True
+        if stage < 0 and self.__base_atk > -6:
+            self.__battle_atk -=1
+            return True
+        return False
+
+    def change_def(self, stage):
+        if stage > 0 and self.__base_def < 6:
+            self.__battle_def+= 1
+            return True
+        if stage < 0 and self.__base_def > -6:
+            self.__battle_def -=1
+            return True
+        return False
+
+    def change_spc(self, stage):
+        if stage > 0 and self.__base_spc < 6:
+            self.__battle_spc += 1
+            return True
+        if stage < 0 and self.__base_spc > -6:
+            self.__battle_spc -=1
+            return True
+        return False
+
+    def change_spe(self, stage):
+        if stage > 0 and self.__base_spe < 6:
+            self.__battle_spe += 1
+            return True
+        if stage < 0 and self.__base_spe > -6:
+            self.__battle_atk -=1
+            return True
+        return False
+
+    def change_acc(self, stage):
+        if stage > 0 and self.__accuracy < 6:
+            self.__accuracy += 1
+            return True
+        if stage < 0 and self.__accuracy > -6:
+            self.__battle_atk -=1
+            return True
+        return False
+
+    def change_eva(self, stage):
+        if stage > 0 and self.__evasion < 6:
+            self.__evasion += 1
+            return True
+        if stage < 0 and self.__evasion > -6:
+            self.__evasion -=1
+            return True
+        return False
 
     @property
     def battle_atk(self):

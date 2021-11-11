@@ -43,7 +43,7 @@
 42,Fire Blast,FIRE,Special,110,85,5,May burn opponent.,6
 43,Fire Punch,FIRE,Physical,75,100,15,May burn opponent.,6
 44,Fire Spin,FIRE,Special,35,85,15,Traps opponent damaging them for 4-5 turns.,21
-45,Fissure,GROUND,Physical,,30,5,One-Hit-KO if it hits.,2
+45,Fissure,GROUND,Physical,,30,5,One-Hit-KO if it hits.,37
 46,Flamethrower,FIRE,Special,90,100,15,May burn opponent.,6
 47,Flash,NORMAL,Status,,100,20,Lowers opponent's Accuracy.,14
 48,Fly,FLYING,Physical,90,95,15,Flies up on first turn attacks on second turn.,24
@@ -53,14 +53,14 @@
 52,Glare,NORMAL,Status,,100,30,Paralyzes opponent.,15
 53,Growl,NORMAL,Status,,100,40,Lowers opponent's Attack.,14
 54,Growth,NORMAL,Status,,,20,Raises user's Special.,14
-55,Guillotine,NORMAL,Physical,,30,5,One-Hit-KO if it hits.,2
+55,Guillotine,NORMAL,Physical,,30,5,One-Hit-KO if it hits.,37
 56,Gust,FLYING,Special,40,100,35,,0
 57,Harden,NORMAL,Status,,,30,Raises user's Defense.,14
 # 58,Haze,ICE,Status,,,30,Resets all stat changes.
 59,Headbutt,NORMAL,Physical,70,100,15,May cause flinching.,3
 60,High Jump Kick,FIGHTING,Physical,130,90,10,If it misses the user loses half their HP.,5
 61,Horn Attack,NORMAL,Physical,65,100,25,,0
-62,Horn Drill,NORMAL,Physical,,30,5,One-Hit-KO if it hits.,2
+62,Horn Drill,NORMAL,Physical,,30,5,One-Hit-KO if it hits.,37
 63,Hydro Pump,WATER,Special,110,80,5,,0
 64,Hyper Beam,NORMAL,Special,150,90,5,User must recharge next turn.,27
 65,Hyper Fang,NORMAL,Physical,80,90,15,May cause flinching.,3
