@@ -85,3 +85,8 @@ class MoveType(Enum):
 
     STRUGGLE = 35
     MIRROR_MOVE = 36
+
+
+class Category(Enum):
+    PHYSICAL = 0
+    SPECIAL = 1

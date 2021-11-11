@@ -1,20 +1,37 @@
 import database.database as db
-from enums import MoveType as mt
+from enums import MoveType as mt, Category
+from pubsub import Publisher
 
 
-class Move:
+class Move(Publisher):
     def __init__(self, name):
         move = db.select(f'SELECT type, power, accuracy, pp, priority, description FROM moves '
                          f'WHERE NAME = \'{name}\';')[0]
         self._name = name
         self._type, self._power, self._accuracy, self._max_pp, self._priority, self._desc = move
         self._pp = self._max_pp
+        self._sub = None
 
-    def use_move(self):
+    def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         pass
 
     def decrement_pp(self):
         self._pp -= 1
+
+    def add_subscriber(self, subscriber):
+        self._sub = subscriber
+
+    def remove_subscriber(self):
+        self._sub = None
+
+    def publish(self, message):
+        self._sub.update(message)
+
+    def category(self):
+        if self._type in ['Fire', 'Water', 'Grass', 'Electric', 'Psychic', 'Ice', 'Dragon']:
+            return Category.SPECIAL
+        else:
+            return Category.PHYSICAL
 
     @property
     def name(self):
