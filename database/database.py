@@ -302,5 +302,5 @@ def create_csvs():
 
 
 if __name__ == '__main__':
-    update_table("UPDATE moves SET move_type = 37 WHERE name = 'Guillotine' or name = 'Fissure' or name = 'Horn Drill';")
+    print(select("SELECT * FROM stat_altering_moves"))
     pass

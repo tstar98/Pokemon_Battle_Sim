@@ -1,3 +1,5 @@
+import random
+
 import database.database as db
 import math
 import enums
@@ -31,7 +33,7 @@ class Pokemon(Publisher):
 
         self.__moves = []
         self.__last_move = None
-        self.__status_effect = enums.StatusEffect.NONE
+        self.__status_effect = enums.StatusEffect.NONE.value
         self.__sleep_counter = 0
         self.__confused = False
         self.__battle_atk = 0
@@ -52,6 +54,7 @@ class Pokemon(Publisher):
         if len(self.__moves) >= 4:
             return False
         self.__moves.append(move)
+        return True
 
     def reset_battle_stats(self):
         self.__battle_atk = 0
@@ -91,6 +94,9 @@ class Pokemon(Publisher):
         if itr not in range(0, 4):
             return None
         return self.__moves[itr]
+
+    def get_random_move(self):
+        return random.choice(self.__moves)
 
     @property
     def name(self):
@@ -156,6 +162,12 @@ class Pokemon(Publisher):
     def status_effect(self):
         return self.__status_effect
 
+    @status_effect.setter
+    def status_effect(self, stat_eff):
+        # don't change the status effect if pokemon already has one, unless changing it to none
+        if self.__status_effect == enums.StatusEffect.NONE.value or stat_eff == enums.StatusEffect.NONE.value:
+            self.__status_effect = stat_eff
+
     @property
     def is_confused(self):
         return self.__confused
@@ -166,56 +178,134 @@ class Pokemon(Publisher):
 
     def change_atk(self, stage):
         if stage > 0 and self.__base_atk < 6:
-            self.__battle_atk += 1
+            self.__base_atk += stage
+
+            # can't go higher than 6
+            if self.__base_atk > 6:
+                self.__base_atk = 6
+
             return True
+
         if stage < 0 and self.__base_atk > -6:
-            self.__battle_atk -=1
+            self.__base_atk -= stage
+
+            # can't go lower than -6
+            if self.__base_atk < -6:
+                self.__base_atk = -6
+
             return True
+
+        # return false if stat already = -6 or 6
         return False
 
     def change_def(self, stage):
         if stage > 0 and self.__base_def < 6:
-            self.__battle_def+= 1
+            self.__base_def += stage
+
+            # can't go higher than 6
+            if self.__base_def > 6:
+                self.__base_def = 6
+
             return True
+
         if stage < 0 and self.__base_def > -6:
-            self.__battle_def -=1
+            self.__base_def -= stage
+
+            # can't go lower than -6
+            if self.__base_def < -6:
+                self.__base_def = -6
+
             return True
+
+        # return false if stat already = -6 or 6
         return False
 
     def change_spc(self, stage):
         if stage > 0 and self.__base_spc < 6:
-            self.__battle_spc += 1
+            self.__base_spc += stage
+
+            # can't go higher than 6
+            if self.__base_spc > 6:
+                self.__base_spc = 6
+
             return True
+
         if stage < 0 and self.__base_spc > -6:
-            self.__battle_spc -=1
+            self.__base_spc -= stage
+
+            # can't go lower than -6
+            if self.__base_spc < -6:
+                self.__base_spc = -6
+
             return True
+
+        # return false if stat already = -6 or 6
         return False
 
     def change_spe(self, stage):
         if stage > 0 and self.__base_spe < 6:
-            self.__battle_spe += 1
+            self.__base_spe += stage
+
+            # can't go higher than 6
+            if self.__base_spe > 6:
+                self.__base_spe = 6
+
             return True
+
         if stage < 0 and self.__base_spe > -6:
-            self.__battle_atk -=1
+            self.__base_spe -= stage
+
+            # can't go lower than -6
+            if self.__base_spe < -6:
+                self.__base_spe = -6
+
             return True
+
+        # return false if stat already = -6 or 6
         return False
 
     def change_acc(self, stage):
         if stage > 0 and self.__accuracy < 6:
-            self.__accuracy += 1
+            self.__accuracy += stage
+
+            # can't go higher than 6
+            if self.__accuracy > 6:
+                self.__accuracy = 6
+
             return True
+
         if stage < 0 and self.__accuracy > -6:
-            self.__battle_atk -=1
+            self.__accuracy -= stage
+
+            # can't go lower than -6
+            if self.__accuracy < -6:
+                self.__accuracy = -6
+
             return True
+
+        # return false if stat already = -6 or 6
         return False
 
     def change_eva(self, stage):
         if stage > 0 and self.__evasion < 6:
-            self.__evasion += 1
+            self.__evasion += stage
+
+            # can't go higher than 6
+            if self.__evasion > 6:
+                self.__evasion = 6
+
             return True
+
         if stage < 0 and self.__evasion > -6:
-            self.__evasion -=1
+            self.__evasion -= stage
+
+            # can't go lower than -6
+            if self.__evasion < -6:
+                self.__evasion = -6
+
             return True
+
+        # return false if stat already = -6 or 6
         return False
 
     @property
@@ -236,11 +326,29 @@ class Pokemon(Publisher):
 
     @property
     def accuracy(self):
-        return self.__battle_stat(self.__accuracy)
+        # accuracy and evasion use a different formula, every stage raises / lowers by 1/3
+        num = 3
+        den = 3
+
+        if self.__accuracy >= 0:
+            num += self.__accuracy
+        else:
+            den += self.__accuracy
+
+        return num / den
 
     @property
     def evasion(self):
-        return self.__battle_stat(self.__evasion)
+        # accuracy and evasion use a different formula, every stage raises / lowers by 1/3
+        num = 3
+        den = 3
+
+        if self.__evasion >= 0:
+            num += self.__evasion
+        else:
+            den += self.__evasion
+
+        return num / den
 
     def __battle_stat(self, stage):
         """ stage is the battle stat to be calculated as a floating point value

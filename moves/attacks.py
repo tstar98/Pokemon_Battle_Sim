@@ -5,61 +5,6 @@ from enums import Stat
 from moves.move import *
 
 
-super_effective = {
-    "NORMAL": [],
-    "FIRE": ["GRASS", "ICE", "BUG"],
-    "WATER": ["FIRE", "GROUND", "ROCK"],
-    "GRASS": ["WATER", "GROUND", "ROCK"],
-    "ELECTRIC": ["WATER", "FLYING"],
-    "ICE": ["GRASS", "GROUND", "FLYING", "DRAGON"],
-    "FIGHTING": ["NORMAL", "ICE", "ROCK"],
-    "POISON": ["GRASS", "BUG"],
-    "GROUND": ["FIRE", "ELECTRIC", "POISON", "ROCK"],
-    "FLYING": ["GRASS", "FIGHTING", "BUG"],
-    "PSYCHIC": ["FIGHTING", "POISON"],
-    "BUG": ["GRASS", "POISON", "PSYCHIC"],
-    "ROCK": ["FIRE", "ICE", "FLYING", "BUG"],
-    "GHOST": ["GHOST"],
-    "DRAGON": ["DRAGON"]
-}
-
-not_very_effective = {
-    "NORMAL": ["ROCK"],
-    "FIRE": ["FIRE", "WATER", "ROCK", "DRAGON"],
-    "WATER": ["WATER", "GRASS", "DRAGON"],
-    "GRASS": ["FIRE", "GRASS", "POISON", "FLYING", "ROCK"],
-    "ELECTRIC": ["GRASS", "ELECTRIC"],
-    "ICE": ["WATER", "ICE"],
-    "FIGHTING": ["POISON", "FLYING", "PSYCHIC"],
-    "POISON": ["POISON", "GROUND", "GHOST"],
-    "GROUND": ["GRASS", "BUG"],
-    "FLYING": ["ELECTRIC", "ROCK"],
-    "PSYCHIC": ["PSYCHIC"],
-    "BUG": ["FIRE", "FIGHTING", "FLYING", "GHOST"],
-    "ROCK": ["FIGHTING", "GROUND"],
-    "GHOST": [],
-    "DRAGON": []
-}
-
-no_effect = {
-    "NORMAL": ["GHOST"],
-    "FIRE": [],
-    "WATER": [],
-    "GRASS": [],
-    "ELECTRIC": ['GROUND'],
-    "ICE": [],
-    "FIGHTING": ["GHOST"],
-    "POISON": [],
-    "GROUND": ["FLYING"],
-    "FLYING": [],
-    "PSYCHIC": [],
-    "BUG": [],
-    "ROCK": [],
-    "GHOST": ["NORMAL", "PSYCHIC"],
-    "DRAGON": []
-}
-
-
 class Attack(Move):
     def __init__(self, name):
         super(Attack, self).__init__(name)
@@ -125,15 +70,6 @@ class Attack(Move):
         if self._type == pokemon.type1:
             return True
         return False
-
-    def _get_effectiveness(self, defend_type):
-        if defend_type in super_effective[self._type]:
-            return 2
-        if defend_type in not_very_effective[self._type]:
-            return .5
-        if defend_type in no_effect[self._type]:
-            return 0
-        return 1
 
 
 class StatAlteringAttack(Attack):

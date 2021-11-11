@@ -6,6 +6,61 @@ from enums import MoveType as mt, Category
 from pubsub import Publisher
 
 
+super_effective = {
+    "NORMAL": [],
+    "FIRE": ["GRASS", "ICE", "BUG"],
+    "WATER": ["FIRE", "GROUND", "ROCK"],
+    "GRASS": ["WATER", "GROUND", "ROCK"],
+    "ELECTRIC": ["WATER", "FLYING"],
+    "ICE": ["GRASS", "GROUND", "FLYING", "DRAGON"],
+    "FIGHTING": ["NORMAL", "ICE", "ROCK"],
+    "POISON": ["GRASS", "BUG"],
+    "GROUND": ["FIRE", "ELECTRIC", "POISON", "ROCK"],
+    "FLYING": ["GRASS", "FIGHTING", "BUG"],
+    "PSYCHIC": ["FIGHTING", "POISON"],
+    "BUG": ["GRASS", "POISON", "PSYCHIC"],
+    "ROCK": ["FIRE", "ICE", "FLYING", "BUG"],
+    "GHOST": ["GHOST"],
+    "DRAGON": ["DRAGON"]
+}
+
+not_very_effective = {
+    "NORMAL": ["ROCK"],
+    "FIRE": ["FIRE", "WATER", "ROCK", "DRAGON"],
+    "WATER": ["WATER", "GRASS", "DRAGON"],
+    "GRASS": ["FIRE", "GRASS", "POISON", "FLYING", "ROCK"],
+    "ELECTRIC": ["GRASS", "ELECTRIC"],
+    "ICE": ["WATER", "ICE"],
+    "FIGHTING": ["POISON", "FLYING", "PSYCHIC"],
+    "POISON": ["POISON", "GROUND", "GHOST"],
+    "GROUND": ["GRASS", "BUG"],
+    "FLYING": ["ELECTRIC", "ROCK"],
+    "PSYCHIC": ["PSYCHIC"],
+    "BUG": ["FIRE", "FIGHTING", "FLYING", "GHOST"],
+    "ROCK": ["FIGHTING", "GROUND"],
+    "GHOST": [],
+    "DRAGON": []
+}
+
+no_effect = {
+    "NORMAL": ["GHOST"],
+    "FIRE": [],
+    "WATER": [],
+    "GRASS": [],
+    "ELECTRIC": ['GROUND'],
+    "ICE": [],
+    "FIGHTING": ["GHOST"],
+    "POISON": [],
+    "GROUND": ["FLYING"],
+    "FLYING": [],
+    "PSYCHIC": [],
+    "BUG": [],
+    "ROCK": [],
+    "GHOST": ["NORMAL", "PSYCHIC"],
+    "DRAGON": []
+}
+
+
 class Move(Publisher):
     def __init__(self, name):
         move = db.select(f'SELECT type, power, accuracy, pp, priority, description FROM moves '
@@ -28,6 +83,15 @@ class Move(Publisher):
             return False
 
         return True
+
+    def _get_effectiveness(self, defend_type):
+        if defend_type in super_effective[self._type]:
+            return 2
+        if defend_type in not_very_effective[self._type]:
+            return .5
+        if defend_type in no_effect[self._type]:
+            return 0
+        return 1
 
     def decrement_pp(self):
         self._pp -= 1
@@ -87,9 +151,9 @@ def move_factory(name):
     from moves.attacks import Attack, StatAlteringAttack, SetDamageAttack, FlinchAttack, RecoilAttack, \
         RecoilOnMissAttack, StatusEffectAttack, ConfusingContinuousAttack, HealingAttack, ChargingAttack, MultiAttack, \
         TrapAttack, ConfusingAttack, CritAttack, VanishingAttack, DreamEater, SelfDestruct, RechargeAttack, \
-        Struggle
+        Struggle, OHKO
     from moves.status_moves import ScreenMove, SwitchingMove, StatAlteringMove, StatusEffectMove, HealingMove, \
-        ConfusingMove, RandomMove, MimicMove, Rest, Splash
+        ConfusingMove, RandomMove, MimicMove, Rest, Splash, Transform, MirrorMove
 
     move_id = db.select(f'SELECT move_type FROM moves WHERE name = \'{name}\';')[0]
 
@@ -113,6 +177,7 @@ def move_factory(name):
         mt.SELF_DESTR.value: SelfDestruct,
         mt.RECHARGE_ATK.value: RechargeAttack,
         mt.STRUGGLE.value: Struggle,
+        mt.OHKO.value: OHKO,
         mt.SCREEN_MOVE.value: ScreenMove,
         mt.SWITCHING_MOVE.value: SwitchingMove,
         mt.STAT_ALT_MOVE.value: StatAlteringMove,
@@ -122,7 +187,9 @@ def move_factory(name):
         mt.RANDOM.value: RandomMove,
         mt.MIMIC_MOVE.value: MimicMove,
         mt.REST.value: Rest,
-        mt.SPLASH.value: Splash
+        mt.SPLASH.value: Splash,
+        mt.TRANSFORM.value: Transform,
+        mt.MIRROR_MOVE.value: MirrorMove
     }
     return moves[move_id[0]](name)
 

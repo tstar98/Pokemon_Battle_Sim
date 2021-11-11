@@ -1,3 +1,5 @@
+import random
+
 from pubsub import Publisher
 
 
@@ -73,5 +75,5 @@ class Player(Trainer):
 class Opponent(Trainer):
     def make_selection(self):
         # TODO: Change. For now, it just selects the first move of the pokemon out
-        move_use = self._team[0].get_move(0)
+        move_use = self._team[0].get_random_move()
         return move_use
