@@ -164,9 +164,33 @@ class Pokemon(Publisher):
 
     @status_effect.setter
     def status_effect(self, stat_eff):
-        # don't change the status effect if pokemon already has one, unless changing it to none
-        if self.__status_effect == enums.StatusEffect.NONE.value or stat_eff == enums.StatusEffect.NONE.value:
+        # don't change the status effect if pokemon already has one, unless changing it to none or rest
+        if self.__status_effect == enums.StatusEffect.NONE.value or stat_eff == enums.StatusEffect.REST.value\
+                or stat_eff == enums.StatusEffect.NONE.value:
             self.__status_effect = stat_eff
+
+            if stat_eff == enums.StatusEffect.NONE.value:
+                return
+
+            message = self.__name
+            if stat_eff == enums.StatusEffect.SLEEP.value:
+                message += ' fell asleep.'
+                # pokemon will sleep for 1-7 turns
+                self.__sleep_counter = random.randint(1, 7)
+            if stat_eff == enums.StatusEffect.REST.value:
+                message += ' started sleeping.'
+                # pokemon will sleep for 2 turns
+                self.__sleep_counter = 2
+            if stat_eff == enums.StatusEffect.PARALYSIS.value:
+                message += "'s paralyzed. It may not move."
+            if stat_eff == enums.StatusEffect.BURN.value:
+                message += "'s burned."
+            if stat_eff == enums.StatusEffect.POISON.value:
+                message += "was poisoned."
+            if stat_eff == enums.StatusEffect.POISON.value:
+                message += "'s badly poisoned."
+
+            self.publish(message)
 
     @property
     def is_confused(self):

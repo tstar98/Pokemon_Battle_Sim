@@ -1,7 +1,7 @@
 import math
 import random
 
-from enums import Stat
+from enums import Stat, StatusEffect
 from moves.move import *
 
 
@@ -360,7 +360,13 @@ class DreamEater(Attack):
         super(DreamEater, self).__init__(name)
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        # fails if target is not asleep
+        if pokemon2.status_effect not in (StatusEffect.REST.value, StatusEffect.SLEEP.value):
+            self._pp -= 1
+            self.publish("But it failed.")
+            return False
+        
+        return super(DreamEater, self).use_move(pokemon1, pokemon2, reflect, light_screen)
 
 
 class SelfDestruct(Attack):

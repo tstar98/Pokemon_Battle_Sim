@@ -8,26 +8,24 @@ from pubsub import Subscriber
 
 def select_team():
     """ player selects pokemon and moves """
-    train = Player()
-    pokemon = Pokemon(10)
-    move = move_factory('Tackle')
+    trainer = Player()
+    pokemon = Pokemon(143)
+    move = move_factory('Rest')
     pokemon.add_move(move)
-    train.add_to_team(pokemon)
+    trainer.add_to_team(pokemon)
 
-    return train
+    return trainer
 
 
 def create_opponent():
     """ creates opponent trainer with random pokemon and moves """
-    train = Opponent()
-    pokemon = Pokemon(3)
-    # move = move_factory('Flamethrower')
-    # pokemon.add_move(move)
-    move = move_factory("Growl")
+    trainer = Opponent()
+    pokemon = Pokemon(6)
+    move = move_factory('Flamethrower')
     pokemon.add_move(move)
-    train.add_to_team(pokemon)
+    trainer.add_to_team(pokemon)
 
-    return train
+    return trainer
 
 
 def battle(train1, train2):

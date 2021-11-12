@@ -1,6 +1,6 @@
 import random
 
-from enums import Stat
+from enums import Stat, StatusEffect, Screen
 from moves.move import *
 
 
@@ -11,7 +11,13 @@ class ScreenMove(Move):
         self.__screen_type = move[0]
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        """ user sets up screen, returns screen type as Screen enum key """
+
+        if self.__screen_type == Screen.REFLECT.value and reflect != 0\
+                or self.__screen_type == Screen.LIGHT.value and light_screen != 0:
+            self.publish("But it failed.")
+
+        return Screen.REFLECT if self.__screen_type == Screen.REFLECT.value else Screen.LIGHT
 
 
 class SwitchingMove(Move):
@@ -83,7 +89,25 @@ class StatusEffectMove(Move):
         self.__status_effect = move[0]
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        self._pp -= 1
+
+        # check accuracy
+        if not self._does_hit(pokemon1.accuracy, pokemon1.evasiveness):
+            return False
+
+        # check if it does not effect
+        effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2)
+        if effectiveness == 0:
+            self.publish(f"It doesn't effect {pokemon2.name}.")
+            return False
+
+        # fails if target already has a status effect
+        if pokemon2.status_effect != StatusEffect.NONE.value:
+            self.publish("But it failed.")
+            return False
+
+        pokemon2.status_effect = self.__status_effect
+        return True
 
 
 class HealingMove(Move):
@@ -92,7 +116,16 @@ class HealingMove(Move):
         self.__percent = 50
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        self._pp -= 1
+
+        # fails on this weird condition according to
+        # https://bulbapedia.bulbagarden.net/wiki/Soft-Boiled_(move)#Generation_I
+        if pokemon1.max_hp - pokemon1.hp == 255 % 256:
+            self.publish("But it failed.")
+            return False
+
+        pokemon1.heal(math.ceil(pokemon1.max_hp))
+        return True
 
 
 class ConfusingMove(Move):
@@ -100,7 +133,17 @@ class ConfusingMove(Move):
         super(ConfusingMove, self).__init__(name)
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        self._pp -= 1
+
+        if not self._does_hit(pokemon1.accuracy, pokemon2.evasion):
+            return False
+
+        if pokemon2.is_confused:
+            self.publish("But it failed.")
+            return False
+
+        pokemon2.is_confused = True
+        self.publish(f"{pokemon2.name} became confused.")
 
 
 class RandomMove(Move):
@@ -108,14 +151,14 @@ class RandomMove(Move):
         super(RandomMove, self).__init__(name)
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
+        self._pp -= 1
         moves = db.select('SELECT * FROM random;')
         move_name = random.choice(moves)
         move = move_factory(move_name[0])
         move.use_move(pokemon1, pokemon2, reflect, light_screen)
 
-        pass
 
-
+# TODO: Remove Mimic
 class MimicMove(Move):
     def __init__(self, name):
         super(MimicMove, self).__init__(name)
@@ -129,7 +172,17 @@ class Rest(Move):
         super(Rest, self).__init__(name)
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        """ user falls asleep for 3 turns and regains full health """
+        self._pp -= 1
+
+        # fails if pokemon has full health
+        if pokemon1.hp == pokemon1.max_hp:
+            self.publish("But it failed.")
+            return False
+
+        pokemon1.status_effect = StatusEffect.REST.value
+        pokemon1.heal(pokemon1.max_hp)
+        self.publish(f"{pokemon1.name} regained health.")
 
 
 class Splash(Move):

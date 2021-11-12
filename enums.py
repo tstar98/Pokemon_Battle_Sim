@@ -26,10 +26,11 @@ class StatusEffect(Enum):
     FREEZE = 3
     POISON = 4
     BAD_POISON = 5
-    NONE = 6
+    REST = 6
+    NONE = 7
 
 
-class Barrier(Enum):
+class Screen(Enum):
     REFLECT = 0
     LIGHT = 1
 
