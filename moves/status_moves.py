@@ -28,7 +28,7 @@ class StatAlteringMove(Move):
         move = db.select(f'SELECT self, stat, stages FROM stat_altering_moves WHERE name = \'{name}\';')[0]
         self._self_target = move[0]
         self._stat = move[1]
-        self._stages = move[1]
+        self._stages = move[2]
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         if not self._does_hit(pokemon1.accuracy, pokemon2.evasion):

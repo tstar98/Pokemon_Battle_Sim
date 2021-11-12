@@ -177,136 +177,88 @@ class Pokemon(Publisher):
         self.__confused = boolean
 
     def change_atk(self, stage):
-        if stage > 0 and self.__base_atk < 6:
-            self.__base_atk += stage
+        if stage > 0 and self.__battle_atk >= 6 or stage < 0 and self.__battle_atk <= -6:
+            return False
 
-            # can't go higher than 6
-            if self.__base_atk > 6:
-                self.__base_atk = 6
+        self.__battle_atk += stage
 
-            return True
+        # ensure it is still between -6 and 6 after the update
+        if self.__battle_atk > 6:
+            self.__battle_atk = 6
+        elif self.__battle_atk < -6:
+            self.__battle_atk = -6
 
-        if stage < 0 and self.__base_atk > -6:
-            self.__base_atk -= stage
-
-            # can't go lower than -6
-            if self.__base_atk < -6:
-                self.__base_atk = -6
-
-            return True
-
-        # return false if stat already = -6 or 6
-        return False
+        return True
 
     def change_def(self, stage):
-        if stage > 0 and self.__base_def < 6:
-            self.__base_def += stage
+        if stage > 0 and self.__battle_def >= 6 or stage < 0 and self.__battle_def <= -6:
+            return False
 
-            # can't go higher than 6
-            if self.__base_def > 6:
-                self.__base_def = 6
+        self.__battle_def += stage
 
-            return True
+        # ensure it is still between -6 and 6 after the update
+        if self.__battle_def > 6:
+            self.__battle_def = 6
+        elif self.__battle_def < -6:
+            self.__battle_def = -6
 
-        if stage < 0 and self.__base_def > -6:
-            self.__base_def -= stage
-
-            # can't go lower than -6
-            if self.__base_def < -6:
-                self.__base_def = -6
-
-            return True
-
-        # return false if stat already = -6 or 6
-        return False
+        return True
 
     def change_spc(self, stage):
-        if stage > 0 and self.__base_spc < 6:
-            self.__base_spc += stage
+        if stage > 0 and self.__battle_spc >= 6 or stage < 0 and self.__battle_spc <= -6:
+            return False
 
-            # can't go higher than 6
-            if self.__base_spc > 6:
-                self.__base_spc = 6
+        self.__battle_spc += stage
 
-            return True
+        # ensure it is still between -6 and 6 after the update
+        if self.__battle_spc > 6:
+            self.__battle_spc = 6
+        elif self.__battle_spc < -6:
+            self.__battle_spc = -6
 
-        if stage < 0 and self.__base_spc > -6:
-            self.__base_spc -= stage
-
-            # can't go lower than -6
-            if self.__base_spc < -6:
-                self.__base_spc = -6
-
-            return True
-
-        # return false if stat already = -6 or 6
-        return False
+        return True
 
     def change_spe(self, stage):
-        if stage > 0 and self.__base_spe < 6:
-            self.__base_spe += stage
+        if stage > 0 and self.__battle_spe >= 6 or stage < 0 and self.__battle_spe <= -6:
+            return False
 
-            # can't go higher than 6
-            if self.__base_spe > 6:
-                self.__base_spe = 6
+        self.__battle_spe += stage
 
-            return True
+        # ensure it is still between -6 and 6 after the update
+        if self.__battle_spe > 6:
+            self.__battle_spe = 6
+        elif self.__battle_spe < -6:
+            self.__battle_spe = -6
 
-        if stage < 0 and self.__base_spe > -6:
-            self.__base_spe -= stage
-
-            # can't go lower than -6
-            if self.__base_spe < -6:
-                self.__base_spe = -6
-
-            return True
-
-        # return false if stat already = -6 or 6
-        return False
+        return True
 
     def change_acc(self, stage):
-        if stage > 0 and self.__accuracy < 6:
-            self.__accuracy += stage
+        if stage > 0 and self.__accuracy >= 6 or stage < 0 and self.__accuracy <= -6:
+            return False
 
-            # can't go higher than 6
-            if self.__accuracy > 6:
-                self.__accuracy = 6
+        self.__battle_spe += stage
 
-            return True
+        # ensure it is still between -6 and 6 after the update
+        if self.__accuracy > 6:
+            self.__accuracy = 6
+        elif self.__accuracy < -6:
+            self.__accuracy = -6
 
-        if stage < 0 and self.__accuracy > -6:
-            self.__accuracy -= stage
-
-            # can't go lower than -6
-            if self.__accuracy < -6:
-                self.__accuracy = -6
-
-            return True
-
-        # return false if stat already = -6 or 6
-        return False
+        return True
 
     def change_eva(self, stage):
-        if stage > 0 and self.__evasion < 6:
-            self.__evasion += stage
+        if stage > 0 and self.__evasion >= 6 or stage < 0 and self.__evasion <= -6:
+            return False
 
-            # can't go higher than 6
-            if self.__evasion > 6:
-                self.__evasion = 6
+        self.__battle_spe += stage
 
-            return True
+        # ensure it is still between -6 and 6 after the update
+        if self.__evasion > 6:
+            self.__evasion = 6
+        elif self.__evasion < -6:
+            self.__evasion = -6
 
-        if stage < 0 and self.__evasion > -6:
-            self.__evasion -= stage
-
-            # can't go lower than -6
-            if self.__evasion < -6:
-                self.__evasion = -6
-
-            return True
-
-        # return false if stat already = -6 or 6
-        return False
+        return True
 
     @property
     def battle_atk(self):
@@ -359,7 +311,7 @@ class Pokemon(Publisher):
         if stage >= 0:
             num += stage
         else:
-            den += stage
+            den -= stage
 
         return num / den
 

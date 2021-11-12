@@ -9,7 +9,7 @@ from pubsub import Subscriber
 def select_team():
     """ player selects pokemon and moves """
     train = Player()
-    pokemon = Pokemon(143)
+    pokemon = Pokemon(10)
     move = move_factory('Tackle')
     pokemon.add_move(move)
     train.add_to_team(pokemon)
@@ -20,10 +20,10 @@ def select_team():
 def create_opponent():
     """ creates opponent trainer with random pokemon and moves """
     train = Opponent()
-    pokemon = Pokemon(6)
-    move = move_factory('Flamethrower')
-    pokemon.add_move(move)
-    move = move_factory("Leer")
+    pokemon = Pokemon(3)
+    # move = move_factory('Flamethrower')
+    # pokemon.add_move(move)
+    move = move_factory("Growl")
     pokemon.add_move(move)
     train.add_to_team(pokemon)
 
