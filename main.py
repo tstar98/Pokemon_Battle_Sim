@@ -9,8 +9,8 @@ from pubsub import Subscriber
 def select_team():
     """ player selects pokemon and moves """
     trainer = Player()
-    pokemon = Pokemon(143)
-    move = move_factory('Rest')
+    pokemon = Pokemon(26)
+    move = move_factory('Thunder Wave')
     pokemon.add_move(move)
     trainer.add_to_team(pokemon)
 
@@ -20,8 +20,8 @@ def select_team():
 def create_opponent():
     """ creates opponent trainer with random pokemon and moves """
     trainer = Opponent()
-    pokemon = Pokemon(6)
-    move = move_factory('Flamethrower')
+    pokemon = Pokemon(3)
+    move = move_factory('Vine Whip')
     pokemon.add_move(move)
     trainer.add_to_team(pokemon)
 
@@ -38,7 +38,6 @@ def battle(train1, train2):
     print()
 
     while train1.has_pokemon() and train2.has_pokemon():
-
         move1 = train1.make_selection()
         move2 = train2.make_selection()
 
@@ -49,6 +48,7 @@ def battle(train1, train2):
             elif train1.pokemon_out().speed < train2.pokemon_out().speed:
                 move_order = 2
             else:
+                # randomly select order if priority and speed are the same
                 move_order = random.randint(1, 2)
 
         elif move1.priority > move2.priority:
@@ -57,23 +57,25 @@ def battle(train1, train2):
             move_order = 2
 
         if move_order == 1:
-            subscriber.update(f"{train1.pokemon_out().name} used {move1.name}")
-            move1.use_move(train1.pokemon_out(), train2.pokemon_out())
-            print()
+            if train1.pokemon_out().can_move():
+                subscriber.update(f"{train1.pokemon_out().name} used {move1.name}")
+                move1.use_move(train1.pokemon_out(), train2.pokemon_out())
+                print()
 
             # pokemon can only use move if they are still in battle after the opponent used their move
-            if train2.pokemon_out().hp > 0:
+            if train2.pokemon_out().hp > 0 and train2.pokemon_out().can_move():
                 subscriber.update(f"{train2.pokemon_out().name} used {move2.name}")
                 move2.use_move(train2.pokemon_out(), train1.pokemon_out())
                 print()
 
         else:
-            subscriber.update(f"{train2.pokemon_out().name} used {move2.name}")
-            move2.use_move(train2.pokemon_out(), train1.pokemon_out())
-            print()
+            if train2.pokemon_out().can_move():
+                subscriber.update(f"{train2.pokemon_out().name} used {move2.name}")
+                move2.use_move(train2.pokemon_out(), train1.pokemon_out())
+                print()
 
             # pokemon can only use move if they are still in battle after the opponent used their move
-            if train1.pokemon_out().hp > 0:
+            if train1.pokemon_out().hp > 0 and train1.pokemon_out().can_move():
                 subscriber.update(f"{train1.pokemon_out().name} used {move1.name}")
                 move1.use_move(train1.pokemon_out(), train2.pokemon_out())
                 print()

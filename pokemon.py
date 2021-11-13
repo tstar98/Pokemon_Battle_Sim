@@ -42,6 +42,8 @@ class Pokemon(Publisher):
         self.__battle_spe = 0
         self.__accuracy = 0
         self.__evasion = 0
+
+        self.__flinch = False
         self.__sub = None
 
     def __determine_stat(self, base):
@@ -63,6 +65,34 @@ class Pokemon(Publisher):
         self.__battle_spe = 0
         self.__accuracy = 0
         self.__evasion = 0
+
+    def can_move(self):
+        """determines if pokemon is able to move, based on status_effect, flinch, confusion"""
+        if self.__flinch:
+            self.publish(f"{self.__name} flinched and can't attack.")
+            return False
+
+        if self.__status_effect == enums.StatusEffect.PARALYSIS.value:
+            if 25 >= random.randint(1, 100):
+                self.publish(f"{self.name} is paralyzed and is unable to attack.")
+                return False
+
+        if self.__status_effect in (enums.StatusEffect.SLEEP.value, enums.StatusEffect.REST.value):
+            if self.__sleep_counter > 0:
+                self.publish(f"{self.name} is fast asleep.")
+            else:
+                self.publish(f"{self.name} woke up.")
+            return False
+
+        if self.__confused:
+            self.publish(f"{self.name} is confused.")
+
+            if 50 >= random.randint(1, 100):
+                # TODO: damage from confusion
+                self.publish("It hurt itself in confusion.")
+                return False
+
+        return True
 
     def take_damage(self, damage):
         """ pokemon takes damage by given amount """
@@ -338,6 +368,14 @@ class Pokemon(Publisher):
             den -= stage
 
         return num / den
+
+    @property
+    def flinch(self):
+        return self.__flinch
+
+    @flinch.setter
+    def flinch(self, boolean):
+        self.__flinch = boolean
 
     def __str__(self):
         return f'Lv. {self.__level} {self.__name}\n{self.__hp} / {self.__max_hp}'

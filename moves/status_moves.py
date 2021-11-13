@@ -92,7 +92,7 @@ class StatusEffectMove(Move):
         self._pp -= 1
 
         # check accuracy
-        if not self._does_hit(pokemon1.accuracy, pokemon1.evasiveness):
+        if not self._does_hit(pokemon1.accuracy, pokemon1.evasion):
             return False
 
         # check if it does not effect
@@ -155,7 +155,7 @@ class RandomMove(Move):
         moves = db.select('SELECT * FROM random;')
         move_name = random.choice(moves)
         move = move_factory(move_name[0])
-        move.use_move(pokemon1, pokemon2, reflect, light_screen)
+        return move.use_move(pokemon1, pokemon2, reflect, light_screen)
 
 
 # TODO: Remove Mimic
@@ -192,6 +192,7 @@ class Splash(Move):
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         self._pp -= 1
         self.publish("But nothing happened.")
+        return False
 
 
 class Transform(Move):

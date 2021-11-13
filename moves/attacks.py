@@ -20,6 +20,11 @@ class Attack(Move):
         return self._do_damage(pokemon1, pokemon2, reflect, light_screen)
 
     def _do_damage(self, pokemon1, pokemon2, reflect, light_screen):
+        effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2)
+
+        if effectiveness == 0:
+            self.publish(f"It doesn't effect {pokemon2.name}.")
+
         # determine category of move and whether a screen will play effect
         if self.category() == Category.PHYSICAL:
             a = pokemon1.attack * pokemon1.battle_atk
@@ -40,24 +45,19 @@ class Attack(Move):
         # stab = Same Type Attack Bonus
         stab = 1.5 if self.is_stab(pokemon1) else 1
 
-        effectiveness = self._get_effectiveness(pokemon2.type1)
-        if pokemon2.type2 is not None:
-            effectiveness *= self._get_effectiveness(pokemon2.type2)
-
         # damage formula found here: https://bulbapedia.bulbagarden.net/wiki/Damage
         damage = math.ceil(((2 * level / 5 + 2) * self._power * a / d) / 50 + 2) * stab * effectiveness
         if screen:
             damage /= 2
         damage = math.ceil(damage * random.randint(85, 100) / 100)
 
-        if effectiveness == 0:
-            self.publish(f"It doesn't effect {pokemon2.name}.")
-        elif effectiveness > 1:
+        if effectiveness > 1:
             self.publish(f"It's super effective.")
         elif effectiveness < 1:
             self.publish(f"It's not very effective.")
 
         pokemon2.take_damage(damage)
+        return damage
 
     def _is_crit(self, speed):
         # formula found here: https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Generation_I
@@ -173,8 +173,17 @@ class FlinchAttack(Attack):
         self.__chance = move[0]
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        super(FlinchAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
-        # TODO: determine if opponent flinches
+        damage = super(FlinchAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
+
+        if self.__adds_effect():
+            pokemon2.flinch = True
+
+        return damage
+
+    def __adds_effect(self):
+        if self.__chance >= random.randint(1, 100):
+            return True
+        return False
 
 
 class RecoilAttack(Attack):
@@ -374,7 +383,44 @@ class SelfDestruct(Attack):
         super(SelfDestruct, self).__init__(name)
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        # user faints and then does damage
+        pokemon1.take_damage(pokemon1.max_hp)
+
+        effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type1)
+        if effectiveness == 0:
+            self.publish(f"It doesn't affect {pokemon2.name}.")
+            return False
+
+        if not self._does_hit(pokemon1.accuracy, pokemon2.evasion):
+            return False
+
+        # slightly different formula from normal attack
+        a = pokemon1.attack * pokemon1.battle_atk
+        d = pokemon2.defense * pokemon2.battle_def
+        screen = True if reflect > 0 else False
+
+        # in gen 1 critical hit damage is based on level
+        level = pokemon1.level
+        if self._is_crit(pokemon1.base_spe):
+            self.publish("It's a critical hit.")
+            level *= 2
+
+        # stab = Same Type Attack Bonus
+        stab = 1.5 if self.is_stab(pokemon1) else 1
+
+        # damage formula found here: https://bulbapedia.bulbagarden.net/wiki/Damage
+        damage = math.ceil(((2 * level / 5 + 2) * self._power * a / d) / 50 + 2) * stab * effectiveness
+        if screen:
+            damage /= 2
+        damage = math.ceil(damage * random.randint(85, 100) / 100)
+
+        if effectiveness > 1:
+            self.publish(f"It's super effective.")
+        elif effectiveness < 1:
+            self.publish(f"It's not very effective.")
+
+        pokemon2.take_damage(damage)
+        return damage
 
 
 class RechargeAttack(ChargingAttack):
@@ -385,9 +431,10 @@ class RechargeAttack(ChargingAttack):
         pass
 
 
-class Struggle(Attack):
+class Struggle(RecoilAttack):
     def __init__(self, name):
         super(Struggle, self).__init__(name)
+        self._power = 50
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         pass
