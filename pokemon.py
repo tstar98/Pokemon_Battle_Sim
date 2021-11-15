@@ -35,7 +35,10 @@ class Pokemon(Publisher):
         self.__last_move = None
         self.__status_effect = enums.StatusEffect.NONE.value
         self.__sleep_counter = 0
+        self.__poison_counter = 0
         self.__confused = False
+        self.__confusion_counter = 0
+
         self.__battle_atk = 0
         self.__battle_def = 0
         self.__battle_spc = 0
@@ -78,6 +81,7 @@ class Pokemon(Publisher):
                 return False
 
         if self.__status_effect in (enums.StatusEffect.SLEEP.value, enums.StatusEffect.REST.value):
+            # sleep turns only count if the pokemon is trying to use a move
             if self.__sleep_counter > 0:
                 self.publish(f"{self.name} is fast asleep.")
             else:
@@ -85,12 +89,20 @@ class Pokemon(Publisher):
             return False
 
         if self.__confused:
-            self.publish(f"{self.name} is confused.")
+            if self.__confusion_counter == 0:
+                self.__confused = False
+                self.publish(f"{self.__name} snapped out of confusion.")
 
-            if 50 >= random.randint(1, 100):
-                # TODO: damage from confusion
-                self.publish("It hurt itself in confusion.")
-                return False
+            else:
+                self.publish(f"{self.name} is confused.")
+                # confusion turns only count at this point
+                self.__confusion_counter -= 1
+
+                if 50 >= random.randint(1, 100):
+                    # cannot move due to confusion
+                    # TODO: damage from confusion
+                    self.publish("It hurt itself in confusion.")
+                    return False
 
         return True
 
@@ -106,6 +118,22 @@ class Pokemon(Publisher):
         self.__hp += health
         if self.__hp > self.__max_hp:
             self.__hp = self.__max_hp
+
+    def next_turn(self):
+        # take damage from status effects
+        if self.__status_effect == enums.StatusEffect.BURN.value:
+            self.take_damage(math.floor(self.__max_hp / 16))
+            self.publish(f"{self.__name}'s hurt by the burn.")
+
+        elif self.__status_effect == enums.StatusEffect.POISON.value:
+            self.take_damage(math.floor(self.__max_hp / 16))
+            self.publish(f"{self.__name}'s hurt by poison.")
+
+        elif self.__status_effect == enums.StatusEffect.BAD_POISON.value:
+            # if badly poisoned, pokemon takes N/16 of HP where N is 1-15
+            self.take_damage(math.floor(self.__max_hp / 16) * self.__poison_counter)
+            self.publish(f"{self.__name}'s hurt by poison.")
+            self.__poison_counter = self.__poison_counter + 1 if self.__poison_counter < 15 else 15
 
     def add_subscriber(self, subscriber):
         self.__sub = subscriber
@@ -217,8 +245,9 @@ class Pokemon(Publisher):
                 message += "'s burned."
             if stat_eff == enums.StatusEffect.POISON.value:
                 message += "was poisoned."
-            if stat_eff == enums.StatusEffect.POISON.value:
+            if stat_eff == enums.StatusEffect.BAD_POISON.value:
                 message += "'s badly poisoned."
+                self.__poison_counter = 1
 
             self.publish(message)
 
@@ -228,7 +257,8 @@ class Pokemon(Publisher):
 
     @is_confused.setter
     def is_confused(self, boolean):
-        self.__confused = boolean
+        if boolean:
+            self.__confusion_counter = random.randint(2, 5)
 
     def change_atk(self, stage):
         if stage > 0 and self.__battle_atk >= 6 or stage < 0 and self.__battle_atk <= -6:

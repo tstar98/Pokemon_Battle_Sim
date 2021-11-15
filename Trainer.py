@@ -1,5 +1,3 @@
-import random
-
 from pubsub import Publisher
 
 
@@ -22,6 +20,11 @@ class Trainer(Publisher):
     def make_selection(self):
         """ trainer makes selection to either fight or switch """
         pass
+
+    def next_turn(self):
+        """performs functions that occur in between turns"""
+        self._light_screen = 0 if self._light_screen <= 0 else self._light_screen - 1
+        self._reflect = 0 if self._reflect <= 0 else self._reflect - 1
 
     def add_subscriber(self, subscriber):
         self._sub = subscriber
