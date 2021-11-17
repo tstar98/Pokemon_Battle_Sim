@@ -128,7 +128,7 @@ class SetDamageAttack(Attack):
         if effectiveness == 0:
             self.publish(f"It doesn't effect {pokemon2.name}.")
 
-        if not self._does_hit(pokemon1, pokemon2):
+        if not self._does_hit(pokemon1.accuracy, pokemon2.evasion):
             return False
 
         pokemon2.take_damage(self.__damage)

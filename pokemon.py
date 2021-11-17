@@ -83,10 +83,11 @@ class Pokemon(Publisher):
         if self.__status_effect in (enums.StatusEffect.SLEEP.value, enums.StatusEffect.REST.value):
             # sleep turns only count if the pokemon is trying to use a move
             if self.__sleep_counter > 0:
-                self.__status_effect -= 1
+                self.__sleep_counter -= 1
                 self.publish(f"{self.name} is fast asleep.")
             else:
                 self.publish(f"{self.name} woke up.")
+                self.__status_effect = enums.StatusEffect.NONE.value
             return False
 
         if self.__confused:

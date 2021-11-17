@@ -302,10 +302,5 @@ def create_csvs():
 
 
 if __name__ == '__main__':
-    update_table("UPDATE stat_altering_moves SET self = false WHERE name = 'Flash' or name = 'Growl'"
-                 " or name = 'Kinesis' or name = 'Leer' or name = 'Growl' or name = 'Sand Attack' or name = 'Screech'"
-                 " or name = 'Smoke Screen' or name = 'String Shot' or name = 'Tail Whip';")
-    moves = select("SELECT * FROM stat_altering_moves")
-    for move in moves:
-        print(move)
+    print("SELECT * FROM moves WHERE name = 'Rage';")
     pass

@@ -1,4 +1,3 @@
-import os
 import random
 
 from Trainer import *
@@ -11,13 +10,13 @@ def select_team():
     """ player selects pokemon and moves """
     trainer = Player()
     pokemon = Pokemon(28)
-    move = move_factory('Poison Sting')
+    move = move_factory('Fury Swipes')
     pokemon.add_move(move)
     move = move_factory('Swords Dance')
     pokemon.add_move(move)
     move = move_factory('Rest')
     pokemon.add_move(move)
-    move = move_factory('Sand Attack')
+    move = move_factory('Take Down')
     pokemon.add_move(move)
     trainer.add_to_team(pokemon)
 
@@ -28,7 +27,7 @@ def create_opponent():
     """ creates opponent trainer with random pokemon and moves """
     trainer = Opponent()
     pokemon = Pokemon(51)
-    move = move_factory('Toxic')
+    move = move_factory('Dragon Rage')
     pokemon.add_move(move)
     move = move_factory('Rest')
     pokemon.add_move(move)
