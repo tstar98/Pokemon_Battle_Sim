@@ -91,6 +91,11 @@ class StatusEffectMove(Move):
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         self._pp -= 1
 
+        # fails if target already has a status effect
+        if pokemon2.status_effect != StatusEffect.NONE.value:
+            self.publish("But it failed.")
+            return False
+
         # check accuracy
         if not self._does_hit(pokemon1.accuracy, pokemon1.evasion):
             return False
@@ -101,11 +106,6 @@ class StatusEffectMove(Move):
             self.publish(f"It doesn't effect {pokemon2.name}.")
             return False
 
-        # fails if target already has a status effect
-        if pokemon2.status_effect != StatusEffect.NONE.value:
-            self.publish("But it failed.")
-            return False
-
         pokemon2.status_effect = self.__status_effect
         return True
 
@@ -113,18 +113,17 @@ class StatusEffectMove(Move):
 class HealingMove(Move):
     def __init__(self, name):
         super(HealingMove, self).__init__(name)
-        self.__percent = 50
+        self._percent = 50
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         self._pp -= 1
 
-        # fails on this weird condition according to
-        # https://bulbapedia.bulbagarden.net/wiki/Soft-Boiled_(move)#Generation_I
-        if pokemon1.max_hp - pokemon1.hp == 255 % 256:
+        # fails if at full HP
+        if pokemon1.hp == pokemon1.max_hp:
             self.publish("But it failed.")
             return False
 
-        pokemon1.heal(math.ceil(pokemon1.max_hp))
+        pokemon1.heal(math.ceil(pokemon1.max_hp * self._percent / 100))
         return True
 
 
@@ -135,11 +134,12 @@ class ConfusingMove(Move):
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         self._pp -= 1
 
-        if not self._does_hit(pokemon1.accuracy, pokemon2.evasion):
-            return False
-
+        # fails if already confused
         if pokemon2.is_confused:
             self.publish("But it failed.")
+            return False
+
+        if not self._does_hit(pokemon1.accuracy, pokemon2.evasion):
             return False
 
         pokemon2.is_confused = True
@@ -167,22 +167,23 @@ class MimicMove(Move):
         pass
 
 
-class Rest(Move):
+class Rest(HealingMove):
     def __init__(self, name):
         super(Rest, self).__init__(name)
+        self._percent = 100
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         """ user falls asleep for 3 turns and regains full health """
-        self._pp -= 1
 
         # fails if pokemon has full health
         if pokemon1.hp == pokemon1.max_hp:
             self.publish("But it failed.")
+            # goes inside if statement since super.use_move() decrements pp
+            self._pp -= 1
             return False
 
         pokemon1.status_effect = StatusEffect.REST.value
-        pokemon1.heal(pokemon1.max_hp)
-        self.publish(f"{pokemon1.name} regained health.")
+        super(Rest, self).use_move(pokemon1, pokemon2)
 
 
 class Splash(Move):

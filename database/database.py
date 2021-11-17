@@ -302,5 +302,5 @@ def create_csvs():
 
 
 if __name__ == '__main__':
-    print("SELECT * FROM moves WHERE name = 'Rage';")
+    print(select("SELECT * FROM moves WHERE name = 'Struggle';"))
     pass

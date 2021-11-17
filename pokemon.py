@@ -3,6 +3,7 @@ import random
 import database.database as db
 import math
 import enums
+from moves.attacks import Confused
 from pubsub import Publisher
 
 
@@ -72,21 +73,21 @@ class Pokemon(Publisher):
     def can_move(self):
         """determines if pokemon is able to move, based on status_effect, flinch, confusion"""
         if self.__flinch:
-            self.publish(f"{self.__name} flinched and can't attack.")
+            self.publish(f"{self.__name} flinched and can't attack.\n")
             return False
 
         if self.__status_effect == enums.StatusEffect.PARALYSIS.value:
             if 25 >= random.randint(1, 100):
-                self.publish(f"{self.name} is paralyzed and is unable to attack.")
+                self.publish(f"{self.name} is paralyzed and is unable to attack.\n")
                 return False
 
         if self.__status_effect in (enums.StatusEffect.SLEEP.value, enums.StatusEffect.REST.value):
             # sleep turns only count if the pokemon is trying to use a move
             if self.__sleep_counter > 0:
                 self.__sleep_counter -= 1
-                self.publish(f"{self.name} is fast asleep.")
+                self.publish(f"{self.name} is fast asleep.\n")
             else:
-                self.publish(f"{self.name} woke up.")
+                self.publish(f"{self.name} woke up.\n")
                 self.__status_effect = enums.StatusEffect.NONE.value
             return False
 
@@ -101,9 +102,9 @@ class Pokemon(Publisher):
                 self.__confusion_counter -= 1
 
                 if 50 >= random.randint(1, 100):
-                    # cannot move due to confusion
-                    # TODO: damage from confusion
-                    self.publish("It hurt itself in confusion.")
+                    # cannot move due to confusion and hurts itself
+                    Confused().use_move(self)
+                    self.publish("It hurt itself in confusion.\n")
                     return False
 
         return True
@@ -125,16 +126,16 @@ class Pokemon(Publisher):
         # take damage from status effects
         if self.__status_effect == enums.StatusEffect.BURN.value:
             self.take_damage(math.floor(self.__max_hp / 16))
-            self.publish(f"{self.__name}'s hurt by the burn.")
+            self.publish(f"{self.__name}'s hurt by the burn.\n")
 
         elif self.__status_effect == enums.StatusEffect.POISON.value:
             self.take_damage(math.floor(self.__max_hp / 16))
-            self.publish(f"{self.__name}'s hurt by poison.")
+            self.publish(f"{self.__name}'s hurt by poison.\n")
 
         elif self.__status_effect == enums.StatusEffect.BAD_POISON.value:
             # if badly poisoned, pokemon takes N/16 of HP where N is 1-15
             self.take_damage(math.floor(self.__max_hp / 16) * self.__poison_counter)
-            self.publish(f"{self.__name}'s hurt by poison.")
+            self.publish(f"{self.__name}'s hurt by poison.\n")
             self.__poison_counter = self.__poison_counter + 1 if self.__poison_counter < 15 else 15
 
     def add_subscriber(self, subscriber):
@@ -156,7 +157,9 @@ class Pokemon(Publisher):
         return self.__moves[itr]
 
     def get_random_move(self):
-        return self.__moves[random.randint(0, 3)]
+        if len(self.__moves) == 0:
+            return None
+        return self.__moves[random.randint(0, len(self.__moves) - 1)]
 
     @property
     def name(self):
@@ -267,6 +270,7 @@ class Pokemon(Publisher):
     def is_confused(self, boolean):
         if boolean:
             self.__confusion_counter = random.randint(2, 5)
+        self.__confused = boolean
 
     def change_atk(self, stage):
         if stage > 0 and self.__battle_atk >= 6 or stage < 0 and self.__battle_atk <= -6:

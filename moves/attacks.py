@@ -24,6 +24,7 @@ class Attack(Move):
 
         if effectiveness == 0:
             self.publish(f"It doesn't effect {pokemon2.name}.")
+            return False
 
         # determine category of move and whether a screen will play effect
         if self.category() == Category.PHYSICAL:
@@ -364,7 +365,7 @@ class VanishingAttack(Attack):
         pass
 
 
-class DreamEater(Attack):
+class DreamEater(HealingAttack):
     def __init__(self, name):
         super(DreamEater, self).__init__(name)
 
@@ -416,7 +417,7 @@ class SelfDestruct(Attack):
 
         if effectiveness > 1:
             self.publish(f"It's super effective.")
-        elif effectiveness < 1:
+        elif effectiveness < 1 and effectiveness != 0:
             self.publish(f"It's not very effective.")
 
         pokemon2.take_damage(damage)
@@ -429,6 +430,20 @@ class RechargeAttack(ChargingAttack):
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         pass
+
+
+class Confused(Attack):
+    """ For when a pokemon is confused, not the attack Confusion """
+    def __init__(self):
+        super().__init__("Confused")
+
+    def use_move(self, pokemon1, pokemon2=None, reflect=0, light_screen=0):
+        """ pokemon1 hurts itself in confusion, pokemon2, reflect, light_screen are not used here """
+        a = pokemon1.attack * pokemon1.battle_atk
+        d = pokemon1.defense * pokemon1.battle_def
+        damage = math.ceil(((2 * pokemon1.level / 5 + 2) * self._power * a / d) / 50 + 2)
+
+        pokemon1.take_damage(damage)
 
 
 class Struggle(RecoilAttack):
