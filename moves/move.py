@@ -77,8 +77,8 @@ class Move(Publisher):
         if self._accuracy is None:
             return True
 
-        threshold = math.floor(self._accuracy / 100 * accuracy / evasion * 256)
-        if threshold < random.randint(1, 256):
+        threshold = math.floor(self._accuracy * accuracy / evasion )
+        if threshold < random.randint(1, 100):
             self.publish("But it missed.")
             return False
 

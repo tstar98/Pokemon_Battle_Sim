@@ -83,6 +83,7 @@ class Pokemon(Publisher):
         if self.__status_effect in (enums.StatusEffect.SLEEP.value, enums.StatusEffect.REST.value):
             # sleep turns only count if the pokemon is trying to use a move
             if self.__sleep_counter > 0:
+                self.__status_effect -= 1
                 self.publish(f"{self.name} is fast asleep.")
             else:
                 self.publish(f"{self.name} woke up.")
@@ -149,12 +150,12 @@ class Pokemon(Publisher):
         self.__sub.update(message)
 
     def get_move(self, itr):
-        if itr not in range(0, 4):
+        if itr not in range(0, 3):
             return None
         return self.__moves[itr]
 
     def get_random_move(self):
-        return random.choice(self.__moves)
+        return self.__moves[random.randint(0, 3)]
 
     @property
     def name(self):
@@ -231,20 +232,26 @@ class Pokemon(Publisher):
                 return
 
             message = self.__name
+
             if stat_eff == enums.StatusEffect.SLEEP.value:
                 message += ' fell asleep.'
                 # pokemon will sleep for 1-7 turns
                 self.__sleep_counter = random.randint(1, 7)
+
             if stat_eff == enums.StatusEffect.REST.value:
                 message += ' started sleeping.'
                 # pokemon will sleep for 2 turns
                 self.__sleep_counter = 2
+
             if stat_eff == enums.StatusEffect.PARALYSIS.value:
                 message += "'s paralyzed. It may not move."
+
             if stat_eff == enums.StatusEffect.BURN.value:
                 message += "'s burned."
+
             if stat_eff == enums.StatusEffect.POISON.value:
                 message += "was poisoned."
+
             if stat_eff == enums.StatusEffect.BAD_POISON.value:
                 message += "'s badly poisoned."
                 self.__poison_counter = 1
@@ -320,7 +327,7 @@ class Pokemon(Publisher):
         if stage > 0 and self.__accuracy >= 6 or stage < 0 and self.__accuracy <= -6:
             return False
 
-        self.__battle_spe += stage
+        self.__accuracy += stage
 
         # ensure it is still between -6 and 6 after the update
         if self.__accuracy > 6:
@@ -334,7 +341,7 @@ class Pokemon(Publisher):
         if stage > 0 and self.__evasion >= 6 or stage < 0 and self.__evasion <= -6:
             return False
 
-        self.__battle_spe += stage
+        self.__evasion += stage
 
         # ensure it is still between -6 and 6 after the update
         if self.__evasion > 6:

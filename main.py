@@ -1,3 +1,4 @@
+import os
 import random
 
 from Trainer import *
@@ -9,8 +10,14 @@ from pubsub import Subscriber
 def select_team():
     """ player selects pokemon and moves """
     trainer = Player()
-    pokemon = Pokemon(26)
-    move = move_factory('Thunder Wave')
+    pokemon = Pokemon(28)
+    move = move_factory('Poison Sting')
+    pokemon.add_move(move)
+    move = move_factory('Swords Dance')
+    pokemon.add_move(move)
+    move = move_factory('Rest')
+    pokemon.add_move(move)
+    move = move_factory('Sand Attack')
     pokemon.add_move(move)
     trainer.add_to_team(pokemon)
 
@@ -20,8 +27,14 @@ def select_team():
 def create_opponent():
     """ creates opponent trainer with random pokemon and moves """
     trainer = Opponent()
-    pokemon = Pokemon(3)
-    move = move_factory('Vine Whip')
+    pokemon = Pokemon(51)
+    move = move_factory('Toxic')
+    pokemon.add_move(move)
+    move = move_factory('Rest')
+    pokemon.add_move(move)
+    move = move_factory('Rock Slide')
+    pokemon.add_move(move)
+    move = move_factory('Double Team')
     pokemon.add_move(move)
     trainer.add_to_team(pokemon)
 
@@ -42,9 +55,11 @@ def battle(trainer1, trainer2):
 
         trainer1.next_turn()
         trainer1.pokemon_out().next_turn()
+        print()
 
         trainer2.next_turn()
         trainer2.pokemon_out().next_turn()
+        print()
 
         print(trainer1.pokemon_out())
         print()
