@@ -27,7 +27,7 @@ def open_gui(frame, pokemon):
     
     # Create a font
     # font = tkFont.Font(family='GothicE', size=7*scale)
-    font = tkFont.Font(family='Arial', size=7*scale)
+    font = tkFont.Font(family='Arial', size=4*scale)
     
     # Back section
     backFrame = tk.Frame(frame)
@@ -62,7 +62,7 @@ def open_gui(frame, pokemon):
         # Create the button, using the created callback
         button = tk.Button(movesFrame, text=move.name, command=callback,
                            relief='raised', borderwidth=1*scale,
-                           font=font)
+                           font=font, width=1)
         button.grid(row=0, column=col, sticky='NSEW', padx=1*scale)
         
     # FIXME

@@ -6,7 +6,6 @@ Created on Wed Nov 17 18:16:03 2021
 """
 
 import tkinter as tk
-from tkinter import font as tkFont
 
 if __name__ == "__main__":
     import move_select
