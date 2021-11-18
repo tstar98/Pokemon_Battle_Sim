@@ -53,6 +53,20 @@ def open_gui(t_pokemon, o_pokemon):
     window.geometry(f"{res[0]}x{res[1]}")
     window.title('Pokemon Battle Simulator')
     
+    # FIXME hack to always open in screen center
+    # https://stackoverflow.com/questions/14910858/how-to-specify-where-a-tkinter-window-opens
+    # get screen width and height
+    ws = window.winfo_screenwidth() # width of the screen
+    hs = window.winfo_screenheight() # height of the screen
+    
+    # calculate x and y coordinates for the Tk root window
+    x = (ws/2) - (res[0]/2)
+    y = (hs/2) - (res[1]/2)
+    
+    # set the dimensions of the screen 
+    # and where it is placed
+    window.geometry('%dx%d+%d+%d' % (res[0], res[1], x, y))
+    
     # Create a base grid: main screen, info/buttons
     row_weights = [12, 10]
     for i, weight in enumerate(row_weights):
