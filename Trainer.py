@@ -1,5 +1,5 @@
 from pubsub import Publisher
-
+from gui import battle
 
 class Trainer(Publisher):
     def __init__(self):
@@ -19,7 +19,7 @@ class Trainer(Publisher):
     # abstract function to be implemented in subclass
     def make_selection(self):
         """ trainer makes selection to either fight or switch """
-        pass
+        raise NotImplementedError()
 
     def next_turn(self):
         """performs functions that occur in between turns"""
@@ -70,8 +70,16 @@ class Trainer(Publisher):
 
 class Player(Trainer):
     def make_selection(self):
-        # TODO: Change. For now, it just selects the first move of the pokemon out
-        move_use = self._team[0].get_random_move()
+        
+        '''
+        Should open the move_select GUI
+        Selecting a move should set move_use
+        '''
+        move_use = battle.open_gui(self.pokemon_out(), None)
+        
+        if move_use is None:
+            raise RuntimeError("No move selected")
+        
         return move_use
 
 
@@ -80,3 +88,6 @@ class Opponent(Trainer):
         # TODO: Change. For now, it just selects the first move of the pokemon out
         move_use = self._team[0].get_random_move()
         return move_use
+
+if __name__ == "__main__":
+    print("You're running Trainer again, dummy")
