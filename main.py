@@ -110,8 +110,8 @@ def battle(trainer1, trainer2):
 
 
 def make_selection(trainer1, trainer2):
-    move1 = trainer1.make_selection()
-    move2 = trainer2.make_selection()
+    move1 = trainer1.make_selection(trainer2.pokemon_out())
+    move2 = trainer2.make_selection(trainer1.pokemon_out())
 
     # determine order of moves
     if move1.priority == move2.priority:

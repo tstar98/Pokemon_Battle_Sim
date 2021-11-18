@@ -69,13 +69,13 @@ class Trainer(Publisher):
 
 
 class Player(Trainer):
-    def make_selection(self):
+    def make_selection(self, opponent):
         
         '''
         Should open the move_select GUI
         Selecting a move should set move_use
         '''
-        move_use = battle.open_gui(self.pokemon_out(), None)
+        move_use = battle.open_gui(self.pokemon_out(), opponent)
         
         if move_use is None:
             raise RuntimeError("No move selected")
@@ -84,7 +84,7 @@ class Player(Trainer):
 
 
 class Opponent(Trainer):
-    def make_selection(self):
+    def make_selection(self, opponent):
         # TODO: Change. For now, it just selects the first move of the pokemon out
         move_use = self._team[0].get_random_move()
         return move_use
