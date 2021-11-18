@@ -83,7 +83,7 @@ def open_gui(t_pokemon, o_pokemon):
     movesFrame = tk.Frame(window, bg='grey',
                           relief='sunken', borderwidth=4*scale,
                           pady=1*scale)
-    movesFrame.grid(row=2, sticky='NSEW')
+    movesFrame.grid(row=1, sticky='NSEW')
     movesFrame.rowconfigure(0, weight=1)
     
     use_move = move_select.open_gui(movesFrame, t_pokemon)
