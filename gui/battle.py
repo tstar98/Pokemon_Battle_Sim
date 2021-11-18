@@ -13,6 +13,26 @@ if __name__ == "__main__":
 else:
     from gui import move_select
 
+def _draw_pokemon(frame, pokemon):
+    if pokemon is None:
+        label = tk.Label(frame, text="NO POKEMON GIVEN")
+        label.pack(fill=tk.BOTH, expand=True)
+        return
+    frame.rowconfigure(0, weight=1) # Pokemon name ; Team status icons
+    frame.rowconfigure(1, weight=1) # Pokemon types
+    frame.rowconfigure(2, weight=1) # Blank spacer
+    frame.rowconfigure(3, weight=1) # Health
+    frame.columnconfigure(0, weight=3) # Left-aligned (most everything)
+    frame.columnconfigure(1, weight=1) # Right-aligned (team status icons)
+    # Pokemon name
+    name = tk.Label(frame, text=pokemon.name)
+    name.grid(row=0, column=0, columnspan=1, sticky="NSEW")
+    # Pokemon types
+    # TODO
+    # Health
+    health = tk.Label(frame, text=pokemon.hp)
+    health.grid(row=3, column=0, columnspan=2, sticky="NSEW")
+
 def open_gui(t_pokemon, o_pokemon):
     """
     
@@ -51,27 +71,15 @@ def open_gui(t_pokemon, o_pokemon):
     fight.columnconfigure(1, weight=1)
     fight.columnconfigure(2, weight=5)
     # Opponent
-    them = tk.Frame(fight, bg='red',
+    opponent = tk.Frame(fight, bg='red',
                     relief='raised', borderwidth=2*scale)
-    them.grid(row=0, column=1, columnspan=2, sticky="NSEW", padx=3*scale, pady=1*scale)
+    opponent.grid(row=0, column=1, columnspan=2, sticky="NSEW", padx=3*scale, pady=1*scale)
+    _draw_pokemon(opponent, o_pokemon)
     # Trainer
-    us = tk.Frame(fight, bg='green',
+    trainer = tk.Frame(fight, bg='green',
                   relief='raised', borderwidth=2*scale)
-    us.grid(row=1, column=0, columnspan=2, sticky="NSEW", padx=3*scale, pady=1*scale)
-    us.rowconfigure(0, weight=1) # Pokemon name ; Team status icons
-    us.rowconfigure(1, weight=1) # Pokemon types
-    us.rowconfigure(2, weight=1) # Blank spacer
-    us.rowconfigure(3, weight=1) # Health
-    us.columnconfigure(0, weight=3) # Left-aligned (most everything)
-    us.columnconfigure(1, weight=1) # Right-aligned (team status icons)
-    # Pokemon name
-    name = tk.Label(us, text=t_pokemon.name)
-    name.grid(row=0, column=0, columnspan=1, sticky="NSEW")
-    # Pokemon types
-    # TODO
-    # Health
-    health = tk.Label(us, text=t_pokemon.hp)
-    health.grid(row=3, column=0, columnspan=2, sticky="NSEW")
+    trainer.grid(row=1, column=0, columnspan=2, sticky="NSEW", padx=3*scale, pady=1*scale)
+    _draw_pokemon(trainer, t_pokemon)
     
     # Move selection
     movesFrame = tk.Frame(window, bg='grey',
@@ -98,17 +106,28 @@ if __name__ == "__main__":
     from moves.move import move_factory
     
     # FIXTURE: create the pokemon
-    pokemon = Pokemon(13)
+    t_pokemon = Pokemon(13)
     move = move_factory('Earthquake')
-    pokemon.add_move(move)
+    t_pokemon.add_move(move)
     move = move_factory('Rest')
-    pokemon.add_move(move)
+    t_pokemon.add_move(move)
     move = move_factory('Rock Slide')
-    pokemon.add_move(move)
+    t_pokemon.add_move(move)
     move = move_factory('Double Team')
-    pokemon.add_move(move)
+    t_pokemon.add_move(move)
     
-    use_move = open_gui(pokemon, None)
+    # FIXTURE: create the pokemon
+    o_pokemon = Pokemon(42)
+    move = move_factory('Earthquake')
+    o_pokemon.add_move(move)
+    move = move_factory('Rest')
+    o_pokemon.add_move(move)
+    move = move_factory('Rock Slide')
+    o_pokemon.add_move(move)
+    move = move_factory('Double Team')
+    o_pokemon.add_move(move)
+    
+    use_move = open_gui(t_pokemon, o_pokemon)
     if use_move is None:
         print("In battle: no move selected")
     else:
