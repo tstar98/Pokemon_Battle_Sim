@@ -95,16 +95,9 @@ def demo3():
     return trainer1, trainer2
 
 
-
-
 def battle(trainer1, trainer2):
     """ where the battle occurs
      train1 is the player, train2 is the opponent"""
-
-    print(trainer1.pokemon_out())
-    print()
-    print(trainer2.pokemon_out())
-    print()
 
     while trainer1.has_pokemon() and trainer2.has_pokemon():
         make_selection(trainer1, trainer2)
@@ -114,11 +107,6 @@ def battle(trainer1, trainer2):
 
         trainer2.next_turn()
         trainer2.pokemon_out().next_turn()
-
-        # print(trainer1.pokemon_out())
-        # print()
-        # print(trainer2.pokemon_out())
-        # print()
 
 
 def make_selection(trainer1, trainer2):

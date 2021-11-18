@@ -35,8 +35,6 @@ def _draw_pokemon(frame, pokemon):
 
 def open_gui(t_pokemon, o_pokemon):
     """
-    
-
     Parameters
     ----------
     t_pokemon : Pokemon
