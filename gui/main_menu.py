@@ -21,7 +21,7 @@ class main_menu(tk.Frame):
         
         # "Assemble Team" button
         def assemble_team():
-            pass
+            self.master.open_menu("TEAM SELECT")
         button = util.Button(self, text='Assemble Team', command=assemble_team)
         button.grid(row=1, column=0, sticky='NSEW')
         
