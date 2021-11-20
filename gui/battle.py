@@ -7,9 +7,9 @@ Created on Wed Nov 17 18:16:03 2021
 
 import tkinter as tk
 
-if __name__ == "__main__":
+try:
     import move_select
-else:
+except ImportError:
     from gui import move_select
 
 def _draw_pokemon(frame, pokemon):
