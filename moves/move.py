@@ -1,5 +1,6 @@
 import math
 import random
+import os
 
 from Pokemon_Battle_Sim.database import database as db
 from Pokemon_Battle_Sim.enums import MoveType as mt, Category
@@ -194,10 +195,18 @@ def move_factory(name):
     return moves[move_id[0]](name)
 
 
-def get_learnset(pokemon_id):
-    file = open('csv/learnsets.csv', 'r')
-
+def __initialize_learnsets():
+    ret = {}
+    path = os.path.split(__file__)[0]
+    path = os.path.split(path)[0]
+    path = os.path.join(path, 'csv', 'learnsets.csv')
+    file = open(path, 'r')
     for line in file:
-        info = line.split(',')
-        if int(info[0]) == pokemon_id:
-            return info[2:len(info)]
+        info = line.strip().split(',')
+        pokemon_id = int(info[0])
+        ret[pokemon_id] = info[2:]
+    return ret
+__learnsets = __initialize_learnsets()
+def get_learnset(pokemon_id):
+    return __learnsets[pokemon_id]
+    
