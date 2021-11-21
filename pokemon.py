@@ -16,6 +16,7 @@ class Pokemon(Publisher):
         data = db.select(f'SELECT name, type1, type2, hp, attack, defense, special, speed FROM pokemon WHERE id = '
                          f'{pokemon_id};')[0]
 
+        self.__id = pokemon_id
         self.__name = data[0]
         self.__type1 = data[1]
         self.__type2 = data[2]
@@ -160,6 +161,10 @@ class Pokemon(Publisher):
         if len(self.__moves) == 0:
             return None
         return self.__moves[random.randint(0, len(self.__moves) - 1)]
+
+    @property
+    def pokemon_id(self):
+        return self.__id
 
     @property
     def name(self):
