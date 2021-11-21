@@ -11,6 +11,14 @@ import tkinter as tk
 scale = 4
 
 font = ('Arial', 8*scale)
+
+def default_window(x=1, y=1):
+    """Create a Tkinter window. Mostly for testing frames"""
+    root = tk.Tk()
+    res = [160*scale*x, 144*scale*y] # Original Game Boy Color resolution
+    root.geometry(f"{res[0]}x{res[1]}")
+    root.title('Pokemon Battle Simulator')
+    return root
         
 def Button(*args, **kwargs):
     """Sugar syntax to make a button using a standard set of settings"""
