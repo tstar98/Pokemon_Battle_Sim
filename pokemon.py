@@ -1,10 +1,10 @@
 import random
-
-import database.database as db
 import math
-import enums
-from moves.attacks import Confused
-from pubsub import Publisher
+
+from Pokemon_Battle_Sim.database import database as db
+from Pokemon_Battle_Sim import enums
+from Pokemon_Battle_Sim.moves.attacks import Confused
+from Pokemon_Battle_Sim.pubsub import Publisher
 
 
 class Pokemon(Publisher):

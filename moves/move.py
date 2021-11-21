@@ -1,9 +1,9 @@
 import math
 import random
 
-import database.database as db
-from enums import MoveType as mt, Category
-from pubsub import Publisher
+from Pokemon_Battle_Sim.database import database as db
+from Pokemon_Battle_Sim.enums import MoveType as mt, Category
+from Pokemon_Battle_Sim.pubsub import Publisher
 
 
 super_effective = {

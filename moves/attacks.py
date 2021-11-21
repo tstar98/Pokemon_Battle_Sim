@@ -1,8 +1,8 @@
 import math
 import random
 
-from enums import Stat, StatusEffect
-from moves.move import *
+from Pokemon_Battle_Sim.enums import Stat, StatusEffect
+from Pokemon_Battle_Sim.moves.move import *
 
 
 class Attack(Move):
