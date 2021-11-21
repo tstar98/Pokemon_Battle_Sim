@@ -85,14 +85,34 @@ class team_select(tk.Frame):
     class pokemon_detail(tk.Frame, Subscriber):
         def __init__(self, parent, *args, **kwargs):
             super().__init__(parent, *args, **kwargs)
+            util.gridconfigure(self, rw=[1, 1], cw=[1,1,1,1])
+            
+            # Pokemon info
             self.text = tk.Label(self, text='Select a Pokemon on the left')
-            self.text.grid(row=0, column=0, sticky='NSEW')
+            self.text.grid(row=0, column=0, columnspan=4, sticky='NSEW')
+            
+            # Moves
+            self.moves = []
+            self.move_buttons = []
+            for col in range(4):
+                button = util.Button(self)
+                button.grid(row=1, column=col, sticky='NSEW')
+                self.move_buttons.append(button)
             
             # Initialize Subscriber
             Subscriber.__init__(self)
             
-        def update(self, pokemon):
-            self.text['text'] = pokemon.name
+        def update(self, message):
+            if isinstance(message, Pokemon):
+                self.text['text'] = message.name
+            elif isinstance(message, Move):
+                if len(self.moves) == 4:
+                    raise RuntimeError("Too many moves")
+                button = self.buttons[len(self.moves)]
+                self.moves.append(message)
+                button['text'] = message.name
+            else:
+                raise TypeError()
             
     class move_select(tk.Frame, Subscriber):
         def __init__(self, parent, *args, **kwargs):
