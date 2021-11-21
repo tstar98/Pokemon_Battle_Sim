@@ -1,6 +1,6 @@
 import sqlite3 as sql
 import os.path
-import enums
+from Pokemon_Battle_Sim import enums
 
 
 # need to use this to call functions from outside of package
