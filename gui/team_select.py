@@ -61,6 +61,9 @@ class team_select(tk.Frame):
         
     class add_move(tk.Button, Publisher, Subscriber):
         def __init__(self, parent, *args, **kwargs):
+            # self = util.Button(parent, text='Add Move', command=self.command,
+            #                  *args, **kwargs)
+            # FIXME why doesn't this work?
             super().__init__(parent, text='Add Move', command=self.command,
                              *args, **kwargs)
             self.move = None
@@ -115,10 +118,15 @@ class team_select(tk.Frame):
         def __init__(self, parent, *args, **kwargs):
             super().__init__(parent, *args, **kwargs)
             util.gridconfigure(self, rw=[1, 1], cw=[1,1,1,1])
+            self.pokemon = None
             
             # Pokemon info
             self.text = tk.Label(self, text='Select a Pokemon on the left')
             self.text.grid(row=0, column=0, columnspan=4, sticky='NSEW')
+            
+            # Add Pokemon button
+            button = tk.Button(self, text='Add to Team', command=self.add_pokemon)
+            button.grid(row=0, column=3, sticky='NE')
             
             # Moves
             self.moves = []
@@ -131,8 +139,17 @@ class team_select(tk.Frame):
             # Initialize Subscriber
             Subscriber.__init__(self)
             
+        def add_pokemon(self):
+            if self.pokemon is None:
+                pass
+            else:
+                print(f"Adding {self.pokemon.name} to team")
+                
+                # TODO Clear current pokemon/move selections
+            
         def update(self, message):
             if isinstance(message, Pokemon):
+                self.pokemon = message
                 self.text['text'] = message.name
                 self.moves.clear()
                 for button in self.move_buttons:
