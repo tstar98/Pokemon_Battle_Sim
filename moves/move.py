@@ -64,6 +64,7 @@ no_effect = {
 
 class Move(Publisher):
     def __init__(self, name):
+        print("WARNING: Should probably use move_factory instead")
         move = db.select(f'SELECT type, power, accuracy, pp, priority, description FROM moves '
                          f'WHERE NAME = \'{name}\';')[0]
         self._name = name

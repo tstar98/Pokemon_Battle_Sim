@@ -11,7 +11,7 @@ import util
 from Pokemon_Battle_Sim.database import database as db
 from Pokemon_Battle_Sim.pubsub import Publisher, Subscriber
 from Pokemon_Battle_Sim.pokemon import Pokemon
-from Pokemon_Battle_Sim.moves.move import Move, get_learnset
+from Pokemon_Battle_Sim.moves.move import Move, move_factory, get_learnset
 
 class team_select(tk.Frame):
     def __init__(self, parent):
@@ -213,7 +213,7 @@ class team_select(tk.Frame):
                 else:
                     idx, = selection
                     name = self.namelist[idx]
-                    self.publish(Move(name))
+                    self.publish(move_factory(name))
                 
             def update(self, pokemon):
                 self.namelist = get_learnset(pokemon.pokemon_id)
