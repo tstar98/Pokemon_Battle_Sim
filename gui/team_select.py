@@ -44,13 +44,42 @@ class team_select(tk.Frame):
         mselect = self.move_select(self, bg='blue')
         mselect.grid(row=2, column=1, columnspan=3, sticky='NSEW')
         
-        # Connect list to detail
+        # Add move button
+        # Needs to be on the same level as Move Selection and Pokemon Detail for easier passing
+        add_move = self.add_move(self)
+        add_move.grid(row=2, column=3, sticky='SE')
+        
+        # Connect Publishers and Subscribers
         plist.add_subscriber(pdetail)
         plist.add_subscriber(mselect)
+        add_move.add_subscriber(pdetail)
+        mselect.mlist.add_subscriber(add_move)
         
         # Current team (bottom)
         team = tk.Frame(self, bg='cyan')
         team.grid(row=3, column=0, columnspan=4, sticky='NSEW')
+        
+    class add_move(tk.Button, Publisher, Subscriber):
+        def __init__(self, parent, *args, **kwargs):
+            super().__init__(parent, text='Add Move', command=self.command,
+                             *args, **kwargs)
+            self.move = None
+            
+            # Initialize Publisher
+            Publisher.__init__(self)
+            
+            # Initialize Subscriber
+            Subscriber.__init__(self)
+            
+        def update(self, message):
+            self.move = message
+            
+        def command(self):
+            if self.move is None:
+                pass
+            else:
+                # Send the current move to the Pokemon
+                self.publish(self.move)
         
     class pokemon_list(tk.Listbox, Publisher):
         """
@@ -105,10 +134,13 @@ class team_select(tk.Frame):
         def update(self, message):
             if isinstance(message, Pokemon):
                 self.text['text'] = message.name
+                self.moves.clear()
+                for button in self.move_buttons:
+                    button['text'] = ''
             elif isinstance(message, Move):
                 if len(self.moves) == 4:
                     raise RuntimeError("Too many moves")
-                button = self.buttons[len(self.moves)]
+                button = self.move_buttons[len(self.moves)]
                 self.moves.append(message)
                 button['text'] = message.name
             else:
@@ -155,7 +187,8 @@ class team_select(tk.Frame):
                 # Initialize Subscriber
                 Subscriber.__init__(self)
             
-            def select(self, event):
+            def select(self, event): # Publish
+                """Get the current selection and publish it"""
                 selection = self.curselection()
                 if len(selection) == 0:
                     # Was actually a de-select
