@@ -64,7 +64,6 @@ no_effect = {
 
 class Move(Publisher):
     def __init__(self, name):
-        print("WARNING: Should probably use move_factory instead")
         move = db.select(f'SELECT type, power, accuracy, pp, priority, description FROM moves '
                          f'WHERE NAME = \'{name}\';')[0]
         self._name = name
@@ -150,11 +149,11 @@ class Move(Publisher):
 
 
 def move_factory(name):
-    from moves.attacks import Attack, StatAlteringAttack, SetDamageAttack, FlinchAttack, RecoilAttack, \
+    from Pokemon_Battle_Sim.moves.attacks import Attack, StatAlteringAttack, SetDamageAttack, FlinchAttack, RecoilAttack, \
         RecoilOnMissAttack, StatusEffectAttack, ConfusingContinuousAttack, HealingAttack, ChargingAttack, MultiAttack, \
         TrapAttack, ConfusingAttack, CritAttack, VanishingAttack, DreamEater, SelfDestruct, RechargeAttack, \
         Struggle, OHKO
-    from moves.status_moves import ScreenMove, SwitchingMove, StatAlteringMove, StatusEffectMove, HealingMove, \
+    from Pokemon_Battle_Sim.moves.status_moves import ScreenMove, SwitchingMove, StatAlteringMove, StatusEffectMove, HealingMove, \
         ConfusingMove, RandomMove, MimicMove, Rest, Splash, Transform, MirrorMove
 
     move_id = db.select(f'SELECT move_type FROM moves WHERE name = \'{name}\';')[0]

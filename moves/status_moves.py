@@ -1,7 +1,7 @@
 import random
 
-from enums import Stat, StatusEffect, Screen
-from moves.move import *
+from Pokemon_Battle_Sim.enums import Stat, StatusEffect, Screen
+from Pokemon_Battle_Sim.moves.move import *
 
 
 class ScreenMove(Move):

@@ -1,5 +1,5 @@
-from pubsub import Publisher
-from gui import battle
+from Pokemon_Battle_Sim.pubsub import Publisher
+from Pokemon_Battle_Sim.gui import battle as battle_gui
 
 class Trainer(Publisher):
     def __init__(self):
