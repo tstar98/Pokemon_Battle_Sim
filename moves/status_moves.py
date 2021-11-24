@@ -143,7 +143,6 @@ class ConfusingMove(Move):
             return False
 
         pokemon2.is_confused = True
-        self.publish(f"{pokemon2.name} became confused.")
 
 
 class RandomMove(Move):
@@ -158,13 +157,61 @@ class RandomMove(Move):
         return move.use_move(pokemon1, pokemon2, reflect, light_screen)
 
 
-# TODO: Remove Mimic
 class MimicMove(Move):
+    """Copies a random move from opponent"""
     def __init__(self, name):
         super(MimicMove, self).__init__(name)
+        self.__move = self
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        if self.__move is self:
+            self._pp -= 1
+
+            # copy random move
+            if self._does_hit(pokemon1.accuracy, pokemon2.evasion):
+                move_selected = pokemon2.get_random_move()
+                self.__move = move_factory(move_selected.name)
+                self.__move.add_subscriber(self._sub)
+                self.publish(f"{pokemon1.name} learned {move_selected.name}.")
+
+        else:
+            return self.__move.use_move(pokemon1, pokemon2, reflect, light_screen)
+
+    # have to override property methods to get the copied move's properties
+    @property
+    def name(self):
+        return self.__move._name
+
+    @property
+    def type(self):
+        return self.__move._type
+
+    @property
+    def power(self):
+        return self.__move._power
+
+    @property
+    def accuracy(self):
+        return self.__move._accuracy
+
+    @property
+    def max_pp(self):
+        return self.__move._max_pp
+
+    @property
+    def pp(self):
+        return self.__move._pp
+
+    @property
+    def priority(self):
+        return self.__move._priority
+
+    @property
+    def desc(self):
+        return self.__move._desc
+
+    def __str__(self):
+        return f'{self._name}\nPP = {self._pp} / {self._max_pp}'
 
 
 class Rest(HealingMove):

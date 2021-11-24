@@ -58,8 +58,8 @@ def demo2():
     pokemon.add_move(move)
     move = move_factory('Dream Eater')
     pokemon.add_move(move)
-    # move = move_factory('Explosion')
-    # pokemon.add_move(move)
+    move = move_factory('Mimic')
+    pokemon.add_move(move)
     move = move_factory('Confuse Ray')
     pokemon.add_move(move)
     trainer2.add_to_team(pokemon)
@@ -155,7 +155,7 @@ def make_selection(trainer1, trainer2):
 
 if __name__ == '__main__':
     subscriber = Subscriber()
-
+    #
     # trainer1, trainer2 = demo1()
     # trainer1.add_subscriber(subscriber)
     # trainer2.add_subscriber(subscriber)
@@ -166,7 +166,7 @@ if __name__ == '__main__':
     trainer1.add_subscriber(subscriber)
     trainer2.add_subscriber(subscriber)
     battle(trainer1, trainer2)
-
+    #
     # input("Press enter to continue.")
     # trainer1, trainer2 = demo3()
     # trainer1.add_subscriber(subscriber)
