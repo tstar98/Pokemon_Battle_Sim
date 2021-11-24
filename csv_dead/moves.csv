@@ -8,7 +8,7 @@
 7,Barrage,NORMAL,Physical,15,85,20,Hits 2-5 times in one turn.,20
 8,Barrier,PSYCHIC,Status,,,20,Sharply raises user's Defense.,14
 # 9,Bide,NORMAL,Physical,,,10,User takes damage for two turns then strikes back double.,11
-10,Bind,NORMAL,Physical,15,85,20,Traps opponent damaging them for 4-5 turns.,21
+10,Bind,NORMAL,Physical,15,85,20,Traps opponent damaging them for 2-5 turns.,21
 11,Bite,NORMAL,Physical,60,100,25,May cause flinching.,3
 12,Blizzard,ICE,Special,110,70,5,May freeze opponent.,6
 13,Body Slam,NORMAL,Physical,85,100,15,May paralyze opponent.,6
@@ -16,7 +16,7 @@
 15,Bonemerang,GROUND,Physical,50,90,10,Hits twice in one turn.,20
 16,Bubble,WATER,Special,40,100,30,May lower opponent's Speed.,1
 17,Bubble Beam,WATER,Special,65,100,20,May lower opponent's Speed.,1
-18,Clamp,WATER,Physical,35,85,15,Traps opponent damaging them for 4-5 turns.,21
+18,Clamp,WATER,Physical,35,85,15,Traps opponent damaging them for 2-5 turns.,21
 19,Comet Punch,NORMAL,Physical,18,85,15,Hits 2-5 times in one turn.,20
 20,Confuse Ray,GHOST,Status,,100,10,Confuses opponent.,18
 21,Confusion,PSYCHIC,Special,50,100,25,May confuse opponent.,22
@@ -42,7 +42,7 @@
 41,Explosion,NORMAL,Physical,250,100,5,User faints.,26
 42,Fire Blast,FIRE,Special,110,85,5,May burn opponent.,6
 43,Fire Punch,FIRE,Physical,75,100,15,May burn opponent.,6
-44,Fire Spin,FIRE,Special,35,85,15,Traps opponent damaging them for 4-5 turns.,21
+44,Fire Spin,FIRE,Special,35,85,15,Traps opponent damaging them for 2-5 turns.,21
 45,Fissure,GROUND,Physical,,30,5,One-Hit-KO if it hits.,37
 46,Flamethrower,FIRE,Special,90,100,15,May burn opponent.,6
 47,Flash,NORMAL,Status,,100,20,Lowers opponent's Accuracy.,14
@@ -163,4 +163,4 @@
 162,Whirlwind,NORMAL,Status,,,20,In battles the opponent switches. In the wild the Pokémon runs.,13
 163,Wing Attack,FLYING,Physical,60,100,35,,0
 164,Withdraw,WATER,Status,,,40,Raises user's Defense.,14
-165,Wrap,NORMAL,Physical,15,90,20,Traps opponent damaging them for 4-5 turns.,21
+165,Wrap,NORMAL,Physical,15,90,20,Traps opponent damaging them for 2-5 turns.,21

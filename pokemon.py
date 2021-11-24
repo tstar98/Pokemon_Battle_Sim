@@ -62,6 +62,7 @@ class Pokemon(Publisher):
 
         self.__flinch = False
         self.__sub = None
+        self.__trap = 0
 
     def __determine_stat(self, base):
         a = (base + self.__dv) * 2
@@ -150,6 +151,10 @@ class Pokemon(Publisher):
             self.take_damage(math.floor(self.__max_hp / 16) * self.__poison_counter)
             self.publish(f"{self.__name}'s hurt by poison.\n")
             self.__poison_counter = self.__poison_counter + 1 if self.__poison_counter < 15 else 15
+
+        # # take damage from trap
+        # if self.__trap > 0:
+        #     self.take_damage()
 
     def add_subscriber(self, subscriber):
         self.__sub = subscriber
@@ -287,6 +292,8 @@ class Pokemon(Publisher):
     def is_confused(self, boolean):
         if boolean:
             self.__confusion_counter = random.randint(2, 5)
+            self.publish(f"{self.__name} became confused.")
+
         self.__confused = boolean
 
     def change_atk(self, stage):
@@ -435,6 +442,18 @@ class Pokemon(Publisher):
     @flinch.setter
     def flinch(self, boolean):
         self.__flinch = boolean
+
+    @property
+    def is_trapped(self):
+        return True if self.__trap > 0 else False
+
+    @is_trapped.setter
+    def is_trapped(self, boolean):
+        # trapped for 2-5 turns
+        if boolean:
+            self.__trap = random.randint(2, 5)
+        else:
+            self.__trap = 0
 
     def __str__(self):
         return f'Lv. {self.__level} {self.__name}\n{self.__hp} / {self.__max_hp}'

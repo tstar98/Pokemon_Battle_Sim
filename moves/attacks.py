@@ -247,7 +247,22 @@ class ConfusingContinuousAttack(Attack):
         self.__max = move[1]
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        # set the counter
+        if self.__counter == 0:
+            self.__counter = random.randint(self.__min, self.__max)
+            self._pp -= 1
+        else:
+            self.__counter -= 1
+
+        damage = self._do_damage(pokemon1, pokemon2, reflect, light_screen)
+
+        # user becomes confused if the end of the counter
+        if counter == 0:
+            pokemon1.is_confused = True
+
+    @property
+    def counter(self):
+        return self.__counter
 
 
 class HealingAttack(Attack):
@@ -266,22 +281,22 @@ class HealingAttack(Attack):
 class ChargingAttack(Attack):
     def __init__(self, name):
         super(ChargingAttack, self).__init__(name)
-        self.__is_charged = False
+        self._is_charged = False
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        if self.__is_charged:
+        if self._is_charged:
             self.publish(f"{pokemon1.name} unleashed its energy.")
             damage = super(ChargingAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
         else:
             damage = 0
             self.publish(f"{pokemon1.name} began charging power.")
 
-        self.__is_charged = not self.__is_charged
+        self._is_charged = not self._is_charged
         return damage
 
     @property
     def is_charged(self):
-        return self.__is_charged
+        return self._is_charged
 
 
 class MultiAttack(Attack):
@@ -360,9 +375,18 @@ class CritAttack(Attack):
 class VanishingAttack(Attack):
     def __init__(self, name):
         super(Attack, self).__init__(name)
+        self
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        if self.__is_charged:
+            self.publish(f"{pokemon1.name} unleashed its energy.")
+            damage = super(ChargingAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
+        else:
+            damage = 0
+            self.publish(f"{pokemon1.name} must recharge.")
+
+        self.__is_charged = not self.__is_charged
+        return damage
 
 
 class DreamEater(HealingAttack):
@@ -427,9 +451,18 @@ class SelfDestruct(Attack):
 class RechargeAttack(ChargingAttack):
     def __init__(self, name):
         super(RechargeAttack, self).__init__(name)
+        self._is_charged = True
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        if self._is_charged:
+            self.publish(f"{pokemon1.name} unleashed its energy.")
+            damage = super(ChargingAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
+        else:
+            damage = 0
+            self.publish(f"{pokemon1.name} began charging power.")
+
+        self._is_charged = not self._is_charged
+        return damage
 
 
 class Confused(Attack):
