@@ -13,25 +13,37 @@ class Pokemon(Publisher):
         self.__dv = 15
         self.__ev = 65535
 
-        data = db.select(f'SELECT name, type1, type2, hp, attack, defense, special, speed FROM pokemon WHERE id = '
-                         f'{pokemon_id};')[0]
-
-        self.__id = pokemon_id
-        self.__name = data[0]
-        self.__type1 = data[1]
-        self.__type2 = data[2]
-        self.__max_hp = self.__determine_stat(data[3]) + self.__level + 10
-        self.__hp = self.__max_hp
-
-        self.__base_atk = data[4]
-        self.__base_def = data[5]
-        self.__base_spc = data[6]
-        self.__base_spe = data[7]
-
-        self.__attack = self.__determine_stat(data[4]) + 5
-        self.__defense = self.__determine_stat(data[5]) + 5
-        self.__special = self.__determine_stat(data[6]) + 5
-        self.__speed = self.__determine_stat(data[7]) + 5
+        if pokemon_id is None:
+            self.__id = None
+            self.__name = ""
+            self.__type1 = None
+            self.__type2 = None
+            self.__max_hp = None
+            self.__hp = self.__max_hp
+    
+            self.__base_atk = 0
+            self.__base_def = 0
+            self.__base_spc = 0
+            self.__base_spe = 0
+        else:
+            data = db.select(f'SELECT name, type1, type2, hp, attack, defense, special, speed FROM pokemon WHERE id = '
+                             f'{pokemon_id};')[0]
+    
+            self.__id = pokemon_id
+            self.__name = data[0]
+            self.__type1 = data[1]
+            self.__type2 = data[2]
+            self.__max_hp = self.__determine_stat(data[3]) + self.__level + 10
+            self.__hp = self.__max_hp
+    
+            self.__base_atk = data[4]
+            self.__base_def = data[5]
+            self.__base_spc = data[6]
+            self.__base_spe = data[7]
+        self.__attack = self.__determine_stat(self.__base_atk) + 5
+        self.__defense = self.__determine_stat(self.__base_def) + 5
+        self.__special = self.__determine_stat(self.__base_spc) + 5
+        self.__speed = self.__determine_stat(self.__base_spe) + 5
 
         self.__moves = []
         self.__last_move = None
