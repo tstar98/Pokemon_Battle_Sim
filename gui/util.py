@@ -12,13 +12,27 @@ scale = 4
 
 font = ('Arial', 8*scale)
 
-def default_window(x=1, y=1):
-    """Create a Tkinter window. Mostly for testing frames"""
-    root = tk.Tk()
-    res = [160*scale*x, 144*scale*y] # Original Game Boy Color resolution
-    root.geometry(f"{res[0]}x{res[1]}")
-    root.title('Pokemon Battle Simulator')
-    return root
+class Default_Window(tk.Tk):
+    def __init__(self, x_stretch=1, y_stretch=1):
+        """Create a Tkinter window with useful settings"""
+        super().__init__()
+        res = [160*scale*x_stretch, 144*scale*y_stretch] # Original Game Boy Color resolution
+        self.geometry(f"{res[0]}x{res[1]}")
+        self.title('Pokemon Battle Simulator')
+                
+        # Always open in screen center
+        # https://stackoverflow.com/questions/14910858/how-to-specify-where-a-tkinter-window-opens
+        # get screen width and height
+        ws = self.winfo_screenwidth() # width of the screen
+        hs = self.winfo_screenheight() # height of the screen
+        
+        # calculate x and y coordinates for the Tk root window
+        x = (ws/2) - (res[0]/2)
+        y = (hs/2) - (res[1]/2)
+        
+        # set the dimensions of the screen 
+        # and where it is placed
+        self.geometry('%dx%d+%d+%d' % (res[0], res[1], x, y))
         
 def Button(*args, **kwargs):
     """Sugar syntax to make a button using a standard set of settings"""

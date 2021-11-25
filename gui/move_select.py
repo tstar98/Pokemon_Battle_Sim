@@ -76,7 +76,7 @@ if __name__ == "__main__":
     
     
     # FIXTURE: create the base Tkinter window
-    root = util.default_window()
+    root = util.Default_Window()
     util.gridconfigure(root)
     frame = Move_Select(root)
     frame.grid(row=0, column=0, sticky='NSEW')

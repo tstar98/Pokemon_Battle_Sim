@@ -21,30 +21,35 @@ class menus(Enum):
     TEAM_SELECT = "TEAM SELECT"
     BATTLE = "BATTLE"
 
-class root(tk.Tk):
+class root(util.Default_Window):
     def __init__(self):
         super().__init__()
         util.gridconfigure(self)
         self.frames = {}
         self.create_frames()
         
-        res = [160*util.scale, 144*util.scale] # Original Game Boy Color resolution
-        self.geometry(f"{res[0]}x{res[1]}")
-        self.title('Pokemon Battle Simulator')
+        self.protocol('WM_DELETE_WINDOW', self.onDestroy) # https://stackoverflow.com/a/3295463/14501840
+        self.bind('<Key>', self.handle_key)
         
-        # Always open in screen center
-        # https://stackoverflow.com/questions/14910858/how-to-specify-where-a-tkinter-window-opens
-        # get screen width and height
-        ws = self.winfo_screenwidth() # width of the screen
-        hs = self.winfo_screenheight() # height of the screen
+    def mainloop(self):
+        """Replacement for the default mainloop so that I can pause it for debugging"""
+        self.run = True # Will be set False by handle_key or onDestroy, so this isn't an infinite loop
+        while self.run:
+            self.update()
         
-        # calculate x and y coordinates for the Tk root window
-        x = (ws/2) - (res[0]/2)
-        y = (hs/2) - (res[1]/2)
-        
-        # set the dimensions of the screen 
-        # and where it is placed
-        self.geometry('%dx%d+%d+%d' % (res[0], res[1], x, y))
+    def handle_key(self, event):
+        """Allows pausing and unpausing"""
+        char = event.char
+        if char == 'p':
+            self.run = False
+            
+    def resume(self):
+        self.run = True
+        self.mainloop()
+            
+    def onDestroy(self):
+        self.run = False
+        self.destroy()
         
     def create_frames(self):
         """Create the various frames that can be shown"""
@@ -74,7 +79,6 @@ class root(tk.Tk):
         if not isinstance(menu, menus):
             menu = menus(menu)
         self.frames[menu].tkraise()
-        
         
 if __name__ == "__main__":
     root = root()

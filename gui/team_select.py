@@ -202,7 +202,7 @@ class team_select(tk.Frame):
             
         
 if __name__ == "__main__":
-    root = util.default_window()
+    root = util.Default_Window()
     util.gridconfigure(root)
     menu = team_select(root)
     menu.grid(row=0, column=0, sticky='NSEW')
