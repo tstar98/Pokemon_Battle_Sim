@@ -65,7 +65,10 @@ class ChannelPublisher():
             to make sure it stays up to date"""
             return self._last
         
+        def publish(self, message):
+            super().publish(message)
+            self._last = message
+        
         def update(self, message):
             """Pass the message along"""
             self.publish(message)
-            self._last = message

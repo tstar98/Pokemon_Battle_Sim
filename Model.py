@@ -25,12 +25,16 @@ class __Model(ChannelPublisher):
         super().__init__()
         for channel in channels:
             self.add_channel(channel)
-        # Initialize a None-Pokemon
-        self.publish(channels.SELECTED_POKEMON, Pokemon(None))
         
         # For managing the two teams
         self.player = Trainer.Player()
         self.opponent = Trainer.Opponent()
+        
+        # Initialize the channels appropriately
+        self.publish(channels.SELECTED_POKEMON, Pokemon(None))
+        self.publish(channels.PLAYER, self.player)
+        self.publish(channels.OPPONENT, self.opponent)
+        
         
     def set_sel_pokemon(self, pokemon):
         self._selected_pokemon = pokemon

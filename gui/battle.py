@@ -11,6 +11,7 @@ from Pokemon_Battle_Sim.gui import move_select
 from Pokemon_Battle_Sim.gui import util
 from Pokemon_Battle_Sim.Model import Model, channels
 from Pokemon_Battle_Sim.pubsub import Subscriber
+from Pokemon_Battle_Sim.pokemon import Pokemon
 
 class Battle(tk.Frame): # The pokemon fighting and the move-select menu
     def __init__(self, parent, *args, **kwargs):
@@ -59,16 +60,18 @@ class Battle(tk.Frame): # The pokemon fighting and the move-select menu
                 # self.grid(row=0, column=1, columnspan=2, sticky="NSEW",
                 #           padx=3*util.scale, pady=1*util.scale)
                 
-                if channel is None:
+                try:
+                    pokemon = Model.get_last(channel).pokemon_out()
+                except Exception:
                     pokemon = Pokemon(None)
-                else:
-                    pokemon = Model.get_last(channel)
                 
                 # Setup grid:
-                # Pokemon name          Team status icons
-                # Pokemon types
-                # [Spacer]
-                # Health
+                #  -----------------------------------------
+                # | Pokemon name          Team status icons |
+                # | Pokemon types                           |
+                # | [Spacer]                                |
+                # | Health                                  |
+                #  -----------------------------------------
                 util.gridconfigure(self, rw=[1,1,1,1], cw=[3,1])
                 # Pokemon name
                 name = tk.Label(self, text=pokemon.name)
