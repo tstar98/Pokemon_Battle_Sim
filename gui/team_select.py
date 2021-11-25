@@ -5,13 +5,15 @@ Created on Sat Nov 20 15:30:21 2021
 @author: Brian
 """
 
+import itertools
 import tkinter as tk
 
 import util
 from Pokemon_Battle_Sim.database import database as db
-from Pokemon_Battle_Sim.pubsub import Publisher, Subscriber
+from Pokemon_Battle_Sim.pubsub import Subscriber
 from Pokemon_Battle_Sim.pokemon import Pokemon
 from Pokemon_Battle_Sim.moves.move import Move, move_factory, get_learnset
+from Pokemon_Battle_Sim.Model import Model, channels
 
 class team_select(tk.Frame):
     def __init__(self, parent):
@@ -49,42 +51,26 @@ class team_select(tk.Frame):
         add_move = self.add_move(self)
         add_move.grid(row=2, column=3, sticky='SE')
         
-        # Connect Publishers and Subscribers
-        plist.add_subscriber(pdetail)
-        plist.add_subscriber(mselect)
-        add_move.add_subscriber(pdetail)
-        mselect.mlist.add_subscriber(add_move)
-        
         # Current team (bottom)
         team = tk.Frame(self, bg='cyan')
         team.grid(row=3, column=0, columnspan=4, sticky='NSEW')
         
-    class add_move(tk.Button, Publisher, Subscriber):
+    class add_move(tk.Button):
         def __init__(self, parent, *args, **kwargs):
             # self = util.Button(parent, text='Add Move', command=self.command,
             #                  *args, **kwargs)
             # FIXME why doesn't this work?
             super().__init__(parent, text='Add Move', command=self.command,
                              *args, **kwargs)
-            self.move = None
-            
-            # Initialize Publisher
-            Publisher.__init__(self)
-            
-            # Initialize Subscriber
-            Subscriber.__init__(self)
-            
-        def update(self, message):
-            self.move = message
             
         def command(self):
-            if self.move is None:
+            if Model.sel_move is None:
                 pass
             else:
-                # Send the current move to the Pokemon
-                self.publish(self.move)
+                # Add the current move to the Pokemon
+                Model.add_sel_move()
         
-    class pokemon_list(tk.Listbox, Publisher):
+    class pokemon_list(tk.Listbox):
         """
         Source: https://www.pythontutorial.net/tkinter/tkinter-listbox/
         """
@@ -101,9 +87,6 @@ class team_select(tk.Frame):
             # Assign behavior when selecting
             self.bind("<<ListboxSelect>>", self.select)
             
-            # Initialize Publisher
-            Publisher.__init__(self)
-            
         def select(self, event):
             selection = self.curselection()
             if len(selection) == 0:
@@ -112,13 +95,12 @@ class team_select(tk.Frame):
             else:
                 idx, = selection
                 pid = self.full_list[idx][0]
-                self.publish(Pokemon(pid))
+                Model.set_sel_pokemon(Pokemon(pid))
             
     class pokemon_detail(tk.Frame, Subscriber):
         def __init__(self, parent, *args, **kwargs):
             super().__init__(parent, *args, **kwargs)
             util.gridconfigure(self, rw=[1, 1], cw=[1,1,1,1])
-            self.pokemon = None
             
             # Pokemon info
             self.text = tk.Label(self, text='Select a Pokemon on the left')
@@ -129,7 +111,6 @@ class team_select(tk.Frame):
             button.grid(row=0, column=3, sticky='NE')
             
             # Moves
-            self.moves = []
             self.move_buttons = []
             for col in range(4):
                 button = util.Button(self)
@@ -138,32 +119,27 @@ class team_select(tk.Frame):
             
             # Initialize Subscriber
             Subscriber.__init__(self)
+            Model.add_subscriber(channels.SELECTED_POKEMON, self)
             
         def add_pokemon(self):
-            if self.pokemon is None:
+            if Model.sel_pokemon is None:
                 pass
             else:
-                print(f"Adding {self.pokemon.name} to team")
-                
+                Model.player.add_to_team(Model.sel_pokemon)
                 # TODO Clear current pokemon/move selections
             
-        def update(self, message):
-            if isinstance(message, Pokemon):
-                self.pokemon = message
-                self.text['text'] = message.name
-                self.moves.clear()
-                for button in self.move_buttons:
-                    button['text'] = ''
-            elif isinstance(message, Move):
-                if len(self.moves) == 4:
-                    raise RuntimeError("Too many moves")
-                button = self.move_buttons[len(self.moves)]
-                self.moves.append(message)
-                button['text'] = message.name
+        def update(self, pokemon):
+            if Pokemon is None:
+                self.text['text'] = 'Select a Pokemon on the left'
             else:
-                raise TypeError()
+                self.text['text'] = pokemon.name
+                for move, button in itertools.zip_longest(Model.sel_pokemon.moves, self.move_buttons):
+                    if move is None:
+                        button['text'] = ''
+                    else:
+                        button['text'] = move.name
             
-    class move_select(tk.Frame, Subscriber):
+    class move_select(tk.Frame):
         def __init__(self, parent, *args, **kwargs):
             super().__init__(parent, *args, **kwargs)
             util.gridconfigure(self, cw=[1, 3])
@@ -171,17 +147,8 @@ class team_select(tk.Frame):
             self.mlist.grid(row=0, column=0, sticky='NESW')
             self.mdetail = self.move_detail(self)
             self.mdetail.grid(row=0, column=1, sticky='NESW')
-        
-            # Connect list to detail
-            self.mlist.add_subscriber(self.mdetail)
-                
-            # Initialize Subscriber
-            Subscriber.__init__(self)
             
-        def update(self, pokemon):
-            self.mlist.update(pokemon)
-            
-        class move_list(tk.Listbox, Publisher, Subscriber):
+        class move_list(tk.Listbox, Subscriber):
             """
             Source: https://www.pythontutorial.net/tkinter/tkinter-listbox/
             """
@@ -197,23 +164,21 @@ class team_select(tk.Frame):
                 self.grid(row=0, column=0)
                 # Assign behavior when selecting
                 self.bind("<<ListboxSelect>>", self.select)
-            
-                # Initialize Publisher
-                Publisher.__init__(self)
                 
                 # Initialize Subscriber
                 Subscriber.__init__(self)
+                Model.add_subscriber(channels.SELECTED_POKEMON, self)
             
-            def select(self, event): # Publish
-                """Get the current selection and publish it"""
+            def select(self, event):
+                """Get the current selection and update the Model with it"""
                 selection = self.curselection()
                 if len(selection) == 0:
                     # Was actually a de-select
-                    self.publish(None)
+                    Model.set_sel_move(None)
                 else:
                     idx, = selection
                     name = self.namelist[idx]
-                    self.publish(move_factory(name))
+                    Model.set_sel_move(move_factory(name))
                 
             def update(self, pokemon):
                 self.namelist = get_learnset(pokemon.pokemon_id)
@@ -227,6 +192,7 @@ class team_select(tk.Frame):
                 
                 # Initialize Subscriber
                 Subscriber.__init__(self)
+                Model.add_subscriber(channels.SELECTED_MOVE, self)
                 
             def update(self, message):
                 if message is None:

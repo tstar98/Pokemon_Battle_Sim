@@ -1,5 +1,4 @@
 from Pokemon_Battle_Sim.pubsub import Publisher
-from Pokemon_Battle_Sim.gui import battle as battle_gui
 
 class Trainer(Publisher):
     def __init__(self):
@@ -75,7 +74,8 @@ class Player(Trainer):
         Should open the move_select GUI
         Selecting a move should set move_use
         '''
-        move_use = battle_gui.open_gui(self.pokemon_out(), opponent)
+        # move_use = battle_gui.open_gui(self.pokemon_out(), opponent)
+        move_use = None
         
         if move_use is None:
             raise RuntimeError("No move selected")

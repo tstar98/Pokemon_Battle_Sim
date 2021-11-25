@@ -7,139 +7,132 @@ Created on Wed Nov 17 18:16:03 2021
 
 import tkinter as tk
 
-try:
-    import move_select
-except ImportError:
-    from gui import move_select
+from Pokemon_Battle_Sim.gui import move_select
+from Pokemon_Battle_Sim.gui import util
+from Pokemon_Battle_Sim.Model import Model, channels
+from Pokemon_Battle_Sim.pubsub import Subscriber
 
-def _draw_pokemon(frame, pokemon):
-    if pokemon is None:
-        label = tk.Label(frame, text="NO POKEMON GIVEN")
-        label.pack(fill=tk.BOTH, expand=True)
-        return
-    frame.rowconfigure(0, weight=1) # Pokemon name ; Team status icons
-    frame.rowconfigure(1, weight=1) # Pokemon types
-    frame.rowconfigure(2, weight=1) # Blank spacer
-    frame.rowconfigure(3, weight=1) # Health
-    frame.columnconfigure(0, weight=3) # Left-aligned (most everything)
-    frame.columnconfigure(1, weight=1) # Right-aligned (team status icons)
-    # Pokemon name
-    name = tk.Label(frame, text=pokemon.name)
-    name.grid(row=0, column=0, columnspan=1, sticky="NSEW")
-    # Pokemon types
-    # TODO
-    # Health
-    health = tk.Label(frame, text=pokemon.hp)
-    health.grid(row=3, column=0, columnspan=2, sticky="NSEW")
-
-def open_gui(t_pokemon, o_pokemon):
-    """
-    Parameters
-    ----------
-    t_pokemon : Pokemon
-        The player's Pokemon
-    o_pokemon : Pokemon
-        The opponent's Pokemon
-
-    Returns
-    -------
-    None.
-
-    """
-    window = tk.Tk()
-    scale = 4
-    res = [160*scale, 144*scale] # Original Game Boy Color resolution
-    window.geometry(f"{res[0]}x{res[1]}")
-    window.title('Pokemon Battle Simulator')
+class Battle(tk.Frame): # The pokemon fighting and the move-select menu
+    def __init__(self, parent, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
+        
+        # Create a base grid: main screen, info/buttons
+        util.gridconfigure(self, rw=[12, 10])
+        
+        # Show the fighting Pokemon
+        field = self.Battlefield(self, bg ='grey')
+        field.grid(row=0, column=0, sticky='NSEW')
+        
+        # Show the move selection buttons
+        msel = util.Button(self, text='msel')
+        msel.grid(row=1, column=0, sticky='NSEW')
     
-    # FIXME hack to always open in screen center
-    # https://stackoverflow.com/questions/14910858/how-to-specify-where-a-tkinter-window-opens
-    # get screen width and height
-    ws = window.winfo_screenwidth() # width of the screen
-    hs = window.winfo_screenheight() # height of the screen
-    
-    # calculate x and y coordinates for the Tk root window
-    x = (ws/2) - (res[0]/2)
-    y = (hs/2) - (res[1]/2)
-    
-    # set the dimensions of the screen 
-    # and where it is placed
-    window.geometry('%dx%d+%d+%d' % (res[0], res[1], x, y))
-    
-    # Create a base grid: main screen, info/buttons
-    row_weights = [12, 10]
-    for i, weight in enumerate(row_weights):
-        window.rowconfigure(i, weight=weight)
-    window.columnconfigure(0, weight=1)
-    
-    # Fight section
-    fight = tk.Frame(window, bg ='grey',
-                     relief='sunken', borderwidth=4*scale, pady=1*scale)
-    fight.grid(row=0, sticky='NSEW')
-    fight.rowconfigure(0, weight=1)
-    fight.rowconfigure(1, weight=1)
-    fight.columnconfigure(0, weight=5)
-    fight.columnconfigure(1, weight=1)
-    fight.columnconfigure(2, weight=5)
-    # Opponent
-    opponent = tk.Frame(fight, bg='red',
-                    relief='raised', borderwidth=2*scale)
-    opponent.grid(row=0, column=1, columnspan=2, sticky="NSEW", padx=3*scale, pady=1*scale)
-    _draw_pokemon(opponent, o_pokemon)
-    # Trainer
-    trainer = tk.Frame(fight, bg='green',
-                  relief='raised', borderwidth=2*scale)
-    trainer.grid(row=1, column=0, columnspan=2, sticky="NSEW", padx=3*scale, pady=1*scale)
-    _draw_pokemon(trainer, t_pokemon)
-    
-    # Move selection
-    movesFrame = tk.Frame(window, bg='grey',
-                          relief='sunken', borderwidth=4*scale,
-                          pady=1*scale)
-    movesFrame.grid(row=1, sticky='NSEW')
-    movesFrame.rowconfigure(0, weight=1)
-    
-    use_move = move_select.open_gui(movesFrame, t_pokemon)
-    
-    return use_move
+    class Battlefield(tk.Frame): # Just the pokemon fighting
+        def __init__(self, parent, *args, **kwargs):
+            super().__init__(parent, relief='sunken', borderwidth=4*util.scale, pady=1*util.scale,
+                             *args, **kwargs)
+            
+            # Place player and opponent Pokemon diagonally
+            util.gridconfigure(self, rw=[1, 1], cw=[5, 1, 5])
+            
+            # Pokemon
+            opponent = self.Pokemon_Detail(self, channels.PLAYER, bg='red')
+            opponent.grid(row=0, column=2, sticky='NSEW')
+            player = self.Pokemon_Detail(self, channels.OPPONENT, bg='green')
+            player.grid(row=1, column=0, sticky='NSEW')
+            
+            # Move selection
+            # movesFrame = tk.Frame(self, bg='grey',
+            #                       relief='sunken', borderwidth=4*util.scale,
+            #                       pady=1*util.scale)
+            # movesFrame.grid(row=1, sticky='NSEW')
+            # movesFrame.rowconfigure(0, weight=1)
+            
+            # use_move = move_select.open_gui(movesFrame, t_pokemon)
+            
+            # return use_move
+        
+        class Pokemon_Detail(tk.Frame, Subscriber):
+            def __init__(self, parent, channel, *args, **kwargs):
+                super().__init__(parent, relief='raised', borderwidth=2*util.scale,
+                                  *args, **kwargs)
+                # self.grid(row=0, column=1, columnspan=2, sticky="NSEW",
+                #           padx=3*util.scale, pady=1*util.scale)
+                
+                if channel is None:
+                    pokemon = Pokemon(None)
+                else:
+                    pokemon = Model.get_last(channel)
+                
+                # Setup grid:
+                # Pokemon name          Team status icons
+                # Pokemon types
+                # [Spacer]
+                # Health
+                util.gridconfigure(self, rw=[1,1,1,1], cw=[3,1])
+                # Pokemon name
+                name = tk.Label(self, text=pokemon.name)
+                name.grid(row=0, column=0, columnspan=1, sticky="NSEW")
+                # Pokemon types
+                # TODO
+                # Health
+                health = tk.Label(self, text=pokemon.hp)
+                health.grid(row=3, column=0, columnspan=2, sticky="NSEW")
+                
+                # Initialize Subscriber
+                Subscriber.__init__(self)
+                if channel is not None:
+                    Model.add_subscriber(channel, self)
+                
+            def update(self, pokemon):
+                self.name['text'] = pokemon.name
+                self.health['text'] = pokemon.hp
     
 if __name__ == "__main__":
-    # Hacky code to mess with the path, since this script usually won't be run directly anyway
-    # https://stackoverflow.com/questions/16981921/relative-imports-in-python-3
-    import sys, os
-    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-    PARENT_DIR = os.path.split(SCRIPT_DIR)[0]
-    if PARENT_DIR not in sys.path:
-        sys.path.append(PARENT_DIR)
-    if SCRIPT_DIR not in sys.path:
-        sys.path.append(SCRIPT_DIR)
-    from pokemon import Pokemon
-    from moves.move import move_factory
+    from Pokemon_Battle_Sim.pokemon import Pokemon
+    from Pokemon_Battle_Sim.moves.move import move_factory
     
     # FIXTURE: create the pokemon
-    t_pokemon = Pokemon(13)
-    move = move_factory('Earthquake')
-    t_pokemon.add_move(move)
-    move = move_factory('Rest')
-    t_pokemon.add_move(move)
-    move = move_factory('Rock Slide')
-    t_pokemon.add_move(move)
-    move = move_factory('Double Team')
-    t_pokemon.add_move(move)
+    if True:
+        t_pokemon = Pokemon(13)
+        move = move_factory('Earthquake')
+        t_pokemon.add_move(move)
+        move = move_factory('Rest')
+        t_pokemon.add_move(move)
+        move = move_factory('Rock Slide')
+        t_pokemon.add_move(move)
+        move = move_factory('Double Team')
+        t_pokemon.add_move(move)
     
     # FIXTURE: create the pokemon
-    o_pokemon = Pokemon(42)
-    move = move_factory('Earthquake')
-    o_pokemon.add_move(move)
-    move = move_factory('Rest')
-    o_pokemon.add_move(move)
-    move = move_factory('Rock Slide')
-    o_pokemon.add_move(move)
-    move = move_factory('Double Team')
-    o_pokemon.add_move(move)
+    if True:
+        o_pokemon = Pokemon(42)
+        move = move_factory('Earthquake')
+        o_pokemon.add_move(move)
+        move = move_factory('Rest')
+        o_pokemon.add_move(move)
+        move = move_factory('Rock Slide')
+        o_pokemon.add_move(move)
+        move = move_factory('Double Team')
+        o_pokemon.add_move(move)
+        
+    # FIXTURE: setup the model
+    Model.player.add_to_team(t_pokemon)
+    Model.player.add_subscriber(Model.get_channel(channels.PLAYER))
+    Model.opponent.add_to_team(o_pokemon)
+    Model.opponent.add_subscriber(Model.get_channel(channels.OPPONENT))
     
-    use_move = open_gui(t_pokemon, o_pokemon)
-    if use_move is None:
-        print("In battle: no move selected")
-    else:
-        print(f"In battle: selected {use_move.name}")
+    Model.player.publish(t_pokemon)
+    Model.opponent.publish(o_pokemon)
+    
+    # FIXTURE: create the base Tkinter window
+    root = util.default_window()
+    util.gridconfigure(root)
+    battle = Battle(root)
+    battle.grid(row=0, column=0, sticky='NSEW')
+    root.mainloop()
+    # use_move = open_gui(t_pokemon, o_pokemon)
+    # if use_move is None:
+    #     print("In battle: no move selected")
+    # else:
+    #     print(f"In battle: selected {use_move.name}")
