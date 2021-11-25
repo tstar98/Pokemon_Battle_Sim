@@ -16,7 +16,56 @@ class Publisher:
         for sub in self._subs:
             sub.update(message)
 
-
 class Subscriber:
     def update(self, message):
         print(message)
+
+class ChannelPublisher():
+    """Variant of Publisher that has different channels"""
+    def __init__(self):
+        self._channels = {}
+        
+    def add_channel(self, channel):
+        """Sugar syntax to create a new, empty channel"""
+        self._channels[channel] = self.Channel()
+        
+    def get_channel(self, channel):
+        return self._channels[channel]
+        
+    def add_subscriber(self, channel, subscriber):
+        assert isinstance(subscriber, Subscriber)
+        self._channels[channel].add_subscriber(subscriber)
+
+    def remove_subscriber(self, channel=None, subscriber=None):
+        if channel is None:
+            self._channels.clear()
+        else:
+            self._channels[channel].remove_subscriber(subscriber)
+
+    def publish(self, channel, message):
+        self._channels[channel].publish(message)
+            
+    def get_last(self, channel):
+        return self._channels[channel].get_last()
+    
+    class Channel(Publisher, Subscriber):
+        def __init__(self):
+            self._last = None
+            
+            # Initialize Publisher
+            Publisher.__init__(self)
+            
+            # Initialize Subscriber
+            Subscriber.__init__(self)
+        
+        def get_last(self):
+            """Gets the last message sent on the channel.
+            Example usage: a widget needs to display the current Pokemon. When the
+            widget is created use this to get the current Pokemon, then subscribe
+            to make sure it stays up to date"""
+            return self._last
+        
+        def update(self, message):
+            """Pass the message along"""
+            self.publish(message)
+            self._last = message
