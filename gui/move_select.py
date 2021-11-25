@@ -6,69 +6,47 @@ Created on Thu Nov 11 19:46:54 2021
 """
 
 import tkinter as tk
-from tkinter import font as tkFont
 import functools
 
-def open_gui(frame, pokemon):
-    """
-    @param panel - the panel to put the menu in
-    @param pokemon - player's Pokemon
-    
-    @returns move_use - the selected move
-    """
-    root = frame.winfo_toplevel()
-    scale = 4
-    
-    # Separate the back button from the moves
-    row_weights = [3, 7]
-    for i, weight in enumerate(row_weights):
-        frame.rowconfigure(i, weight=weight)
-    frame.columnconfigure(0, weight=1)
-    
-    # Create a font
-    # font = tkFont.Font(family='GothicE', size=7*scale)
-    font = tkFont.Font(family='Arial', size=4*scale)
-    
-    # Back section
-    backFrame = tk.Frame(frame)
-    backFrame.grid(row=0, sticky='NSEW')
-    backFrame.columnconfigure(0, weight=1)
-    backFrame.rowconfigure(0, weight=1)
-    def go_back():
-        root.destroy() # FIXME root # TODO go back instead of just closing
-    back = tk.Button(backFrame, text='Back', command=go_back,
-                     relief='ridge', borderwidth=1*scale,
-                     font=font)
-    back.pack(fill=tk.BOTH, expand=True)
-    
-    # Moves section
-    movesFrame = tk.Frame(frame, bg='grey',
-                          relief='sunken', borderwidth=4*scale,
-                          pady=1*scale)
-    movesFrame.grid(row=1, sticky='NSEW')
-    movesFrame.rowconfigure(0, weight=1)
-    
-    # Moves buttons
-    move_use = [None]
-    def select_move(move):
-        move_use[0] = move
-        root.destroy() # FIXME
-    moves = pokemon.moves
-    for col in range(len(moves)):
-        movesFrame.columnconfigure(col, weight=1)
-    for col, move in enumerate(moves):
-        # Create the callback function with the move filled in
-        callback = functools.partial(select_move, move)
-        # Create the button, using the created callback
-        button = tk.Button(movesFrame, text=move.name, command=callback,
-                           relief='raised', borderwidth=1*scale,
-                           font=font, width=1)
-        button.grid(row=0, column=col, sticky='NSEW', padx=1*scale)
+import util
+from Pokemon_Battle_Sim.pubsub import Publisher
+from Pokemon_Battle_Sim.Model import Model, channels
+
+class Move_Select(tk.Frame, Publisher):
+    def __init__(self, parent, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
+        util.gridconfigure(self, rw=[3, 7])
         
-    # FIXME
-    root.mainloop()
+        # Back section
+        backFrame = tk.Frame(self)
+        backFrame.grid(row=0, sticky='NSEW')
+        util.gridconfigure(backFrame)
+        def go_back():
+            print("Go back")
+        back = util.Button(self, text='Back', command=go_back)
+        back.grid(row=0, column=0, sticky='NSEW')
         
-    return move_use[0]
+        # Moves section
+        movesFrame = tk.Frame(self, bg='grey',
+                              relief='sunken', borderwidth=4*util.scale,
+                              pady=1*util.scale)
+        movesFrame.grid(row=1, column=0, sticky='NSEW')
+        util.gridconfigure(movesFrame, cw=[1,1,1,1])
+        
+        # Moves buttons
+        def select_move(move):
+            self.publish(move)
+            go_back()
+        moves = Model.player.pokemon_out().moves
+        for col, move in enumerate(moves):
+            # Create the callback function with the move filled in
+            callback = functools.partial(select_move, move)
+            # Create the button, using the created callback
+            button = util.Button(movesFrame, text=move.name, command=callback)
+            button.grid(row=0, column=col, sticky='NSEW')
+            
+        # Initialize Publisher
+        Publisher.__init__(self)
     
 if __name__ == "__main__":
     # Hacky code to mess with the path, since this script usually won't be run directly anyway
@@ -83,18 +61,6 @@ if __name__ == "__main__":
     from pokemon import Pokemon
     from moves.move import move_factory
     
-    # FIXTURE: create the TKinter window
-    window = tk.Tk()
-    scale = 4
-    res = [160*scale, 144*scale] # Original Game Boy Color resolution
-    window.geometry(f"{res[0]}x{res[1]}")
-    window.title('Pokemon Battle Simulator')
-    # FIXTURE: create the TKinter frame
-    frame = tk.Frame(window, bg='grey',
-                     relief='sunken', borderwidth=4*scale,
-                     pady=1*scale)
-    frame.pack()
-    
     # FIXTURE: create the pokemon
     pokemon = Pokemon(13)
     move = move_factory('Earthquake')
@@ -106,6 +72,12 @@ if __name__ == "__main__":
     move = move_factory('Double Team')
     pokemon.add_move(move)
     del move
+    Model.player.add_to_team(pokemon)
     
-    move_use = open_gui(frame, pokemon)
-    print(f"Selected {move_use.name}")
+    
+    # FIXTURE: create the base Tkinter window
+    root = util.default_window()
+    util.gridconfigure(root)
+    frame = Move_Select(root)
+    frame.grid(row=0, column=0, sticky='NSEW')
+    root.mainloop()
