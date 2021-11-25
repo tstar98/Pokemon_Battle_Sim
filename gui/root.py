@@ -12,13 +12,14 @@ import tkinter as tk
 from enum import Enum
 
 import util
-import battle
 from main_menu import main_menu as _main_menu
 from team_select import team_select as _team_select
+from battle import Battle
 
 class menus(Enum):
     MAIN_MENU = "MAIN MENU"
     TEAM_SELECT = "TEAM SELECT"
+    BATTLE = "BATTLE"
 
 class root(tk.Tk):
     def __init__(self):
@@ -56,6 +57,11 @@ class root(tk.Tk):
         team_select = _team_select(self)
         team_select.grid(row=0, column=0, sticky='NSEW')
         self.frames[menus.TEAM_SELECT] = team_select
+        
+        # Battle
+        battle = Battle(self)
+        battle.grid(row=0, column=0, sticky='NSEW')
+        self.frames[menus.BATTLE] = battle
         
     def open_menu(self, menu):
         """With menus stacked on top of each other, choose which one to show on top

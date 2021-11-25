@@ -13,7 +13,7 @@ class main_menu(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent, bg='red') # Make it red so it's obvious where there's empty space
         
-        util.gridconfigure(self, rw=[4, 1, 3]) # Title, Assemble Team, Reserved for future buttons
+        util.gridconfigure(self, rw=[4, 1, 1, 2]) # Title, Assemble Team, Reserved for future buttons
         
         # Title splash
         title_splash = self.title_splash(self)
@@ -25,10 +25,16 @@ class main_menu(tk.Frame):
         button = util.Button(self, text='Assemble Team', command=assemble_team)
         button.grid(row=1, column=0, sticky='NSEW')
         
+        # "Start Battle" button
+        def battle():
+            self.master.open_menu("BATTLE")
+        button = util.Button(self, text='Start Battle', command=battle)
+        button.grid(row=2, column=0, sticky='NSEW')
+        
         # TODO?
         # Other buttons (high scores?)
         reserved = tk.Frame(self, bg='grey')
-        reserved.grid(row=2, column=0, sticky='NSEW')
+        reserved.grid(row=3, column=0, sticky='NSEW')
     
     def title_splash(self, parent):
         """Creates the title splash
