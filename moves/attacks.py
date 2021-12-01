@@ -14,7 +14,7 @@ class Attack(Move):
         self._pp -= 1
 
         # calculate accuracy
-        if not self._does_hit(pokemon1.accuracy, pokemon2.evasion):
+        if not self._does_hit(pokemon1, pokemon2):
             return False
 
         return self._do_damage(pokemon1, pokemon2, reflect, light_screen)
@@ -129,7 +129,7 @@ class SetDamageAttack(Attack):
         if effectiveness == 0:
             self.publish(f"It doesn't effect {pokemon2.name}.")
 
-        if not self._does_hit(pokemon1.accuracy, pokemon2.evasion):
+        if not self._does_hit(pokemon1, pokemon2):
             return False
 
         pokemon2.take_damage(self.__damage)
@@ -153,12 +153,13 @@ class OHKO(Attack):
         if pokemon1.speed < pokemon2.speed:
             self.publish("But it failed.")
 
-        if not self._does_hit(pokemon1.accuracy, pokemon2.evasion):
+        if not self._does_hit(pokemon1, pokemon2):
             return False
 
         if self._get_effectiveness(pokemon2.type1) == 0 or self._get_effectiveness(pokemon2.type2) == 0:
             self.publish(f"It doesn't effect {pokemon2.name}.")
             return False
+
         else:
             self.publish("It's a one-hit K.O.")
 
@@ -288,6 +289,7 @@ class ChargingAttack(Attack):
             self.publish(f"{pokemon1.name} unleashed its energy.")
             damage = super(ChargingAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
         else:
+            self._pp -= 1
             damage = 0
             self.publish(f"{pokemon1.name} began charging power.")
 
@@ -313,7 +315,7 @@ class MultiAttack(Attack):
         if effectiveness == 0:
             self.publish(f"It doesn't effect {pokemon2.name}.")
 
-        if not self._does_hit(pokemon1.accuracy, pokemon2.evasion):
+        if not self._does_hit(pokemon1, pokemon2):
             return False
 
         times_hit = random.randint(self.__min, self.__max)
@@ -336,8 +338,9 @@ class TrapAttack(Attack):
         damage = super(TrapAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
 
         if damage:
-            # TODO: add trap
-            pass
+            pokemon2.is_trapped = True
+
+        return damage
 
 
 class ConfusingAttack(Attack):
@@ -372,20 +375,25 @@ class CritAttack(Attack):
         return False
 
 
-class VanishingAttack(Attack):
+class VanishingAttack(ChargingAttack):
     def __init__(self, name):
         super(Attack, self).__init__(name)
-        self
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        if self.__is_charged:
-            self.publish(f"{pokemon1.name} unleashed its energy.")
-            damage = super(ChargingAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
-        else:
-            damage = 0
-            self.publish(f"{pokemon1.name} must recharge.")
+        if not self._is_charged:
+            self._pp -= 1
+            if self._name == "Fly":
+                message = f"{pokemon1.name} flew up high."
+            else:
+                message = f"{pokemon1} dug a hole."
 
-        self.__is_charged = not self.__is_charged
+            damage = True
+            pokemon1.is_vanished = True
+
+        else:
+            damage = super(ChargingAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
+            pokemon1.is_vanished = False
+
         return damage
 
 
@@ -416,7 +424,7 @@ class SelfDestruct(Attack):
             self.publish(f"It doesn't affect {pokemon2.name}.")
             return False
 
-        if not self._does_hit(pokemon1.accuracy, pokemon2.evasion):
+        if not self._does_hit(pokemon1, pokemon2):
             return False
 
         # slightly different formula from normal attack

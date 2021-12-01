@@ -302,5 +302,6 @@ def create_csvs():
 
 
 if __name__ == '__main__':
-    print(select("SELECT * FROM moves WHERE name = 'Struggle';"))
+    update_table("DELETE FROM moves WHERE name = 'Transform';")
+    update_table("DELETE FROM pokemon WHERE name = 'Ditto';")
     pass

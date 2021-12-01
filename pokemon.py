@@ -62,7 +62,8 @@ class Pokemon(Publisher):
 
         self.__flinch = False
         self.__sub = None
-        self.__trap = 0
+        self.__trap_counter = 0
+        self.__vanished = False
 
     def __determine_stat(self, base):
         a = (base + self.__dv) * 2
@@ -121,6 +122,10 @@ class Pokemon(Publisher):
                     self.publish("It hurt itself in confusion.\n")
                     return False
 
+        if self.__trap_counter > 0:
+            self.publish(f"{self.__name} is trapped and cannot move.")
+            return False
+
         return True
 
     def take_damage(self, damage):
@@ -152,9 +157,11 @@ class Pokemon(Publisher):
             self.publish(f"{self.__name}'s hurt by poison.\n")
             self.__poison_counter = self.__poison_counter + 1 if self.__poison_counter < 15 else 15
 
-        # # take damage from trap
-        # if self.__trap > 0:
-        #     self.take_damage()
+        # take damage from trap
+        if self.__trap_counter > 0:
+            self.__trap_counter -= 1
+            self.take_damage(math.floor(self.__max_hp / 16))
+            self.publish(f"{self.__name}'s damaged by the trap.")
 
     def add_subscriber(self, subscriber):
         self.__sub = subscriber
@@ -445,15 +452,29 @@ class Pokemon(Publisher):
 
     @property
     def is_trapped(self):
-        return True if self.__trap > 0 else False
+        return True if self.__trap_counter > 0 else False
 
     @is_trapped.setter
     def is_trapped(self, boolean):
         # trapped for 2-5 turns
-        if boolean:
-            self.__trap = random.randint(2, 5)
+        num = random.randint(1, 200)
+        if num <= 75:
+            turns_trapped = 2
+        elif num <= 150:
+            turns_trapped = 3
+        elif num <= 175:
+            turns_trapped = 4
         else:
-            self.__trap = 0
+            turns_trapped = 5
+        self.__trap_counter = turns_trapped
+
+    @property
+    def is_vanished(self):
+        return self.__vanished
+
+    @is_vanished.setter
+    def is_vanished(self, boolean):
+        self.__vanished = boolean
 
     def __str__(self):
         return f'Lv. {self.__level} {self.__name}\n{self.__hp} / {self.__max_hp}'

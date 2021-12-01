@@ -37,7 +37,7 @@ class StatAlteringMove(Move):
         self._stages = move[2]
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        if not self._does_hit(pokemon1.accuracy, pokemon2.evasion):
+        if not self._does_hit(pokemon1, pokemon2):
             return
 
         pokemon = pokemon1 if self._self_target else pokemon2
@@ -97,7 +97,7 @@ class StatusEffectMove(Move):
             return False
 
         # check accuracy
-        if not self._does_hit(pokemon1.accuracy, pokemon1.evasion):
+        if not self._does_hit(pokemon1, pokemon1):
             return False
 
         # check if it does not effect
@@ -139,7 +139,7 @@ class ConfusingMove(Move):
             self.publish("But it failed.")
             return False
 
-        if not self._does_hit(pokemon1.accuracy, pokemon2.evasion):
+        if not self._does_hit(pokemon1, pokemon2):
             return False
 
         pokemon2.is_confused = True
@@ -168,7 +168,7 @@ class MimicMove(Move):
             self._pp -= 1
 
             # copy random move
-            if self._does_hit(pokemon1.accuracy, pokemon2.evasion):
+            if self._does_hit(pokemon1, pokemon2):
                 move_selected = pokemon2.get_random_move()
                 self.__move = move_factory(move_selected.name)
                 self.__move.add_subscriber(self._sub)

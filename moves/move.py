@@ -74,12 +74,12 @@ class Move(Publisher):
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         pass
 
-    def _does_hit(self, accuracy, evasion):
+    def _does_hit(self, pokemon1, pokemon2):
         if self._accuracy is None:
             return True
 
-        threshold = math.floor(self._accuracy * accuracy / evasion )
-        if threshold < random.randint(1, 100):
+        threshold = math.floor(self._accuracy * pokemon1.accuracy / pokemon2.evasion )
+        if threshold < random.randint(1, 100) or pokemon2.is_vanished:
             self.publish("But it missed.")
             return False
 
