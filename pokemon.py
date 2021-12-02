@@ -87,6 +87,8 @@ class Pokemon(Publisher):
 
     def can_move(self):
         """determines if pokemon is able to move, based on status_effect, flinch, confusion"""
+
+        # pokemon can't move if opponent flinced them on same turn
         if self.__flinch:
             self.publish(f"{self.__name} flinched and can't attack.\n")
             return False
@@ -96,6 +98,8 @@ class Pokemon(Publisher):
                 self.publish(f"{self.name} is paralyzed and is unable to attack.\n")
                 return False
 
+        # pokemon can't move if they are asleep
+        # roll to wake up
         if self.__status_effect in (enums.StatusEffect.SLEEP.value, enums.StatusEffect.REST.value):
             # sleep turns only count if the pokemon is trying to use a move
             if self.__sleep_counter > 0:
@@ -106,22 +110,27 @@ class Pokemon(Publisher):
                 self.__status_effect = enums.StatusEffect.NONE.value
             return False
 
+        # roll to see if damaged by confusion
         if self.__confused:
+            # pokemon is no longer confused
             if self.__confusion_counter == 0:
                 self.__confused = False
                 self.publish(f"{self.__name} snapped out of confusion.")
 
+            # pokemon is still confused
             else:
                 self.publish(f"{self.name} is confused.")
                 # confusion turns only count at this point
                 self.__confusion_counter -= 1
 
+                # pokemon takes damage and can't move
                 if 50 >= random.randint(1, 100):
                     # cannot move due to confusion and hurts itself
                     Confused().use_move(self)
                     self.publish("It hurt itself in confusion.\n")
                     return False
 
+        # pokemon can't move if they are trapped
         if self.__trap_counter > 0:
             self.publish(f"{self.__name} is trapped and cannot move.")
             return False
@@ -251,14 +260,23 @@ class Pokemon(Publisher):
         return self.__moves
 
     @property
+    def last_move(self):
+        return self.__last_move
+
+    @last_move.setter
+    def last_move(self, move):
+        self.__last_move = move
+
+    @property
     def status_effect(self):
         return self.__status_effect
 
     @status_effect.setter
     def status_effect(self, stat_eff):
-        # don't change the status effect if pokemon already has one, unless changing it to none or rest
-        if self.__status_effect == enums.StatusEffect.NONE.value or stat_eff == enums.StatusEffect.REST.value\
-                or stat_eff == enums.StatusEffect.NONE.value:
+        """Sets pokemon's status effect to stat_eff given pokemon does not currently have a status effect
+            or stat_eff is None or Rest"""
+        if self.__status_effect == enums.StatusEffect.NONE.value\
+                or stat_eff in (enums.StatusEffect.REST.value, enums.StatusEffect.NONE.value):
             self.__status_effect = stat_eff
 
             if stat_eff == enums.StatusEffect.NONE.value:
@@ -283,7 +301,7 @@ class Pokemon(Publisher):
                 message += "'s burned."
 
             if stat_eff == enums.StatusEffect.POISON.value:
-                message += "was poisoned."
+                message += "'s poisoned."
 
             if stat_eff == enums.StatusEffect.BAD_POISON.value:
                 message += "'s badly poisoned."

@@ -86,7 +86,10 @@ class MoveType(Enum):
 
     STRUGGLE = 35
     MIRROR_MOVE = 36
+
     OHKO = 37
+    LEVEL_BASED_ATK = 38
+    HALF_HEALTH_ATTACK = 39
 
 
 class Category(Enum):

@@ -82,12 +82,37 @@ class Player(Trainer):
         
         return move_use
 
+    @reflect.setter
+    def reflect(self, boolean):
+        if boolean:
+            self.publish("Reflect raised your team's Defense.")
+        self._reflect = boolean
+
+    @light_screen.setter
+    def light_screen(self, boolean):
+        if boolean:
+            self.publish("Light Screen raised your team's Special.")
+        self._reflect = boolean
+
 
 class Opponent(Trainer):
     def make_selection(self, opponent):
         # TODO: Change. For now, it just selects the first move of the pokemon out
         move_use = self._team[0].get_random_move()
         return move_use
+
+    @reflect.setter
+    def reflect(self, boolean):
+        if boolean:
+            self.publish("Reflect raised your opponent's Defense.")
+        self._reflect = boolean
+
+    @light_screen.setter
+    def light_screen(self, boolean):
+        if boolean:
+            self.publish("Light Screen raised your opponent's Special.")
+        self._reflect = boolean
+
 
 if __name__ == "__main__":
     print("You're running Trainer again, dummy")

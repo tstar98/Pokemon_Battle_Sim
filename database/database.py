@@ -302,6 +302,9 @@ def create_csvs():
 
 
 if __name__ == '__main__':
-    update_table("DELETE FROM moves WHERE name = 'Transform';")
-    update_table("DELETE FROM pokemon WHERE name = 'Ditto';")
+    update_table("UPDATE moves SET description = 'A Psychic-type attack of varying intensity. It occasionally inflicts heavy damage.' WHERE name = 'Psywave'")
+
+    print(select("SELECT * FROM set_damage_attacks"))
+    print(select("SELECT * FROM moves WHERE move_type = 38"))
+    print(select("SELECT * FROM moves WHERE move_type = 39"))
     pass

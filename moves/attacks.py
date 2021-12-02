@@ -23,7 +23,7 @@ class Attack(Move):
         effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2)
 
         if effectiveness == 0:
-            self.publish(f"It doesn't effect {pokemon2.name}.")
+            self.publish(f"It doesn't affect {pokemon2.name}.")
             return False
 
         # determine category of move and whether a screen will play effect
@@ -108,26 +108,12 @@ class SetDamageAttack(Attack):
         super(SetDamageAttack, self).__init__(name)
         move = db.select(f'SELECT damage FROM set_damage_attacks WHERE name = \'{name}\';')[0]
         self.__damage = move[0]
-        if self.__damage == 0:
-            self.__use_move = self.half_damage
-
-        elif self.__damage is None:
-            if self._name == "Psywave":
-                self.__use_move = self.psywave
-            else:
-                self.__use_move = self.level_based
-
-        else:
-            self.__use_move = self.set_damage
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        return self.__use_move(pokemon1, pokemon2)
-
-    def set_damage(self, pokemon1, pokemon2):
-        """ move damages pokemon2 by a set integer """
+        self._pp -= 1
         effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2)
         if effectiveness == 0:
-            self.publish(f"It doesn't effect {pokemon2.name}.")
+            self.publish(f"It doesn't affect {pokemon2.name}.")
 
         if not self._does_hit(pokemon1, pokemon2):
             return False
@@ -135,14 +121,64 @@ class SetDamageAttack(Attack):
         pokemon2.take_damage(self.__damage)
         return self.__damage
 
-    def half_damage(self, pokemon1, pokemon2):
-        pass
 
-    def level_based(self, pokemon1, pokemon2):
-        pass
+class LevelBasedAttack(Attack):
+    def __init__(self, name):
+        super(LevelBasedAttack, self).__init__(name)
 
-    def psywave(self, pokemon1, pokemon2):
-        pass
+        if name == "Psywave":
+            self.__use_move = self.__psywave
+        else:
+            self.__use_move = self.__level_damage
+
+    def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
+        self._pp -= 1
+        return self.__use_move(pokemon1, pokemon2, reflect, light_screen)
+
+    def __psywave(self, pokemon1, pokemon2, reflect=0, light_screen=0):
+        """Does damage equal to the user's level * random number between 1 - 1.5"""
+        if not does_hit(pokemon1, pokemon2):
+            return False
+
+        damage = math.floor(pokemon1.level * random.randint(100, 150) / 100)
+        pokemon2.take_damage(damage)
+        return damage
+
+    def __level_damage(self, pokemon1, pokemon2, reflect=0, light_screen=0):
+        """does damage equal to the user's level"""
+        if not self._does_hit(pokemon1, pokemon2):
+            return False
+
+        if self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2) == 0:
+            self.publish(f"It doesn't affect {pokemon2.name}.")
+            return False
+
+        damage = pokemon1.level
+        pokemon2.take_damage(damage)
+        return damage
+
+
+class HalfHealthAttack(Attack):
+    """Does damage equal to half of the opponent's current HP. Always does at least 1 damage"""
+    def __init__(self, name):
+        super(HalfHealthAttack, self).__init__(name)
+
+    def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
+        self._pp -= 1
+        if not self._does_hit(pokemon1, pokemon2):
+            return False
+
+        effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2)
+        if effectiveness == 0:
+            self.publish(f"It doesn't affect {pokemon2.name}")
+            return False
+
+        damage = math.floor(pokemon2.hp / 2)
+        if damage < 1:
+            damage = 1
+
+        pokemon2.take_damage(damage)
+        return damage
 
 
 class OHKO(Attack):
@@ -150,6 +186,8 @@ class OHKO(Attack):
         super(OHKO, self).__init__(name)
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
+        self._pp -= 1
+
         if pokemon1.speed < pokemon2.speed:
             self.publish("But it failed.")
 
@@ -157,7 +195,7 @@ class OHKO(Attack):
             return False
 
         if self._get_effectiveness(pokemon2.type1) == 0 or self._get_effectiveness(pokemon2.type2) == 0:
-            self.publish(f"It doesn't effect {pokemon2.name}.")
+            self.publish(f"It doesn't affect {pokemon2.name}.")
             return False
 
         else:
@@ -228,8 +266,8 @@ class StatusEffectAttack(Attack):
         damage = super(StatusEffectAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
 
         if damage and self.__adds_effect():
-            pass
-            # TODO: status effect
+            # add status effect
+            pokemon2.status_effect = self.__status_effect
 
         return damage
 
@@ -313,7 +351,7 @@ class MultiAttack(Attack):
 
         effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2)
         if effectiveness == 0:
-            self.publish(f"It doesn't effect {pokemon2.name}.")
+            self.publish(f"It doesn't affect {pokemon2.name}.")
 
         if not self._does_hit(pokemon1, pokemon2):
             return False
@@ -335,6 +373,7 @@ class TrapAttack(Attack):
         super(TrapAttack, self).__init__(name)
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
+        self._pp -= 1
         damage = super(TrapAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
 
         if damage:
@@ -463,11 +502,10 @@ class RechargeAttack(ChargingAttack):
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         if self._is_charged:
-            self.publish(f"{pokemon1.name} unleashed its energy.")
             damage = super(ChargingAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
         else:
             damage = 0
-            self.publish(f"{pokemon1.name} began charging power.")
+            self.publish(f"{pokemon1.name} must recharge.")
 
         self._is_charged = not self._is_charged
         return damage
@@ -488,9 +526,16 @@ class Confused(Attack):
 
 
 class Struggle(RecoilAttack):
-    def __init__(self, name):
-        super(Struggle, self).__init__(name)
+    def __init__(self):
+        super(Struggle, self).__init__("Struggle")
         self._power = 50
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        a = pokemon1.attack * pokemon1.battle_atk
+        d = pokemon2.defense * pokemon2.battle_def
+        damage = math.ceil(((2 * pokemon1.level / 5 + 2) * self._power * a / d) / 50 + 2)
+
+        pokemon2.take_damage(damage)
+
+        self.publish(f"{pokemon1.name} is damaged by recoil.")
+        pokemon1.take_damage(math.floor(damage * self._recoil / 100))

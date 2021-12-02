@@ -11,15 +11,19 @@ class ScreenMove(Move):
         self.__screen_type = move[0]
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        """ user sets up screen, returns screen type as Screen enum key """
+        """ user sets up screen, returns screen enum key """
+        self._pp -= 1
 
+        # fails if already set up
         if self.__screen_type == Screen.REFLECT.value and reflect != 0\
                 or self.__screen_type == Screen.LIGHT.value and light_screen != 0:
             self.publish("But it failed.")
+            return False
 
         return Screen.REFLECT if self.__screen_type == Screen.REFLECT.value else Screen.LIGHT
 
 
+# TODO:
 class SwitchingMove(Move):
     def __init__(self, name):
         super(SwitchingMove, self).__init__(name)
@@ -37,8 +41,10 @@ class StatAlteringMove(Move):
         self._stages = move[2]
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
+        self._pp -= 1
+
         if not self._does_hit(pokemon1, pokemon2):
-            return
+            return False
 
         pokemon = pokemon1 if self._self_target else pokemon2
         message = pokemon.name + "'s "
@@ -103,7 +109,7 @@ class StatusEffectMove(Move):
         # check if it does not effect
         effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2)
         if effectiveness == 0:
-            self.publish(f"It doesn't effect {pokemon2.name}.")
+            self.publish(f"It doesn't affect {pokemon2.name}.")
             return False
 
         pokemon2.status_effect = self.__status_effect
@@ -164,6 +170,7 @@ class MimicMove(Move):
         self.__move = self
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
+        # if it has not been used, copy random move from opponent
         if self.__move is self:
             self._pp -= 1
 
@@ -174,6 +181,7 @@ class MimicMove(Move):
                 self.__move.add_subscriber(self._sub)
                 self.publish(f"{pokemon1.name} learned {move_selected.name}.")
 
+        # us copied move
         else:
             return self.__move.use_move(pokemon1, pokemon2, reflect, light_screen)
 
@@ -211,7 +219,7 @@ class MimicMove(Move):
         return self.__move._desc
 
     def __str__(self):
-        return f'{self._name}\nPP = {self._pp} / {self._max_pp}'
+        return f'{self.__move._name}\nPP = {self.__move._pp} / {self.__move._max_pp}'
 
 
 class Rest(HealingMove):
@@ -225,6 +233,7 @@ class Rest(HealingMove):
         # fails if pokemon has full health
         if pokemon1.hp == pokemon1.max_hp:
             self.publish("But it failed.")
+
             # goes inside if statement since super.use_move() decrements pp
             self._pp -= 1
             return False
@@ -256,4 +265,14 @@ class MirrorMove(Move):
         super(MirrorMove, self).__init__(name)
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        """Uses the opponent's last move"""
+
+        # fails if last move is None or Mirror Move
+        if pokemon2.last_move is None or isinstance(pokemon2.last_move.name, MirrorMove):
+            self.publish("But it failed.")
+            return False
+
+        # copy opponent's last move and use it but discard the move afterwards
+        move = move_factory(pokemon2.last_move.name)
+        self.publish(f"{pokemon1} used {move.name}.")
+        return move.use_move(pokemon1, pokemon2, reflect, light_screen)

@@ -3,7 +3,9 @@ import random
 from Trainer import *
 from pokemon import Pokemon
 from moves.move import move_factory
+from attacks import Struggle
 from pubsub import Subscriber
+from enums import Screen
 
 
 def select_team():
@@ -110,6 +112,8 @@ def battle(trainer1, trainer2):
 
 
 def make_selection(trainer1, trainer2):
+    # TODO: add checks for last move used
+
     move1 = trainer1.make_selection(trainer2.pokemon_out())
     move2 = trainer2.make_selection(trainer1.pokemon_out())
 
@@ -129,28 +133,45 @@ def make_selection(trainer1, trainer2):
         move_order = 2
 
     if move_order == 1:
-        if trainer1.pokemon_out().can_move():
-            subscriber.update(f"{trainer1.pokemon_out().name} used {move1.name}")
-            move1.use_move(trainer1.pokemon_out(), trainer2.pokemon_out())
-            print()
-
-        # pokemon can only use move if they are still in battle after the opponent used their move
-        if trainer2.pokemon_out().hp > 0 and trainer2.pokemon_out().can_move():
-            subscriber.update(f"{trainer2.pokemon_out().name} used {move2.name}")
-            move2.use_move(trainer2.pokemon_out(), trainer1.pokemon_out())
-            print()
+        use_moves(move1, trainer1, trainer2)
+        # only use the move if both the attacker and target are still in battle
+        if trainer1.pokemon_out().hp > 0 and trainer2.pokemon_out().hp > 0:
+            use_moves(move2, trainer2, trainer1)
 
     else:
-        if trainer2.pokemon_out().can_move():
-            subscriber.update(f"{trainer2.pokemon_out().name} used {move2.name}")
-            move2.use_move(trainer2.pokemon_out(), trainer1.pokemon_out())
-            print()
+        use_moves(move2, trainer2, trainer1)
+        # only use the move if both the attacker and target are still in battle
+        if trainer1.pokemon_out().hp > 0 and trainer2.pokemon_out().hp > 0:
+            use_moves(move1, trainer1, trainer2)
 
-        # pokemon can only use move if they are still in battle after the opponent used their move
-        if trainer1.pokemon_out().hp > 0 and trainer1.pokemon_out().can_move():
-            subscriber.update(f"{trainer1.pokemon_out().name} used {move1.name}")
-            move1.use_move(trainer1.pokemon_out(), trainer2.pokemon_out())
-            print()
+
+def use_moves(move, attacking_trainer, target_trainer):
+    pokemon1 = attacking_trainer.pokemon_out()
+    pokemon2 = target_trainer.pokemon_out()
+    reflect = target_trainer.reflect
+    light_screen = target_trainer.light_screen
+
+    if not pokemon1.can_move():
+        return
+
+    # if all moves have 0 pp, struggle
+    if not pokemon1.has_moves:
+        subscriber.update(f"{pokemon1.name} has no moves left.")
+        subscriber.update(f"{pokemon1.name} used Struggle.")
+        struggle = Struggle()
+        struggle.use_move(pokemon1, pokemon2)
+        return
+
+    subscriber.update(f"{pokemon1.name} used {move.name}")
+    result = move.use_move(pokemon1, pokemon2, reflect, light_screen)
+
+    pokemon1.last_move = move
+
+    # set up screens if the move did so
+    if result is Screen.REFLECT:
+        attacking_trainer.reflect = True
+    elif result is Screen.LIGHT:
+        attacking_trainer.light_screen = True
 
 
 if __name__ == '__main__':
