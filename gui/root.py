@@ -25,7 +25,6 @@ class Root(util.Default_Window):
         super().__init__()
         util.gridconfigure(self)
         self.frames = {}
-        self.create_frames()
         
         self.protocol('WM_DELETE_WINDOW', self.onDestroy) # https://stackoverflow.com/a/3295463/14501840
         self.bind('<Key>', self.handle_key)
@@ -53,26 +52,11 @@ class Root(util.Default_Window):
         self.run = False
         self.destroy()
         
-    def create_frames(self):
-        """Create the various frames that can be shown"""
-        # Main menu
-        main_menu = _main_menu(self)
-        main_menu.grid(row=0, column=0, sticky='NSEW')
-        self.frames[menus.MAIN_MENU] = main_menu
-        
-        # Team selection
-        team_select = _team_select(self)
-        team_select.grid(row=0, column=0, sticky='NSEW')
-        self.frames[menus.TEAM_SELECT] = team_select
-        
-        # Battle
-        battle = Battle(self)
-        battle.grid(row=0, column=0, sticky='NSEW')
-        self.frames[menus.BATTLE] = battle
-        
     def open_menu(self, menu):
         """With menus stacked on top of each other, choose which one to show on top
         source: https://www.pythontutorial.net/tkinter/tkraise/
+        
+        If menu has not been created yet, create it
         
         Parameters
         ----------
@@ -80,9 +64,17 @@ class Root(util.Default_Window):
             Which menu to show"""
         if not isinstance(menu, menus):
             menu = menus(menu)
-        self.frames[menu].tkraise()
+        
+        if menu in self.frames:
+            self.frames[menu].tkraise()
+        else:
+            mapper = {menus.MAIN_MENU: _main_menu,
+                      menus.TEAM_SELECT: _team_select,
+                      menus.BATTLE: Battle}
+            frame = mapper[menu](self)
+            util.grid(frame)
+            self.frames[menu] = frame
         
 if __name__ == "__main__":
     root = Root()
-    root.open_menu(menus.BATTLE)
     root.mainloop()
