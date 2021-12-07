@@ -6,6 +6,7 @@ from moves.move import move_factory
 from attacks import Struggle
 from pubsub import Subscriber
 from enums import Screen
+from Model import Model, channels
 
 
 def select_team():
@@ -14,7 +15,7 @@ def select_team():
 
 
 def demo1():
-    trainer1 = Opponent()
+    trainer1 = Model.opponent
     pokemon = Pokemon(51)
     move = move_factory('Earthquake')
     pokemon.add_move(move)
@@ -26,7 +27,7 @@ def demo1():
     pokemon.add_move(move)
     trainer1.add_to_team(pokemon)
 
-    trainer2 = Player()
+    trainer2 = Model.player
     pokemon = Pokemon(28)
     move = move_factory('Fury Swipes')
     pokemon.add_move(move)
@@ -42,7 +43,7 @@ def demo1():
 
 
 def demo2():
-    trainer1 = Opponent()
+    trainer1 = Model.opponent
     pokemon = Pokemon(65)
     move = move_factory('Thunder Wave')
     pokemon.add_move(move)
@@ -54,7 +55,7 @@ def demo2():
     pokemon.add_move(move)
     trainer1.add_to_team(pokemon)
 
-    trainer2 = Player()
+    trainer2 = Model.player
     pokemon = Pokemon(94)
     move = move_factory('Hypnosis')
     pokemon.add_move(move)
@@ -70,7 +71,7 @@ def demo2():
 
 
 def demo3():
-    trainer1 = Opponent()
+    trainer1 = Model.opponent
     pokemon = Pokemon(51)
     move = move_factory('Dragon Rage')
     pokemon.add_move(move)
@@ -82,7 +83,7 @@ def demo3():
     pokemon.add_move(move)
     trainer1.add_to_team(pokemon)
 
-    trainer2 = Player()
+    trainer2 = Model.player
     pokemon = Pokemon(28)
     move = move_factory('Fury Swipes')
     pokemon.add_move(move)
