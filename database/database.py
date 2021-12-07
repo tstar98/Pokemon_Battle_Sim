@@ -302,5 +302,7 @@ def create_csvs():
 
 
 if __name__ == '__main__':
-    print(select("SELECT * FROM stat_charging_attacks"))
+    moves = select("SELECT * FROM moves WHERE description = ''")
+    for move in moves:
+        print(move)
     pass

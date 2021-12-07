@@ -62,6 +62,16 @@ class Trainer(Publisher):
                 return True
         return False
 
+    def switch_pokemon(self, pokemon):
+        """Switches pokemon_out with given pokemon"""
+        self.publish(f"{self._team[0].name} was removed from battle.")
+
+        #TODO: remove
+        self._team[0].take_damage(1000)
+
+        i = self._team.index(pokemon)
+        self._team[0], self._team[i] = self._team[i], self._team[0]
+
     @property
     def reflect(self):
         return self._reflect
@@ -86,6 +96,10 @@ class Player(Trainer):
         else:
             move_use = self.pokemon_out().get_random_move()
         return move_use
+
+    def switch_pokemon(self, pokemon):
+        super(Player, self).switch_pokemon(pokemon)
+        self.publish(f"You sent out {pokemon.name}.")
 
     @property
     def reflect(self):
@@ -113,6 +127,10 @@ class Opponent(Trainer):
         # TODO: Change. For now, it just selects the first move of the pokemon out
         move_use = self.pokemon_out().get_random_move()
         return move_use
+
+    def switch_pokemon(self, pokemon):
+        super(Opponent, self).switch_pokemon(pokemon)
+        self.publish(f"Your opponent sent out {pokemon.name}.")
 
     @property
     def reflect(self):

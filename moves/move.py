@@ -75,9 +75,16 @@ class Move(Publisher):
         pass
 
     def _does_hit(self, pokemon1, pokemon2):
+        # pokemon that is in the air or underground avoid all attacks
+        if pokemon2.is_vanished:
+            self.publish(f"{pokemon2.name} avoided the attack.")
+            return False
+
+        # some moves always hit
         if self._accuracy is None:
             return True
 
+        # calculate accuracy of the move
         threshold = math.floor(self._accuracy * pokemon1.accuracy / pokemon2.evasion )
         if threshold < random.randint(1, 100) or pokemon2.is_vanished:
             self.publish("But it missed.")

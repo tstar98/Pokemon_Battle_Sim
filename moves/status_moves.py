@@ -23,13 +23,32 @@ class ScreenMove(Move):
         return Screen.REFLECT if self.__screen_type == Screen.REFLECT.value else Screen.LIGHT
 
 
-# TODO:
 class SwitchingMove(Move):
     def __init__(self, name):
         super(SwitchingMove, self).__init__(name)
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        """returns function to switch Pokemon out that is to be called immediately"""
+        return self._switch_pokemon
+
+    def _switch_pokemon(self, trainer):
+        switch_with = []
+
+        # adds all of trainer's non-fainted Pokemon that are not in battle to list
+        for pokemon in trainer.team():
+
+            if pokemon is trainer.pokemon_out():
+                continue
+            if pokemon.hp > 0:
+                switch_with.append(pokemon)
+
+        if len(switch_with) == 0:
+            self.publish("But it failed.")
+            return False
+
+        # select random pokemon
+        pokemon = random.choice(switch_with)
+        trainer.switch_pokemon(pokemon)
 
 
 class StatAlteringMove(Move):
@@ -246,6 +265,7 @@ class MirrorMove(Move):
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         """Uses the opponent's last move"""
+        self._pp -= 1
 
         # fails if last move is None or Mirror Move
         if pokemon2.last_move is None or isinstance(pokemon2.last_move.name, MirrorMove):

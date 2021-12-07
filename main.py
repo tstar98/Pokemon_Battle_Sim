@@ -53,15 +53,14 @@ def demo2(make_player=True):
     pokemon.add_move(move)
     Model.opponent.add_to_team(pokemon)
 
+    pokemon = Pokemon(150)
+    move = move_factory("Psychic")
+    pokemon.add_move(move)
+    Model.opponent.add_to_team(pokemon)
+
     if make_player:
         pokemon = Pokemon(94)
-        move = move_factory('Hypnosis')
-        pokemon.add_move(move)
-        move = move_factory('Dream Eater')
-        pokemon.add_move(move)
-        move = move_factory('Mimic')
-        pokemon.add_move(move)
-        move = move_factory('Confuse Ray')
+        move = move_factory('Roar')
         pokemon.add_move(move)
         Model.player.add_to_team(pokemon)
 
@@ -94,6 +93,12 @@ def demo3(make_player=True):
 class Battle():
     """ where the battle occurs"""
     def battle_round(self):
+        if not use_gui:
+            print(Model.player.pokemon_out())
+            print()
+            print(Model.opponent.pokemon_out())
+            print()
+
         self.make_selection()
 
         Model.player.next_turn()
@@ -101,12 +106,7 @@ class Battle():
 
         Model.opponent.next_turn()
         Model.opponent.pokemon_out().next_turn()
-        
-        if not use_gui:
-            print(Model.player.pokemon_out())
-            print()
-            print(Model.opponent.pokemon_out())
-            print()
+
                 
     def console_battle(self):
         while Model.player.has_pokemon() and Model.opponent.has_pokemon():
@@ -156,15 +156,12 @@ def use_moves(move, attacking_trainer, target_trainer):
         return
 
     # if all moves have 0 pp, struggle
-    if True:
-        warn("Pokemon.has_moves not implemented")
-    else:
-        if not pokemon1.has_moves:
-            subscriber.update(f"{pokemon1.name} has no moves left.")
-            subscriber.update(f"{pokemon1.name} used Struggle.")
-            struggle = Struggle()
-            struggle.use_move(pokemon1, pokemon2)
-            return
+    if not pokemon1.has_moves:
+        subscriber.update(f"{pokemon1.name} has no moves left.")
+        subscriber.update(f"{pokemon1.name} used Struggle.")
+        struggle = Struggle()
+        struggle.use_move(pokemon1, pokemon2)
+        return
 
     subscriber.update(f"{pokemon1.name} used {move.name}")
     result = move.use_move(pokemon1, pokemon2, reflect, light_screen)
@@ -176,6 +173,12 @@ def use_moves(move, attacking_trainer, target_trainer):
         attacking_trainer.reflect = True
     elif result is Screen.LIGHT:
         attacking_trainer.light_screen = True
+
+    # SwitchingMove needs target_trainer and this works around refactoring every Move subclass
+    # switches out pokemon
+    elif callable(result):
+        result(target_trainer)
+
 
 class ConsolePrinter(Subscriber):
     """Prints any messages to the console"""
@@ -196,7 +199,7 @@ if __name__ == '__main__':
     demo2(make_player)
     Model.player.add_subscriber(subscriber)
     Model.opponent.add_subscriber(subscriber)
-    #
+
     # input("Press enter to continue.")
     # demo3(make_player)
     # Model.player.add_subscriber(subscriber)
