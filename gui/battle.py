@@ -10,7 +10,7 @@ import tkinter as tk
 from Pokemon_Battle_Sim.gui.move_select import Move_Select
 from Pokemon_Battle_Sim.gui import util
 from Pokemon_Battle_Sim.Model import Model, channels
-from Pokemon_Battle_Sim.pubsub import Subscriber
+from Pokemon_Battle_Sim.pubsub import Subscriber, Observer
 from Pokemon_Battle_Sim.pokemon import Pokemon
 
 class Battle(tk.Frame): # The pokemon fighting and the move-select menu
@@ -21,11 +21,11 @@ class Battle(tk.Frame): # The pokemon fighting and the move-select menu
         util.gridconfigure(self, rw=[12, 10])
         
         # Show the fighting Pokemon
-        field = self.Battlefield(self, bg ='grey')
-        field.grid(row=0, column=0, sticky='NSEW')
+        self.field = self.Battlefield(self, bg ='grey')
+        self.field.grid(row=0, column=0, sticky='NSEW')
         
         # Show the move selection buttons
-        msel = util.Button(self, text='msel')
+        msel = Move_Select(self)
         msel.grid(row=1, column=0, sticky='NSEW')
     
     class Battlefield(tk.Frame): # Just the pokemon fighting
@@ -37,33 +37,25 @@ class Battle(tk.Frame): # The pokemon fighting and the move-select menu
             util.gridconfigure(self, rw=[1, 1], cw=[5, 1, 5])
             
             # Pokemon
-            opponent = self.Pokemon_Detail(self, channels.PLAYER, bg='red')
-            opponent.grid(row=0, column=2, sticky='NSEW')
-            player = self.Pokemon_Detail(self, channels.OPPONENT, bg='green')
-            player.grid(row=1, column=0, sticky='NSEW')
-            
-            # Move selection
-            # movesFrame = tk.Frame(self, bg='grey',
-            #                       relief='sunken', borderwidth=4*util.scale,
-            #                       pady=1*util.scale)
-            # movesFrame.grid(row=1, sticky='NSEW')
-            # movesFrame.rowconfigure(0, weight=1)
-            
-            # use_move = move_select.open_gui(movesFrame, t_pokemon)
-            
-            # return use_move
+            if Model.player.has_pokemon():
+                self.player = self.Pokemon_Detail(self, Model.player.pokemon_out(), bg='green')
+            else:
+                print("Player has no Pokemon to battle with")
+                self.player = self.Pokemon_Detail(self, Pokemon(None), bg='green')
+            self.player.grid(row=1, column=0, sticky='NSEW')
+            if Model.opponent.has_pokemon():
+                self.opponent = self.Pokemon_Detail(self, Model.opponent.pokemon_out(), bg='red')
+            else:
+                print("Opponent has no Pokemon to battle with")
+                self.opponent = self.Pokemon_Detail(self, Pokemon(None), bg='red')
+            self.opponent.grid(row=0, column=2, sticky='NSEW')
         
-        class Pokemon_Detail(tk.Frame, Subscriber):
-            def __init__(self, parent, channel, *args, **kwargs):
+        class Pokemon_Detail(tk.Frame, Observer):
+            def __init__(self, parent, pokemon, *args, **kwargs):
                 super().__init__(parent, relief='raised', borderwidth=2*util.scale,
                                   *args, **kwargs)
                 # self.grid(row=0, column=1, columnspan=2, sticky="NSEW",
                 #           padx=3*util.scale, pady=1*util.scale)
-                
-                try:
-                    pokemon = Model.get_last(channel).pokemon_out()
-                except Exception:
-                    pokemon = Pokemon(None)
                 
                 # Setup grid:
                 #  -----------------------------------------
@@ -74,22 +66,21 @@ class Battle(tk.Frame): # The pokemon fighting and the move-select menu
                 #  -----------------------------------------
                 util.gridconfigure(self, rw=[1,1,1,1], cw=[3,1])
                 # Pokemon name
-                name = tk.Label(self, text=pokemon.name)
-                name.grid(row=0, column=0, columnspan=1, sticky="NSEW")
+                self.name = tk.Label(self, text=pokemon.name, bg=self["background"])
+                self.name.grid(row=0, column=0, columnspan=1, sticky="NSEW")
                 # Pokemon types
                 # TODO
                 # Health
-                health = tk.Label(self, text=pokemon.hp)
-                health.grid(row=3, column=0, columnspan=2, sticky="NSEW")
+                self.health = tk.Label(self, text=pokemon.hp, bg=self["background"])
+                self.health.grid(row=3, column=0, columnspan=2, sticky="NSEW")
                 
-                # Initialize Subscriber
-                Subscriber.__init__(self)
-                if channel is not None:
-                    Model.add_subscriber(channel, self)
+                # Initialize Observer
+                Observer.__init__(self, pokemon)
                 
-            def update(self, pokemon):
-                self.name['text'] = pokemon.name
-                self.health['text'] = pokemon.hp
+            def update(self):
+                self.name['text'] = self.subject.name
+                self.health['text'] = self.subject.hp
+                
     
 if __name__ == "__main__":
     from Pokemon_Battle_Sim.pokemon import Pokemon
@@ -121,12 +112,7 @@ if __name__ == "__main__":
         
     # FIXTURE: setup the model
     Model.player.add_to_team(t_pokemon)
-    Model.player.add_subscriber(Model.get_channel(channels.PLAYER))
     Model.opponent.add_to_team(o_pokemon)
-    Model.opponent.add_subscriber(Model.get_channel(channels.OPPONENT))
-    
-    Model.player.publish(t_pokemon)
-    Model.opponent.publish(o_pokemon)
     
     # FIXTURE: create the base Tkinter window
     root = util.Default_Window()
