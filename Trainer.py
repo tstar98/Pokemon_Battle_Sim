@@ -1,4 +1,5 @@
 from Pokemon_Battle_Sim.pubsub import Publisher
+from Pokemon_Battle_Sim import use_gui
 
 class Trainer(Publisher):
     def __init__(self):
@@ -69,8 +70,10 @@ class Trainer(Publisher):
 
 class Player(Trainer):
     def make_selection(self, opponent):
-        # TODO: Change. For now, it just selects the first move of the pokemon out
-        move_use = self._team[0].get_random_move()
+        if use_gui:
+            raise NotImplementedError()
+        else:
+            move_use = self._team[0].get_random_move()
         return move_use
 
     @property

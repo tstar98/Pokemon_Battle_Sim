@@ -9,7 +9,7 @@ from pubsub import Subscriber
 from enums import Screen
 # MUST import from top-level or it gets a different instance from GUI scripts
 from Pokemon_Battle_Sim.Model import Model, channels
-
+from Pokemon_Battle_Sim import use_gui
 
 def select_team():
     """ player selects pokemon and moves """
@@ -203,4 +203,7 @@ if __name__ == '__main__':
     # trainer1, trainer2 = demo3()
     # trainer1.add_subscriber(subscriber)
     # trainer2.add_subscriber(subscriber)
-    # battle(trainer1, trainer2)
+    
+    if use_gui:
+        # Initialize GUI
+        from gui.root import Root, menus
