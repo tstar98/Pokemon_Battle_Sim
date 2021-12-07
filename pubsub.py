@@ -82,11 +82,15 @@ class ChannelPublisher(BasePublisher):
             self.publish(message)
 
 class Observer(Subscriber):
-    def __init__(self, subject):
+    def __init__(self, subject, channel=None):
         super().__init__()
         assert isinstance(subject, BaseObservable)
         self.subject = subject
-        subject.add_subscriber(self)
+        if channel is None:
+            subject.add_subscriber(self)
+        else:
+            assert isinstance(subject, ChannelObservable)
+            subject.add_subscriber(channel, self)
         
     def update(self, message):
         """Should be implemented in inheriting classes to fetch the appropriate
