@@ -16,7 +16,7 @@ def select_team():
     pass
 
 
-def demo1():
+def demo1(make_player=True):
     trainer1 = Model.opponent
     pokemon = Pokemon(51)
     move = move_factory('Earthquake')
@@ -30,21 +30,22 @@ def demo1():
     trainer1.add_to_team(pokemon)
 
     trainer2 = Model.player
-    pokemon = Pokemon(28)
-    move = move_factory('Fury Swipes')
-    pokemon.add_move(move)
-    move = move_factory('Swords Dance')
-    pokemon.add_move(move)
-    move = move_factory('Rest')
-    pokemon.add_move(move)
-    move = move_factory('Take Down')
-    pokemon.add_move(move)
-    trainer2.add_to_team(pokemon)
+    if make_player:
+        pokemon = Pokemon(28)
+        move = move_factory('Fury Swipes')
+        pokemon.add_move(move)
+        move = move_factory('Swords Dance')
+        pokemon.add_move(move)
+        move = move_factory('Rest')
+        pokemon.add_move(move)
+        move = move_factory('Take Down')
+        pokemon.add_move(move)
+        trainer2.add_to_team(pokemon)
 
     return trainer1, trainer2
 
 
-def demo2():
+def demo2(make_player=True):
     trainer1 = Model.opponent
     pokemon = Pokemon(65)
     move = move_factory('Thunder Wave')
@@ -58,21 +59,22 @@ def demo2():
     trainer1.add_to_team(pokemon)
 
     trainer2 = Model.player
-    pokemon = Pokemon(94)
-    move = move_factory('Hypnosis')
-    pokemon.add_move(move)
-    move = move_factory('Dream Eater')
-    pokemon.add_move(move)
-    move = move_factory('Mimic')
-    pokemon.add_move(move)
-    move = move_factory('Confuse Ray')
-    pokemon.add_move(move)
-    trainer2.add_to_team(pokemon)
+    if make_player:
+        pokemon = Pokemon(94)
+        move = move_factory('Hypnosis')
+        pokemon.add_move(move)
+        move = move_factory('Dream Eater')
+        pokemon.add_move(move)
+        move = move_factory('Mimic')
+        pokemon.add_move(move)
+        move = move_factory('Confuse Ray')
+        pokemon.add_move(move)
+        trainer2.add_to_team(pokemon)
 
     return trainer1, trainer2
 
 
-def demo3():
+def demo3(make_player=True):
     trainer1 = Model.opponent
     pokemon = Pokemon(51)
     move = move_factory('Dragon Rage')
@@ -86,16 +88,17 @@ def demo3():
     trainer1.add_to_team(pokemon)
 
     trainer2 = Model.player
-    pokemon = Pokemon(28)
-    move = move_factory('Fury Swipes')
-    pokemon.add_move(move)
-    move = move_factory('Swords Dance')
-    pokemon.add_move(move)
-    move = move_factory('Rest')
-    pokemon.add_move(move)
-    move = move_factory('Take Down')
-    pokemon.add_move(move)
-    trainer2.add_to_team(pokemon)
+    if make_player:
+        pokemon = Pokemon(28)
+        move = move_factory('Fury Swipes')
+        pokemon.add_move(move)
+        move = move_factory('Swords Dance')
+        pokemon.add_move(move)
+        move = move_factory('Rest')
+        pokemon.add_move(move)
+        move = move_factory('Take Down')
+        pokemon.add_move(move)
+        trainer2.add_to_team(pokemon)
 
     return trainer1, trainer2
 
@@ -186,19 +189,21 @@ def use_moves(move, attacking_trainer, target_trainer):
 
 
 if __name__ == '__main__':
+    make_player = not use_gui
+    
     subscriber = Subscriber()
     #
-    # trainer1, trainer2 = demo1()
+    # trainer1, trainer2 = demo1(make_player)
     # trainer1.add_subscriber(subscriber)
     # trainer2.add_subscriber(subscriber)
     #
     # input("Press enter to continue.")
-    trainer1, trainer2 = demo2()
+    trainer1, trainer2 = demo2(make_player)
     trainer1.add_subscriber(subscriber)
     trainer2.add_subscriber(subscriber)
     #
     # input("Press enter to continue.")
-    # trainer1, trainer2 = demo3()
+    # trainer1, trainer2 = demo3(make_player)
     # trainer1.add_subscriber(subscriber)
     # trainer2.add_subscriber(subscriber)
     
