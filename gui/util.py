@@ -16,7 +16,7 @@ class Default_Window(tk.Tk):
     def __init__(self, x_stretch=1, y_stretch=1):
         """Create a Tkinter window with useful settings"""
         super().__init__()
-        res = [160*scale*x_stretch, 144*scale*y_stretch] # Original Game Boy Color resolution
+        res = [int(160*scale*x_stretch), int(144*scale*y_stretch)] # Original Game Boy Color resolution
         self.geometry(f"{res[0]}x{res[1]}")
         self.title('Pokemon Battle Simulator')
                 
@@ -36,7 +36,9 @@ class Default_Window(tk.Tk):
         
 def Button(*args, **kwargs):
     """Sugar syntax to make a button using a standard set of settings"""
-    kwargs.update(relief='ridge', borderwidth=1*scale, font=font)
+    # kwargs.update(relief='ridge', borderwidth=1*scale, font=font)
+    # FIXME - using the big font makes all the buttons weird sizes
+    kwargs.update(relief='ridge', borderwidth=1*scale)
     return tk.Button(*args, **kwargs)
     
 def gridconfigure(obj, rw=None, cw=None):
