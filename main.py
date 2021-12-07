@@ -1,4 +1,5 @@
 import random
+from warnings import warn
 
 from Trainer import *
 from pokemon import Pokemon
@@ -110,6 +111,11 @@ def battle(trainer1, trainer2):
 
         trainer2.next_turn()
         trainer2.pokemon_out().next_turn()
+        
+        print(trainer1.pokemon_out())
+        print()
+        print(trainer2.pokemon_out())
+        print()
 
 
 def make_selection(trainer1, trainer2):
@@ -156,12 +162,15 @@ def use_moves(move, attacking_trainer, target_trainer):
         return
 
     # if all moves have 0 pp, struggle
-    if not pokemon1.has_moves:
-        subscriber.update(f"{pokemon1.name} has no moves left.")
-        subscriber.update(f"{pokemon1.name} used Struggle.")
-        struggle = Struggle()
-        struggle.use_move(pokemon1, pokemon2)
-        return
+    if True:
+        warn("Pokemon.has_moves not implemented")
+    else:
+        if not pokemon1.has_moves:
+            subscriber.update(f"{pokemon1.name} has no moves left.")
+            subscriber.update(f"{pokemon1.name} used Struggle.")
+            struggle = Struggle()
+            struggle.use_move(pokemon1, pokemon2)
+            return
 
     subscriber.update(f"{pokemon1.name} used {move.name}")
     result = move.use_move(pokemon1, pokemon2, reflect, light_screen)
