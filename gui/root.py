@@ -8,20 +8,19 @@ The main game window that persists until player exits the game
 Adapted from https://www.pythontutorial.net/tkinter/tkinter-object-oriented-window/
 """
 
-import tkinter as tk
 from enum import Enum
 
-import util
-from main_menu import main_menu as _main_menu
-from team_select import team_select as _team_select
-from battle import Battle
+from Pokemon_Battle_Sim.gui import util
+from Pokemon_Battle_Sim.gui.main_menu import main_menu as _main_menu
+from Pokemon_Battle_Sim.gui.team_select import team_select as _team_select
+from Pokemon_Battle_Sim.gui.battle import Battle
 
 class menus(Enum):
     MAIN_MENU = "MAIN MENU"
     TEAM_SELECT = "TEAM SELECT"
     BATTLE = "BATTLE"
 
-class root(util.Default_Window):
+class Root(util.Default_Window):
     def __init__(self):
         super().__init__()
         util.gridconfigure(self)
@@ -30,6 +29,9 @@ class root(util.Default_Window):
         
         self.protocol('WM_DELETE_WINDOW', self.onDestroy) # https://stackoverflow.com/a/3295463/14501840
         self.bind('<Key>', self.handle_key)
+        
+        # Default to Main Menu
+        self.open_menu(menus.MAIN_MENU)
         
     def mainloop(self):
         """Replacement for the default mainloop so that I can pause it for debugging"""
@@ -81,6 +83,6 @@ class root(util.Default_Window):
         self.frames[menu].tkraise()
         
 if __name__ == "__main__":
-    root = root()
-    root.open_menu(menus.MAIN_MENU)
+    root = Root()
+    root.open_menu(menus.BATTLE)
     root.mainloop()
