@@ -336,7 +336,7 @@ class Pokemon(Observable):
             return "greatly fell."
         if stage > 0:
             return "rose."
-        if srage < 0:
+        if stage < 0:
             return "fell."
 
     def change_atk(self, stage):
