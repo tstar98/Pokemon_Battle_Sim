@@ -1,4 +1,4 @@
-from Pokemon_Battle_Sim.pubsub import Publisher
+from Pokemon_Battle_Sim.pubsub import Publisher, Observable
 from Pokemon_Battle_Sim import use_gui, MAX_TEAM
 
 class Trainer(Publisher):
