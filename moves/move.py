@@ -73,11 +73,9 @@ class Move(Publisher):
 
         # Initialize the Publisher
         super().__init__()
-        self.add_subscriber(Printer)
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        self.publish(f"{pokemon1.name} used {self.name}")
-        self._pp -= 1
+        pass
 
     def _does_hit(self, pokemon1, pokemon2):
         # pokemon that is in the air or underground avoid all attacks

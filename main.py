@@ -146,6 +146,8 @@ class Battle(Subscriber):
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
                 use_moves(move1, Model.player, Model.opponent)
 
+        print()
+
 
 def use_moves(move, attacking_trainer, target_trainer):
     pokemon1 = attacking_trainer.pokemon_out()
@@ -172,6 +174,10 @@ def use_moves(move, attacking_trainer, target_trainer):
         attacking_trainer.reflect = True
     elif result is Screen.LIGHT:
         attacking_trainer.light_screen = True
+
+    # Switching out a pokemon needs the trainer. Work around for refactoring every subclass of Move
+    elif callable(result):
+        result(target_trainer)
 
 class GUIPrinter(Subscriber):
     """Prints any messages to the appropriate textbox"""

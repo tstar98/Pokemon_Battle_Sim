@@ -11,7 +11,8 @@ class Attack(Move):
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         """ returns False if it misses, damage if it hits """
-        super().use_move(pokemon1, pokemon2, reflect, light_screen)
+        self.publish(f"{pokemon1.name} used {self._name}.")
+        self._pp -= 1
 
         # calculate accuracy
         if not self._does_hit(pokemon1, pokemon2):
@@ -112,6 +113,7 @@ class SetDamageAttack(Attack):
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         self.publish(f"{pokemon1.name} used {self.name}")
         self._pp -= 1
+
         effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2)
         if effectiveness == 0:
             self.publish(f"It doesn't affect {pokemon2.name}.")
@@ -293,7 +295,6 @@ class ConfusingContinuousAttack(Attack):
         # set the counter
         if self.__counter == 0:
             self.__counter = random.randint(self.__min, self.__max)
-            self.publish(f"{pokemon1.name} used {self.name}")
             self._pp -= 1
         else:
             self.__counter -= 1
@@ -332,7 +333,6 @@ class ChargingAttack(Attack):
             self.publish(f"{pokemon1.name} unleashed its energy.")
             damage = super(ChargingAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
         else:
-            self.publish(f"{pokemon1.name} used {self.name}")
             self._pp -= 1
             damage = 0
             self.publish(f"{pokemon1.name} began charging power.")
@@ -365,9 +365,13 @@ class MultiAttack(Attack):
 
         times_hit = random.randint(self.__min, self.__max)
         damage = 0
-        for _ in range(times_hit):
+        for i in range(times_hit):
+            if pokemon2.hp == 0:
+                break
             damage += self._do_damage(pokemon1, pokemon2, reflect, light_screen)
 
+        # reset it due to break statement
+        times_hit = i + 1
         message = f"It hit {times_hit} time"
         message += "s." if times_hit > 1 else "."
         self.publish(message)
@@ -428,7 +432,6 @@ class VanishingAttack(ChargingAttack):
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         if not self._is_charged:
-            self.publish(f"{pokemon1.name} used {self.name}")
             self._pp -= 1
             if self._name == "Fly":
                 message = f"{pokemon1.name} flew up high."

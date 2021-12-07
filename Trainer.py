@@ -29,6 +29,7 @@ class Trainer(Publisher):
     def add_to_team(self, pokemon):
         if len(self._team) < self._max_team:
             self._team.append(pokemon)
+            pokemon.add_subscriber(Printer)
             return True
         else:
             return False

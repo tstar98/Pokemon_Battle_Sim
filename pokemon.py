@@ -7,6 +7,7 @@ from Pokemon_Battle_Sim import enums
 from Pokemon_Battle_Sim.moves.attacks import Confused
 from Pokemon_Battle_Sim.pubsub import ChannelObservable
 from Pokemon_Battle_Sim import MAX_MOVES
+from Pokemon_Battle_Sim.Printer import Printer
 
 class channels(Enum):
     PRINT = "PRINT"
