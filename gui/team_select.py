@@ -10,7 +10,7 @@ import tkinter as tk
 
 from Pokemon_Battle_Sim.gui import util
 from Pokemon_Battle_Sim.database import database as db
-from Pokemon_Battle_Sim.pubsub import Subscriber
+from Pokemon_Battle_Sim.pubsub import Subscriber, Observer
 from Pokemon_Battle_Sim.pokemon import Pokemon
 from Pokemon_Battle_Sim.moves.move import Move, move_factory, get_learnset
 from Pokemon_Battle_Sim.Model import Model, channels
@@ -53,7 +53,7 @@ class team_select(tk.Frame):
         add_move.grid(row=2, column=3, sticky='SE')
         
         # Current team (bottom)
-        team = tk.Frame(self, bg='cyan')
+        team = self.Current_Team(self, bg='cyan')
         team.grid(row=3, column=0, columnspan=4, sticky='NSEW')
         
     class add_move(tk.Button):
@@ -201,7 +201,50 @@ class team_select(tk.Frame):
                 else:
                     self.text['text'] = message.name
             
+    class Current_Team(tk.Frame, Observer):
+        def __init__(self, parent, *args, **kwargs):
+            super().__init__(parent, *args, **kwargs)
+            util.gridconfigure(self, cw=[1]*MAX_TEAM)
+            
+            self.details = []
+            for i in range(MAX_TEAM):
+                frame = util.Frame(self)
+                util.grid(frame, column=i)
+                self.details.append(frame)
+            
+            # Initialize the Observer
+            Observer.__init__(self, Model.player.team())
         
+        def update(self, message=None):
+            if message == "append":
+                # Only need to add a new Pokemon
+                i = len(Model.player.team()) - 1
+                frame = self.details[i]
+                pokemon = Model.player.team()[-1]
+                
+                util.gridconfigure(frame, rw=[2, 1, 1,1,1,1])
+                
+                # Name
+                name = tk.Label(frame, text=pokemon.name)
+                util.grid(name, row=0)
+                
+                # Types
+                # TODO
+                types = tk.Label(frame, text='TODO: types')
+                util.grid(types, row=1)
+                
+                # Moves
+                for i, move in enumerate(pokemon.moves):
+                    label = tk.Label(frame, text=move.name)
+                    util.grid(label, row=i+2)
+                # Fill in unused moves
+                for ii in range(i+1, MAX_MOVES):
+                    label = tk.Label(frame, text='')
+                    util.grid(label, row=ii+2)
+                
+            else:
+                raise NotImplementedError()
+    
 if __name__ == "__main__":
     root = util.Default_Window()
     util.gridconfigure(root)
