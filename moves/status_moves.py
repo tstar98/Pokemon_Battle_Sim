@@ -232,14 +232,6 @@ class Splash(Move):
         return False
 
 
-class Transform(Move):
-    def __init__(self, name):
-        super(Transform, self).__init__(name)
-
-    def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
-
-
 class MirrorMove(Move):
     def __init__(self, name):
         super(MirrorMove, self).__init__(name)
