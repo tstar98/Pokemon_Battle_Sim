@@ -14,6 +14,7 @@ from Pokemon_Battle_Sim.pubsub import Subscriber
 from Pokemon_Battle_Sim.pokemon import Pokemon
 from Pokemon_Battle_Sim.moves.move import Move, move_factory, get_learnset
 from Pokemon_Battle_Sim.Model import Model, channels
+from Pokemon_Battle_Sim import MAX_TEAM, MAX_MOVES
 
 class team_select(tk.Frame):
     def __init__(self, parent):

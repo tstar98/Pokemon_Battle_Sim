@@ -5,6 +5,7 @@ from Pokemon_Battle_Sim.database import database as db
 from Pokemon_Battle_Sim import enums
 from Pokemon_Battle_Sim.moves.attacks import Confused
 from Pokemon_Battle_Sim.pubsub import Publisher
+from Pokemon_Battle_Sim import MAX_MOVES
 
 
 class Pokemon(Publisher):
@@ -72,7 +73,7 @@ class Pokemon(Publisher):
         return math.floor(((a + b) * self.__level) / 100)
 
     def add_move(self, move):
-        if len(self.__moves) >= 4:
+        if len(self.__moves) >= MAX_MOVES:
             return False
         self.__moves.append(move)
         return True

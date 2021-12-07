@@ -1,12 +1,12 @@
 from Pokemon_Battle_Sim.pubsub import Publisher
-from Pokemon_Battle_Sim import use_gui
+from Pokemon_Battle_Sim import use_gui, MAX_TEAM
 
 class Trainer(Publisher):
     def __init__(self):
         self._team = []
         self._reflect = 0
         self._light_screen = 0
-        self._max_team = 3
+        self._max_team = MAX_TEAM
         self._sub = None
 
     def add_to_team(self, pokemon):
@@ -73,7 +73,7 @@ class Player(Trainer):
         if use_gui:
             raise NotImplementedError()
         else:
-            move_use = self._team[0].get_random_move()
+            move_use = self.pokemon_out().get_random_move()
         return move_use
 
     @property
@@ -100,7 +100,7 @@ class Player(Trainer):
 class Opponent(Trainer):
     def make_selection(self, opponent):
         # TODO: Change. For now, it just selects the first move of the pokemon out
-        move_use = self._team[0].get_random_move()
+        move_use = self.pokemon_out().get_random_move()
         return move_use
 
     @property
