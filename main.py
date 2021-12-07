@@ -172,9 +172,6 @@ def use_moves(move, attacking_trainer, target_trainer):
     elif result is Screen.LIGHT:
         attacking_trainer.light_screen = True
 
-class ConsolePrinter(Subscriber):
-    """Prints any messages to the console"""
-
 class GUIPrinter(Subscriber):
     """Prints any messages to the appropriate textbox"""
 
@@ -182,24 +179,14 @@ if __name__ == '__main__':
     # make_player = not use_gui
     make_player = True
     
-    if use_gui:
-        subscriber = GUIPrinter()
-    else:
-        subscriber = ConsolePrinter()
     #
     # demo1(make_player)
-    # Model.player.add_subscriber(subscriber)
-    # Model.opponent.add_subscriber(subscriber)
     #
     # input("Press enter to continue.")
     demo2(make_player)
-    Model.player.add_subscriber(subscriber)
-    Model.opponent.add_subscriber(subscriber)
     #
     # input("Press enter to continue.")
     # demo3(make_player)
-    # Model.player.add_subscriber(subscriber)
-    # Model.opponent.add_subscriber(subscriber)
     
     if use_gui:
         # Initialize GUI

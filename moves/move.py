@@ -5,6 +5,7 @@ import os
 from Pokemon_Battle_Sim.database import database as db
 from Pokemon_Battle_Sim.enums import MoveType as mt, Category
 from Pokemon_Battle_Sim.pubsub import Publisher
+from Pokemon_Battle_Sim.Printer import Printer
 
 
 super_effective = {
@@ -69,7 +70,10 @@ class Move(Publisher):
         self._name = name
         self._type, self._power, self._accuracy, self._max_pp, self._priority, self._desc = move
         self._pp = self._max_pp
-        self._sub = None
+
+        # Initialize the Publisher
+        super().__init__()
+        self.add_subscriber(Printer)
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         self.publish(f"{pokemon1.name} used {self.name}")
@@ -97,15 +101,6 @@ class Move(Publisher):
 
     def decrement_pp(self):
         self._pp -= 1
-
-    def add_subscriber(self, subscriber):
-        self._sub = subscriber
-
-    def remove_subscriber(self):
-        self._sub = None
-
-    def publish(self, message):
-        self._sub.update(message)
 
     def category(self):
         if self._type in ['Fire', 'Water', 'Grass', 'Electric', 'Psychic', 'Ice', 'Dragon']:

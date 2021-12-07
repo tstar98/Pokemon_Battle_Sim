@@ -1,6 +1,7 @@
 from Pokemon_Battle_Sim.pubsub import Publisher, Observable
 from Pokemon_Battle_Sim import use_gui, MAX_TEAM
 # from Pokemon_Battle_Sim.Model import Model # just-in-time import to avoid circular import
+from Pokemon_Battle_Sim.Printer import Printer
 
 class Trainer(Publisher):
     def __init__(self):
@@ -8,7 +9,11 @@ class Trainer(Publisher):
         self._reflect = 0
         self._light_screen = 0
         self._max_team = MAX_TEAM
-        self._sub = None
+        
+        # Publish to Printer for printing Reflect and Light Screen effects
+        super().__init__()
+        self.add_subscriber(Printer)
+        
         
     class __Team(list, Observable):
         """Needed to separate the Trainer publishing text from changes to the

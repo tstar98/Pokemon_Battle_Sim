@@ -165,7 +165,6 @@ class MimicMove(Move):
             if self._does_hit(pokemon1, pokemon2):
                 move_selected = pokemon2.get_random_move()
                 self.__move = move_factory(move_selected.name)
-                self.__move.add_subscriber(self._sub)
                 self.publish(f"{pokemon1.name} learned {move_selected.name}.")
 
         # us copied move
