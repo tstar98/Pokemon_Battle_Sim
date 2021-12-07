@@ -72,7 +72,8 @@ class Move(Publisher):
         self._sub = None
 
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
-        pass
+        self.publish(f"{pokemon1.name} used {self.name}")
+        self._pp -= 1
 
     def _does_hit(self, pokemon1, pokemon2):
         if self._accuracy is None:
