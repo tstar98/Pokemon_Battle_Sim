@@ -113,11 +113,11 @@ def battle(trainer1, trainer2):
         trainer2.next_turn()
         trainer2.pokemon_out().next_turn()
         
-        print(trainer1.pokemon_out())
-        print()
-        print(trainer2.pokemon_out())
-        print()
-
+        if not use_gui:
+            print(trainer1.pokemon_out())
+            print()
+            print(trainer2.pokemon_out())
+            print()
 
 def make_selection(trainer1, trainer2):
     # TODO: add checks for last move used
@@ -191,13 +191,11 @@ if __name__ == '__main__':
     # trainer1, trainer2 = demo1()
     # trainer1.add_subscriber(subscriber)
     # trainer2.add_subscriber(subscriber)
-    # battle(trainer1, trainer2)
     #
     # input("Press enter to continue.")
     trainer1, trainer2 = demo2()
     trainer1.add_subscriber(subscriber)
     trainer2.add_subscriber(subscriber)
-    battle(trainer1, trainer2)
     #
     # input("Press enter to continue.")
     # trainer1, trainer2 = demo3()
@@ -207,3 +205,8 @@ if __name__ == '__main__':
     if use_gui:
         # Initialize GUI
         from gui.root import Root, menus
+        root = Root()
+        root.mainloop()
+    else:
+        # Run in console
+        battle(trainer1, trainer2)
