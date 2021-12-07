@@ -91,8 +91,9 @@ def demo3(make_player=True):
         Model.player.add_to_team(pokemon)
 
 
-class Battle():
+class Battle(Subscriber):
     """ where the battle occurs"""
+    
     def battle_round(self):
         self.make_selection()
 
@@ -102,12 +103,11 @@ class Battle():
         Model.opponent.next_turn()
         Model.opponent.pokemon_out().next_turn()
         
-        if not use_gui:
-            print(Model.player.pokemon_out())
-            print()
-            print(Model.opponent.pokemon_out())
-            print()
-                
+        print(Model.player.pokemon_out())
+        print()
+        print(Model.opponent.pokemon_out())
+        print()
+            
     def console_battle(self):
         while Model.player.has_pokemon() and Model.opponent.has_pokemon():
             self.battle_round()
@@ -156,17 +156,12 @@ def use_moves(move, attacking_trainer, target_trainer):
         return
 
     # if all moves have 0 pp, struggle
-    if True:
-        warn("Pokemon.has_moves not implemented")
-    else:
-        if not pokemon1.has_moves:
-            subscriber.update(f"{pokemon1.name} has no moves left.")
-            subscriber.update(f"{pokemon1.name} used Struggle.")
-            struggle = Struggle()
-            struggle.use_move(pokemon1, pokemon2)
-            return
+    if not pokemon1.has_moves:
+        subscriber.update(f"{pokemon1.name} has no moves left.")
+        struggle = Struggle()
+        struggle.use_move(pokemon1, pokemon2)
+        return
 
-    subscriber.update(f"{pokemon1.name} used {move.name}")
     result = move.use_move(pokemon1, pokemon2, reflect, light_screen)
 
     pokemon1.last_move = move
@@ -184,9 +179,13 @@ class GUIPrinter(Subscriber):
     """Prints any messages to the appropriate textbox"""
 
 if __name__ == '__main__':
-    make_player = not use_gui
+    # make_player = not use_gui
+    make_player = True
     
-    subscriber = ConsolePrinter()
+    if use_gui:
+        subscriber = GUIPrinter()
+    else:
+        subscriber = ConsolePrinter()
     #
     # demo1(make_player)
     # Model.player.add_subscriber(subscriber)
@@ -204,8 +203,9 @@ if __name__ == '__main__':
     
     if use_gui:
         # Initialize GUI
-        from gui.root import Root
+        from gui.root import Root, menus
         root = Root()
+        root.open_menu(menus.BATTLE)
         root.mainloop()
     else:
         # Run in console
