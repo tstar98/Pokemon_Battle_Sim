@@ -3,7 +3,7 @@ import random
 from Trainer import *
 from pokemon import Pokemon
 from moves.move import move_factory
-from attacks import Struggle
+from moves.attacks import Struggle
 from pubsub import Subscriber
 from enums import Screen
 from Model import Model, channels

@@ -82,11 +82,19 @@ class Player(Trainer):
         
         return move_use
 
+    @property
+    def reflect(self):
+        return self._reflect
+
     @reflect.setter
     def reflect(self, boolean):
         if boolean:
             self.publish("Reflect raised your team's Defense.")
         self._reflect = boolean
+
+    @property
+    def light_screen(self):
+        return self._light_screen
 
     @light_screen.setter
     def light_screen(self, boolean):
@@ -101,11 +109,19 @@ class Opponent(Trainer):
         move_use = self._team[0].get_random_move()
         return move_use
 
+    @property
+    def reflect(self):
+        return self._reflect
+
     @reflect.setter
     def reflect(self, boolean):
         if boolean:
             self.publish("Reflect raised your opponent's Defense.")
         self._reflect = boolean
+
+    @property
+    def light_screen(self):
+        return self._light_screen
 
     @light_screen.setter
     def light_screen(self, boolean):
