@@ -1,5 +1,6 @@
 from Pokemon_Battle_Sim.pubsub import Publisher, Observable
 from Pokemon_Battle_Sim import use_gui, MAX_TEAM
+# from Pokemon_Battle_Sim.Model import Model # just-in-time import to avoid circular import
 
 class Trainer(Publisher):
     def __init__(self):
@@ -82,7 +83,8 @@ class Trainer(Publisher):
 class Player(Trainer):
     def make_selection(self, opponent):
         if use_gui:
-            raise NotImplementedError()
+            from Pokemon_Battle_Sim.Model import Model # just-in-time import to avoid circular import
+            move_use = Model.sel_move
         else:
             move_use = self.pokemon_out().get_random_move()
         return move_use
