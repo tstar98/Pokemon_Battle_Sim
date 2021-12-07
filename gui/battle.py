@@ -7,7 +7,7 @@ Created on Wed Nov 17 18:16:03 2021
 
 import tkinter as tk
 
-from Pokemon_Battle_Sim.gui import move_select
+from Pokemon_Battle_Sim.gui.move_select import Move_Select
 from Pokemon_Battle_Sim.gui import util
 from Pokemon_Battle_Sim.Model import Model, channels
 from Pokemon_Battle_Sim.pubsub import Subscriber

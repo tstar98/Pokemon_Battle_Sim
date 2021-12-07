@@ -8,7 +8,7 @@ Created on Thu Nov 11 19:46:54 2021
 import tkinter as tk
 import functools
 
-import util
+from Pokemon_Battle_Sim.gui import util
 from Pokemon_Battle_Sim.pubsub import Publisher
 from Pokemon_Battle_Sim.Model import Model, channels
 
@@ -35,6 +35,7 @@ class Move_Select(tk.Frame, Publisher):
         
         # Moves buttons
         def select_move(move):
+            print(f"DEBUG using {move.name}")
             self.publish(move)
             go_back()
         moves = Model.player.pokemon_out().moves
@@ -76,7 +77,7 @@ if __name__ == "__main__":
     
     
     # FIXTURE: create the base Tkinter window
-    root = util.Default_Window()
+    root = util.Default_Window(y_stretch=10/(10+12))
     util.gridconfigure(root)
     frame = Move_Select(root)
     frame.grid(row=0, column=0, sticky='NSEW')

@@ -7,7 +7,7 @@ Created on Sat Nov 20 14:51:18 2021
 
 import tkinter as tk
 
-import util
+from Pokemon_Battle_Sim.gui import util
 
 class main_menu(tk.Frame):
     def __init__(self, parent):

@@ -8,7 +8,7 @@ Created on Sat Nov 20 15:30:21 2021
 import itertools
 import tkinter as tk
 
-import util
+from Pokemon_Battle_Sim.gui import util
 from Pokemon_Battle_Sim.database import database as db
 from Pokemon_Battle_Sim.pubsub import Subscriber
 from Pokemon_Battle_Sim.pokemon import Pokemon
