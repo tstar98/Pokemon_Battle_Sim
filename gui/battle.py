@@ -16,6 +16,7 @@ from Pokemon_Battle_Sim.pubsub import Publisher, Subscriber, Observer
 from Pokemon_Battle_Sim.pokemon import Pokemon, channels as poke_channels
 from Pokemon_Battle_Sim.enums import Screen
 from Pokemon_Battle_Sim.moves.attacks import Struggle
+from Pokemon_Battle_Sim.Printer import ConsolePrinter
 
 class Battle(tk.Frame, Publisher, Subscriber): # The pokemon fighting and the move-select menu
     def __init__(self, parent, *args, **kwargs):
@@ -56,6 +57,11 @@ class Battle(tk.Frame, Publisher, Subscriber): # The pokemon fighting and the mo
 
         Model.opponent.next_turn()
         Model.opponent.pokemon_out().next_turn()
+        
+        ConsolePrinter.update(Model.player.pokemon_out())
+        ConsolePrinter.update()
+        ConsolePrinter.update(Model.opponent.pokemon_out())
+        ConsolePrinter.update()
                 
     def gui_battle(self):
         while Model.player.has_pokemon() and Model.opponent.has_pokemon():

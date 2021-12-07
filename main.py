@@ -10,6 +10,7 @@ from Pokemon_Battle_Sim.pubsub import Subscriber
 from Pokemon_Battle_Sim.enums import Screen
 from Pokemon_Battle_Sim.Model import Model, channels
 from Pokemon_Battle_Sim import use_gui
+from Pokemon_Battle_Sim.Printer import ConsolePrinter
 
 def select_team():
     """ player selects pokemon and moves """
@@ -103,10 +104,10 @@ class Battle(Subscriber):
         Model.opponent.next_turn()
         Model.opponent.pokemon_out().next_turn()
         
-        print(Model.player.pokemon_out())
-        print()
-        print(Model.opponent.pokemon_out())
-        print()
+        ConsolePrinter.update(Model.player.pokemon_out())
+        ConsolePrinter.update()
+        ConsolePrinter.update(Model.opponent.pokemon_out())
+        ConsolePrinter.update()
             
     def console_battle(self):
         while Model.player.has_pokemon() and Model.opponent.has_pokemon():

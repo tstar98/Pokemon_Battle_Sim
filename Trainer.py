@@ -43,19 +43,6 @@ class Trainer(Publisher):
         self._light_screen = 0 if self._light_screen <= 0 else self._light_screen - 1
         self._reflect = 0 if self._reflect <= 0 else self._reflect - 1
 
-    def add_subscriber(self, subscriber):
-        self._sub = subscriber
-        for pokemon in self._team:
-            pokemon.add_subscriber(subscriber)
-
-    def remove_subscriber(self):
-        self._sub = None
-        for pokemon in self._team:
-            pokemon.remove_subscriber()
-
-    def publish(self, message):
-        self._sub.update(message)
-
     def team(self):
         return self._team
 
