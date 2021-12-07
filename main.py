@@ -17,7 +17,6 @@ def select_team():
 
 
 def demo1(make_player=True):
-    trainer1 = Model.opponent
     pokemon = Pokemon(51)
     move = move_factory('Earthquake')
     pokemon.add_move(move)
@@ -27,9 +26,8 @@ def demo1(make_player=True):
     pokemon.add_move(move)
     move = move_factory('Double Team')
     pokemon.add_move(move)
-    trainer1.add_to_team(pokemon)
+    Model.opponent.add_to_team(pokemon)
 
-    trainer2 = Model.player
     if make_player:
         pokemon = Pokemon(28)
         move = move_factory('Fury Swipes')
@@ -40,13 +38,10 @@ def demo1(make_player=True):
         pokemon.add_move(move)
         move = move_factory('Take Down')
         pokemon.add_move(move)
-        trainer2.add_to_team(pokemon)
-
-    return trainer1, trainer2
+        Model.player.add_to_team(pokemon)
 
 
 def demo2(make_player=True):
-    trainer1 = Model.opponent
     pokemon = Pokemon(65)
     move = move_factory('Thunder Wave')
     pokemon.add_move(move)
@@ -56,9 +51,8 @@ def demo2(make_player=True):
     pokemon.add_move(move)
     move = move_factory('Recover')
     pokemon.add_move(move)
-    trainer1.add_to_team(pokemon)
+    Model.opponent.add_to_team(pokemon)
 
-    trainer2 = Model.player
     if make_player:
         pokemon = Pokemon(94)
         move = move_factory('Hypnosis')
@@ -69,13 +63,10 @@ def demo2(make_player=True):
         pokemon.add_move(move)
         move = move_factory('Confuse Ray')
         pokemon.add_move(move)
-        trainer2.add_to_team(pokemon)
-
-    return trainer1, trainer2
+        Model.player.add_to_team(pokemon)
 
 
 def demo3(make_player=True):
-    trainer1 = Model.opponent
     pokemon = Pokemon(51)
     move = move_factory('Dragon Rage')
     pokemon.add_move(move)
@@ -85,9 +76,8 @@ def demo3(make_player=True):
     pokemon.add_move(move)
     move = move_factory('Double Team')
     pokemon.add_move(move)
-    trainer1.add_to_team(pokemon)
+    Model.opponent.add_to_team(pokemon)
 
-    trainer2 = Model.player
     if make_player:
         pokemon = Pokemon(28)
         move = move_factory('Fury Swipes')
@@ -98,62 +88,62 @@ def demo3(make_player=True):
         pokemon.add_move(move)
         move = move_factory('Take Down')
         pokemon.add_move(move)
-        trainer2.add_to_team(pokemon)
-
-    return trainer1, trainer2
+        Model.player.add_to_team(pokemon)
 
 
-def battle(trainer1, trainer2):
-    """ where the battle occurs
-     train1 is the player, train2 is the opponent"""
+class Battle():
+    """ where the battle occurs"""
+    def battle_round(self):
+        self.make_selection()
 
-    while trainer1.has_pokemon() and trainer2.has_pokemon():
-        make_selection(trainer1, trainer2)
+        Model.player.next_turn()
+        Model.player.pokemon_out().next_turn()
 
-        trainer1.next_turn()
-        trainer1.pokemon_out().next_turn()
-
-        trainer2.next_turn()
-        trainer2.pokemon_out().next_turn()
+        Model.opponent.next_turn()
+        Model.opponent.pokemon_out().next_turn()
         
         if not use_gui:
-            print(trainer1.pokemon_out())
+            print(Model.player.pokemon_out())
             print()
-            print(trainer2.pokemon_out())
+            print(Model.opponent.pokemon_out())
             print()
+                
+    def console_battle(self):
+        while Model.player.has_pokemon() and Model.opponent.has_pokemon():
+            self.battle_round()
 
-def make_selection(trainer1, trainer2):
-    # TODO: add checks for last move used
-
-    move1 = trainer1.make_selection(trainer2.pokemon_out())
-    move2 = trainer2.make_selection(trainer1.pokemon_out())
-
-    # determine order of moves
-    if move1.priority == move2.priority:
-        if trainer1.pokemon_out().speed > trainer2.pokemon_out().speed:
+    def make_selection(self):
+        # TODO: add checks for last move used
+    
+        move1 = Model.player.make_selection(Model.opponent.pokemon_out())
+        move2 = Model.opponent.make_selection(Model.player.pokemon_out())
+    
+        # determine order of moves
+        if move1.priority == move2.priority:
+            if Model.player.pokemon_out().speed > Model.opponent.pokemon_out().speed:
+                move_order = 1
+            elif Model.player.pokemon_out().speed < Model.opponent.pokemon_out().speed:
+                move_order = 2
+            else:
+                # randomly select order if priority and speed are the same
+                move_order = random.randint(1, 2)
+    
+        elif move1.priority > move2.priority:
             move_order = 1
-        elif trainer1.pokemon_out().speed < trainer2.pokemon_out().speed:
-            move_order = 2
         else:
-            # randomly select order if priority and speed are the same
-            move_order = random.randint(1, 2)
-
-    elif move1.priority > move2.priority:
-        move_order = 1
-    else:
-        move_order = 2
-
-    if move_order == 1:
-        use_moves(move1, trainer1, trainer2)
-        # only use the move if both the attacker and target are still in battle
-        if trainer1.pokemon_out().hp > 0 and trainer2.pokemon_out().hp > 0:
-            use_moves(move2, trainer2, trainer1)
-
-    else:
-        use_moves(move2, trainer2, trainer1)
-        # only use the move if both the attacker and target are still in battle
-        if trainer1.pokemon_out().hp > 0 and trainer2.pokemon_out().hp > 0:
-            use_moves(move1, trainer1, trainer2)
+            move_order = 2
+    
+        if move_order == 1:
+            use_moves(move1, Model.player, Model.opponent)
+            # only use the move if both the attacker and target are still in battle
+            if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
+                use_moves(move2, Model.opponent, Model.player)
+    
+        else:
+            use_moves(move2, Model.opponent, Model.player)
+            # only use the move if both the attacker and target are still in battle
+            if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
+                use_moves(move1, Model.player, Model.opponent)
 
 
 def use_moves(move, attacking_trainer, target_trainer):
@@ -187,31 +177,37 @@ def use_moves(move, attacking_trainer, target_trainer):
     elif result is Screen.LIGHT:
         attacking_trainer.light_screen = True
 
+class ConsolePrinter(Subscriber):
+    """Prints any messages to the console"""
+
+class GUIPrinter(Subscriber):
+    """Prints any messages to the appropriate textbox"""
 
 if __name__ == '__main__':
     make_player = not use_gui
     
-    subscriber = Subscriber()
+    subscriber = ConsolePrinter()
     #
-    # trainer1, trainer2 = demo1(make_player)
-    # trainer1.add_subscriber(subscriber)
-    # trainer2.add_subscriber(subscriber)
-    #
-    # input("Press enter to continue.")
-    trainer1, trainer2 = demo2(make_player)
-    trainer1.add_subscriber(subscriber)
-    trainer2.add_subscriber(subscriber)
+    # demo1(make_player)
+    # Model.player.add_subscriber(subscriber)
+    # Model.opponent.add_subscriber(subscriber)
     #
     # input("Press enter to continue.")
-    # trainer1, trainer2 = demo3(make_player)
-    # trainer1.add_subscriber(subscriber)
-    # trainer2.add_subscriber(subscriber)
+    demo2(make_player)
+    Model.player.add_subscriber(subscriber)
+    Model.opponent.add_subscriber(subscriber)
+    #
+    # input("Press enter to continue.")
+    # demo3(make_player)
+    # Model.player.add_subscriber(subscriber)
+    # Model.opponent.add_subscriber(subscriber)
     
     if use_gui:
         # Initialize GUI
-        from gui.root import Root, menus
+        from gui.root import Root
         root = Root()
         root.mainloop()
     else:
         # Run in console
-        battle(trainer1, trainer2)
+        battle = Battle()
+        battle.console_battle()
