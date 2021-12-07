@@ -96,7 +96,13 @@ class team_select(tk.Frame):
             else:
                 idx, = selection
                 pid = self.full_list[idx][0]
-                Model.set_sel_pokemon(Pokemon(pid))
+                old_id = Model.sel_pokemon.pokemon_id
+                if pid == old_id:
+                    # Reselected what was already selected, do nothing
+                    pass
+                else:
+                    # Selection changed
+                    Model.set_sel_pokemon(Pokemon(pid))
             
     class pokemon_detail(tk.Frame, Subscriber):
         def __init__(self, parent, *args, **kwargs):
@@ -113,7 +119,7 @@ class team_select(tk.Frame):
             
             # Moves
             self.move_buttons = []
-            for col in range(4):
+            for col in range(MAX_MOVES):
                 button = util.Button(self)
                 button.grid(row=1, column=col, sticky='NSEW')
                 self.move_buttons.append(button)
@@ -134,7 +140,7 @@ class team_select(tk.Frame):
                 self.text['text'] = 'Select a Pokemon on the left'
             else:
                 self.text['text'] = pokemon.name
-                for move, button in itertools.zip_longest(Model.sel_pokemon.moves, self.move_buttons):
+                for move, button in itertools.zip_longest(pokemon.moves, self.move_buttons):
                     if move is None:
                         button['text'] = ''
                     else:
