@@ -3,11 +3,22 @@ from Pokemon_Battle_Sim import use_gui, MAX_TEAM
 
 class Trainer(Publisher):
     def __init__(self):
-        self._team = []
+        self._team = self.__Team()
         self._reflect = 0
         self._light_screen = 0
         self._max_team = MAX_TEAM
         self._sub = None
+        
+    class __Team(list, Observable):
+        """Needed to separate the Trainer publishing text from changes to the
+        Observable team (i.e. Pokemon added/dropped, switched, etc.)"""
+        def __init__(self):
+            super().__init__()
+            Observable.__init__(self)
+            
+        def append(self, object, /):
+            super().append(object)
+            self.publish("append")
 
     def add_to_team(self, pokemon):
         if len(self._team) < self._max_team:

@@ -18,6 +18,8 @@ class Publisher:
 
 class Subscriber:
     def update(self, message):
+        """Prints the given message
+        Note: be careful when using TKinter objects, they have an update function"""
         print(message)
 
 class ChannelPublisher():
@@ -72,3 +74,24 @@ class ChannelPublisher():
         def update(self, message):
             """Pass the message along"""
             self.publish(message)
+
+class Observer(Subscriber):
+    def __init__(self, subject):
+        super().__init__()
+        assert isinstance(subject, Observable)
+        self.subject = subject
+        subject.add_subscriber(self)
+        
+    def update(self, message):
+        """Should be implemented in inheriting classes to fetch the appropriate
+        information from the subject
+        Note: be careful when using TKinter objects, they have an update function"""
+        raise NotImplementedError()
+    
+class Observable(Publisher):
+    """
+    Instead of publishing a message, the Publish function just serves to alert
+    subscribers that a change has happened
+    """
+    def __init__(self):
+        super().__init__()

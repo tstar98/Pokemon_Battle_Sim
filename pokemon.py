@@ -4,11 +4,11 @@ import math
 from Pokemon_Battle_Sim.database import database as db
 from Pokemon_Battle_Sim import enums
 from Pokemon_Battle_Sim.moves.attacks import Confused
-from Pokemon_Battle_Sim.pubsub import Publisher
+from Pokemon_Battle_Sim.pubsub import Observable
 from Pokemon_Battle_Sim import MAX_MOVES
 
 
-class Pokemon(Publisher):
+class Pokemon(Observable):
     def __init__(self, pokemon_id):
         self.__level = 50
         self.__dv = 15
