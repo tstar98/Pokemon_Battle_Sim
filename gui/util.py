@@ -40,6 +40,13 @@ def Button(*args, **kwargs):
     # FIXME - using the big font makes all the buttons weird sizes
     kwargs.update(relief='ridge', borderwidth=1*scale)
     return tk.Button(*args, **kwargs)
+
+def Frame(*args, **kwargs):
+    """Sugar syntax to make a frame using a standard set of settings"""
+    # kwargs.update(relief='ridge', borderwidth=1*scale, font=font)
+    # FIXME - using the big font makes all the buttons weird sizes
+    kwargs.update(relief='ridge', borderwidth=1*scale)
+    return tk.Frame(*args, **kwargs)
     
 def gridconfigure(obj, rw=None, cw=None):
     """
@@ -63,3 +70,10 @@ def gridconfigure(obj, rw=None, cw=None):
         obj.rowconfigure(i, weight=weight)
     for i, weight in enumerate(cw):
         obj.columnconfigure(i, weight=weight)
+        
+def grid(obj, row=0, column=0, *args, **kwargs):
+    """Sugar syntax for TKinter's grid function"""
+    if 'sticky' not in kwargs:
+        kwargs['sticky'] = 'NSEW'
+    obj.grid(*args, row=row, column=column, **kwargs)
+        
