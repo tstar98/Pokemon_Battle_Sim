@@ -1,13 +1,13 @@
 import random
 from warnings import warn
 
-from Trainer import *
-from pokemon import Pokemon
-from moves.move import move_factory
-from moves.attacks import Struggle
-from pubsub import Subscriber
-from enums import Screen
 # MUST import from top-level or it gets a different instance from GUI scripts
+from Pokemon_Battle_Sim.Trainer import *
+from Pokemon_Battle_Sim.pokemon import Pokemon
+from Pokemon_Battle_Sim.moves.move import move_factory
+from Pokemon_Battle_Sim.moves.attacks import Struggle
+from Pokemon_Battle_Sim.pubsub import Subscriber
+from Pokemon_Battle_Sim.enums import Screen
 from Pokemon_Battle_Sim.Model import Model, channels
 from Pokemon_Battle_Sim import use_gui
 
