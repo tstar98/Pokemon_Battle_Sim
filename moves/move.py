@@ -152,9 +152,9 @@ def move_factory(name):
     from Pokemon_Battle_Sim.moves.attacks import Attack, StatAlteringAttack, SetDamageAttack, FlinchAttack, RecoilAttack, \
         RecoilOnMissAttack, StatusEffectAttack, ConfusingContinuousAttack, HealingAttack, ChargingAttack, MultiAttack, \
         TrapAttack, ConfusingAttack, CritAttack, VanishingAttack, DreamEater, SelfDestruct, RechargeAttack, \
-        Struggle, OHKO
+        Struggle, OHKO, LevelBasedAttack, HalfHealthAttack, StatChargingAttack
     from Pokemon_Battle_Sim.moves.status_moves import ScreenMove, SwitchingMove, StatAlteringMove, StatusEffectMove, HealingMove, \
-        ConfusingMove, RandomMove, MimicMove, Rest, Splash, Transform, MirrorMove
+        ConfusingMove, RandomMove, MimicMove, Rest, Splash, MirrorMove
 
     move_id = db.select(f'SELECT move_type FROM moves WHERE name = \'{name}\';')[0]
 
@@ -189,8 +189,11 @@ def move_factory(name):
         mt.MIMIC_MOVE.value: MimicMove,
         mt.REST.value: Rest,
         mt.SPLASH.value: Splash,
-        mt.TRANSFORM.value: Transform,
-        mt.MIRROR_MOVE.value: MirrorMove
+        mt.MIRROR_MOVE.value: MirrorMove,
+        mt.OHKO.value: OHKO,
+        mt.LEVEL_BASED_ATK.value: LevelBasedAttack,
+        mt.HALF_HEALTH_ATTACK.value: HalfHealthAttack,
+        mt.STAT_CHARGE_ATK.value: StatChargingAttack
     }
     return moves[move_id[0]](name)
 

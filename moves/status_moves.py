@@ -51,41 +51,21 @@ class StatAlteringMove(Move):
 
         # determine stat and set function obj to correct stat altering function
         if self._stat == Stat.ATTACK.value:
-            message += "attack "
             change_stat = pokemon.change_atk
         elif self._stat == Stat.DEFENSE.value:
-            message += "defense "
             change_stat = pokemon.change_def
         elif self._stat == Stat.SPECIAL.value:
-            message += "special "
             change_stat = pokemon.change_spc
         elif self._stat == Stat.SPEED.value:
-            message += "speed "
             change_stat = pokemon.change_spe
         elif self._stat == Stat.EVASION.value:
-            message += "evade "
             change_stat = pokemon.change_eva
         else:
-            message += "accuracy "
             change_stat = pokemon.change_acc
 
-        if change_stat(self._stages):
-            if self._stages > 1 or self._stages < -1:
-                message += "greatly "
-            if self._stages > 0:
-                message += "rose."
-            else:
-                message += "fell."
+        change_stat(self._stages)
 
-        else:
-            # pokemon's stat won't change, either too high or too low,
-            message += "won't go any "
-            if self._stages > 0:
-                message += "higher."
-            else:
-                message += "lower."
-
-        self.publish(message)
+        return True
 
 
 class StatusEffectMove(Move):

@@ -196,6 +196,13 @@ class Pokemon(Observable):
             return None
         return self.__moves[random.randint(0, len(self.__moves) - 1)]
 
+    def has_moves(self):
+        """returns False if all moves have 0 pp"""
+        for move in self.__moves:
+            if move.pp > 0:
+                return True
+        return False
+
     @property
     def pokemon_id(self):
         return self.__id
@@ -322,11 +329,26 @@ class Pokemon(Observable):
 
         self.__confused = boolean
 
+    def _stat_message(self, stage):
+        if stage >= 2:
+            return "greatly rose."
+        if stage <= -2:
+            return "greatly fell."
+        if stage > 0:
+            return "rose."
+        if srage < 0:
+            return "fell."
+
     def change_atk(self, stage):
-        if stage > 0 and self.__battle_atk >= 6 or stage < 0 and self.__battle_atk <= -6:
+        if stage > 0 and self.__evasion >= 6:
+            self.publish(f"{self.__name}'s attack won't go any higher.")
+            return False
+        if stage < 0 and self.__evasion <= -6:
+            self.publish(f"{self.__name}'s attack won't go any lower.")
             return False
 
         self.__battle_atk += stage
+        self.publish(f"{self.name}'s attack {self._stat_message(stage)}")
 
         # ensure it is still between -6 and 6 after the update
         if self.__battle_atk > 6:
@@ -337,10 +359,15 @@ class Pokemon(Observable):
         return True
 
     def change_def(self, stage):
-        if stage > 0 and self.__battle_def >= 6 or stage < 0 and self.__battle_def <= -6:
+        if stage > 0 and self.__evasion >= 6:
+            self.publish(f"{self.__name}'s defense won't go any higher.")
+            return False
+        if stage < 0 and self.__evasion <= -6:
+            self.publish(f"{self.__name}'s defense won't go any lower.")
             return False
 
         self.__battle_def += stage
+        self.publish(f"{self.name}'s defense {self._stat_message(stage)}")
 
         # ensure it is still between -6 and 6 after the update
         if self.__battle_def > 6:
@@ -351,10 +378,15 @@ class Pokemon(Observable):
         return True
 
     def change_spc(self, stage):
-        if stage > 0 and self.__battle_spc >= 6 or stage < 0 and self.__battle_spc <= -6:
+        if stage > 0 and self.__evasion >= 6:
+            self.publish(f"{self.__name}'s special won't go any higher.")
+            return False
+        if stage < 0 and self.__evasion <= -6:
+            self.publish(f"{self.__name}'s special won't go any lower.")
             return False
 
         self.__battle_spc += stage
+        self.publish(f"{self.name}'s special {self._stat_message(stage)}")
 
         # ensure it is still between -6 and 6 after the update
         if self.__battle_spc > 6:
@@ -365,10 +397,15 @@ class Pokemon(Observable):
         return True
 
     def change_spe(self, stage):
-        if stage > 0 and self.__battle_spe >= 6 or stage < 0 and self.__battle_spe <= -6:
+        if stage > 0 and self.__evasion >= 6:
+            self.publish(f"{self.__name}'s speed won't go any higher.")
+            return False
+        if stage < 0 and self.__evasion <= -6:
+            self.publish(f"{self.__name}'s speed won't go any lower.")
             return False
 
         self.__battle_spe += stage
+        self.publish(f"{self.name}'s speed {self._stat_message(stage)}")
 
         # ensure it is still between -6 and 6 after the update
         if self.__battle_spe > 6:
@@ -379,10 +416,15 @@ class Pokemon(Observable):
         return True
 
     def change_acc(self, stage):
-        if stage > 0 and self.__accuracy >= 6 or stage < 0 and self.__accuracy <= -6:
+        if stage > 0 and self.__evasion >= 6:
+            self.publish(f"{self.__name}'s accuracy won't go any higher.")
+            return False
+        if stage < 0 and self.__evasion <= -6:
+            self.publish(f"{self.__name}'s accuracy won't go any lower.")
             return False
 
         self.__accuracy += stage
+        self.publish(f"{self.name}'s accuracy {self._stat_message(stage)}")
 
         # ensure it is still between -6 and 6 after the update
         if self.__accuracy > 6:
@@ -393,10 +435,15 @@ class Pokemon(Observable):
         return True
 
     def change_eva(self, stage):
-        if stage > 0 and self.__evasion >= 6 or stage < 0 and self.__evasion <= -6:
+        if stage > 0 and self.__evasion >= 6:
+            self.publish(f"{self.__name}'s evasion won't go any higher.")
+            return False
+        if stage < 0 and self.__evasion <= -6:
+            self.publish(f"{self.__name}'s evasion won't go any lower.")
             return False
 
         self.__evasion += stage
+        self.publish(f"{self.__name}'s evasion {self._stat_message(stage)}")
 
         # ensure it is still between -6 and 6 after the update
         if self.__evasion > 6:

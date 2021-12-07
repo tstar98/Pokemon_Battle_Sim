@@ -511,6 +511,29 @@ class RechargeAttack(ChargingAttack):
         return damage
 
 
+class StatChargingAttack(ChargingAttack):
+    def __init__(self, name):
+        super(StatChargingAttack, self).__init__(name)
+        move = db.select(f'SELECT stat, stages FROM stat_charging_attacks WHERE name = \'{name}\'')[0]
+        self.__stat = move[0]
+        self.__stages = move[1]
+
+    def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
+        super(StatChargingAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
+
+        # change stat
+        if self._is_charged:
+            # change correct stat
+            if self.__stat == Stat.ATTACK.value:
+                pokemon1.change_atk(self.__stages)
+            if self.__stat == Stat.DEFENSE.value:
+                pokemon1.change_def(self.__stages)
+            if self.__stat == Stat.SPECIAL.value:
+                pokemon1.change_spc(self.__stages)
+            if self.__stat == Stat.SPEED.value:
+                pokemon1.change_spe(self.__stages)
+
+
 class Confused(Attack):
     """ For when a pokemon is confused, not the attack Confusion """
     def __init__(self):
