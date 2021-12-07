@@ -1,15 +1,25 @@
 import random
 import math
+from enum import Enum
 
 from Pokemon_Battle_Sim.database import database as db
 from Pokemon_Battle_Sim import enums
 from Pokemon_Battle_Sim.moves.attacks import Confused
-from Pokemon_Battle_Sim.pubsub import Observable
+from Pokemon_Battle_Sim.pubsub import ChannelObservable
 from Pokemon_Battle_Sim import MAX_MOVES
 
+class channels(Enum):
+    PRINT = "PRINT"
+    POKEMON = "POKEMON"
 
-class Pokemon(Observable):
+class Pokemon(ChannelObservable):
     def __init__(self, pokemon_id):
+        # Initialize the Observable
+        super().__init__()
+        for channel in channels:
+            self.add_channel(channel)
+            
+        # Initialize the Pokemon itself
         self.__level = 50
         self.__dv = 15
         self.__ev = 65535
@@ -62,7 +72,6 @@ class Pokemon(Observable):
         self.__evasion = 0
 
         self.__flinch = False
-        self.__sub = None
         self.__trap_counter = 0
         self.__vanished = False
 
@@ -173,18 +182,34 @@ class Pokemon(Observable):
             self.take_damage(math.floor(self.__max_hp / 16))
             self.publish(f"{self.__name}'s damaged by the trap.")
 
-    def add_subscriber(self, subscriber):
-        self.__sub = subscriber
-        for move in self.__moves:
-            move.add_subscriber(subscriber)
+    def add_subscriber(self, arg1, arg2=None):
+        if arg2 is None:
+            channel = channels.PRINT
+            subscriber = arg1
+        else:
+            channel = arg1
+            subscriber = arg2
+            
+        super().add_subscriber(channel, subscriber)
+            
+        if channel == channels.PRINT:
+            for move in self.__moves:
+                move.add_subscriber(subscriber)
 
-    def remove_subscriber(self):
-        self.__sub = None
-        for move in self.__moves:
-            move.remove_subscriber()
+    def remove_subscriber(self, channel=None):
+        raise NotImplementedError()
+        # self.__sub = None
+        # for move in self.__moves:
+        #     move.remove_subscriber()
 
-    def publish(self, message):
-        self.__sub.update(message)
+    def publish(self, arg1, arg2=None):
+        if arg2 is None:
+            channel = channels.PRINT
+            message = arg1
+        else:
+            channel = arg1
+            message = arg2
+        super().publish(channel, message)
 
     def get_move(self, itr):
         if itr not in range(0, 3):

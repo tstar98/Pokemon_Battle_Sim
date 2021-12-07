@@ -1,5 +1,7 @@
 from Pokemon_Battle_Sim.pubsub import Publisher, Observable
 from Pokemon_Battle_Sim import use_gui, MAX_TEAM
+# from Pokemon_Battle_Sim.Model import Model # just-in-time import to avoid circular import
+from Pokemon_Battle_Sim.Printer import Printer
 
 class Trainer(Publisher):
     def __init__(self):
@@ -7,7 +9,11 @@ class Trainer(Publisher):
         self._reflect = 0
         self._light_screen = 0
         self._max_team = MAX_TEAM
-        self._sub = None
+        
+        # Publish to Printer for printing Reflect and Light Screen effects
+        super().__init__()
+        self.add_subscriber(Printer)
+        
         
     class __Team(list, Observable):
         """Needed to separate the Trainer publishing text from changes to the
@@ -36,19 +42,6 @@ class Trainer(Publisher):
         """performs functions that occur in between turns"""
         self._light_screen = 0 if self._light_screen <= 0 else self._light_screen - 1
         self._reflect = 0 if self._reflect <= 0 else self._reflect - 1
-
-    def add_subscriber(self, subscriber):
-        self._sub = subscriber
-        for pokemon in self._team:
-            pokemon.add_subscriber(subscriber)
-
-    def remove_subscriber(self):
-        self._sub = None
-        for pokemon in self._team:
-            pokemon.remove_subscriber()
-
-    def publish(self, message):
-        self._sub.update(message)
 
     def team(self):
         return self._team
@@ -92,7 +85,8 @@ class Trainer(Publisher):
 class Player(Trainer):
     def make_selection(self, opponent):
         if use_gui:
-            raise NotImplementedError()
+            from Pokemon_Battle_Sim.Model import Model # just-in-time import to avoid circular import
+            move_use = Model.sel_move
         else:
             move_use = self.pokemon_out().get_random_move()
         return move_use

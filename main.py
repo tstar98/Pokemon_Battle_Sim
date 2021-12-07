@@ -1,15 +1,16 @@
 import random
 from warnings import warn
 
-from Trainer import *
-from pokemon import Pokemon
-from moves.move import move_factory
-from moves.attacks import Struggle
-from pubsub import Subscriber
-from enums import Screen
 # MUST import from top-level or it gets a different instance from GUI scripts
+from Pokemon_Battle_Sim.Trainer import *
+from Pokemon_Battle_Sim.pokemon import Pokemon
+from Pokemon_Battle_Sim.moves.move import move_factory
+from Pokemon_Battle_Sim.moves.attacks import Struggle
+from Pokemon_Battle_Sim.pubsub import Subscriber
+from Pokemon_Battle_Sim.enums import Screen
 from Pokemon_Battle_Sim.Model import Model, channels
 from Pokemon_Battle_Sim import use_gui
+from Pokemon_Battle_Sim.Printer import ConsolePrinter
 
 def select_team():
     """ player selects pokemon and moves """
@@ -53,14 +54,15 @@ def demo2(make_player=True):
     pokemon.add_move(move)
     Model.opponent.add_to_team(pokemon)
 
-    pokemon = Pokemon(150)
-    move = move_factory("Psychic")
-    pokemon.add_move(move)
-    Model.opponent.add_to_team(pokemon)
-
     if make_player:
         pokemon = Pokemon(94)
-        move = move_factory('Roar')
+        move = move_factory('Hypnosis')
+        pokemon.add_move(move)
+        move = move_factory('Dream Eater')
+        pokemon.add_move(move)
+        move = move_factory('Mimic')
+        pokemon.add_move(move)
+        move = move_factory('Confuse Ray')
         pokemon.add_move(move)
         Model.player.add_to_team(pokemon)
 
@@ -90,15 +92,10 @@ def demo3(make_player=True):
         Model.player.add_to_team(pokemon)
 
 
-class Battle():
+class Battle(Subscriber):
     """ where the battle occurs"""
+    
     def battle_round(self):
-        if not use_gui:
-            print(Model.player.pokemon_out())
-            print()
-            print(Model.opponent.pokemon_out())
-            print()
-
         self.make_selection()
 
         Model.player.next_turn()
@@ -106,8 +103,12 @@ class Battle():
 
         Model.opponent.next_turn()
         Model.opponent.pokemon_out().next_turn()
-
-                
+        
+        ConsolePrinter.update(Model.player.pokemon_out())
+        ConsolePrinter.update()
+        ConsolePrinter.update(Model.opponent.pokemon_out())
+        ConsolePrinter.update()
+            
     def console_battle(self):
         while Model.player.has_pokemon() and Model.opponent.has_pokemon():
             self.battle_round()
@@ -158,12 +159,10 @@ def use_moves(move, attacking_trainer, target_trainer):
     # if all moves have 0 pp, struggle
     if not pokemon1.has_moves:
         subscriber.update(f"{pokemon1.name} has no moves left.")
-        subscriber.update(f"{pokemon1.name} used Struggle.")
         struggle = Struggle()
         struggle.use_move(pokemon1, pokemon2)
         return
 
-    subscriber.update(f"{pokemon1.name} used {move.name}")
     result = move.use_move(pokemon1, pokemon2, reflect, light_screen)
 
     pokemon1.last_move = move
@@ -174,41 +173,27 @@ def use_moves(move, attacking_trainer, target_trainer):
     elif result is Screen.LIGHT:
         attacking_trainer.light_screen = True
 
-    # SwitchingMove needs target_trainer and this works around refactoring every Move subclass
-    # switches out pokemon
-    elif callable(result):
-        result(target_trainer)
-
-
-class ConsolePrinter(Subscriber):
-    """Prints any messages to the console"""
-
 class GUIPrinter(Subscriber):
     """Prints any messages to the appropriate textbox"""
 
 if __name__ == '__main__':
-    make_player = not use_gui
+    # make_player = not use_gui
+    make_player = True
     
-    subscriber = ConsolePrinter()
     #
     # demo1(make_player)
-    # Model.player.add_subscriber(subscriber)
-    # Model.opponent.add_subscriber(subscriber)
     #
     # input("Press enter to continue.")
     demo2(make_player)
-    Model.player.add_subscriber(subscriber)
-    Model.opponent.add_subscriber(subscriber)
-
+    #
     # input("Press enter to continue.")
     # demo3(make_player)
-    # Model.player.add_subscriber(subscriber)
-    # Model.opponent.add_subscriber(subscriber)
     
     if use_gui:
         # Initialize GUI
-        from gui.root import Root
+        from gui.root import Root, menus
         root = Root()
+        root.open_menu(menus.BATTLE)
         root.mainloop()
     else:
         # Run in console

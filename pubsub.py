@@ -1,9 +1,15 @@
-class Publisher:
+# Base classes for isinstance checking
+class BasePublisher:
+    pass
+class BaseSubscriber:
+    pass
+
+class Publisher(BasePublisher):
     def __init__(self):
         self._subs = []
         
     def add_subscriber(self, subscriber):
-        assert isinstance(subscriber, Subscriber)
+        assert isinstance(subscriber, BaseSubscriber)
         self._subs.append(subscriber)
 
     def remove_subscriber(self, subscriber=None):
@@ -16,13 +22,13 @@ class Publisher:
         for sub in self._subs:
             sub.update(message)
 
-class Subscriber:
+class Subscriber(BaseSubscriber):
     def update(self, message):
         """Prints the given message
         Note: be careful when using TKinter objects, they have an update function"""
         print(message)
 
-class ChannelPublisher():
+class ChannelPublisher(BasePublisher):
     """Variant of Publisher that has different channels"""
     def __init__(self):
         self._channels = {}
@@ -35,7 +41,7 @@ class ChannelPublisher():
         return self._channels[channel]
         
     def add_subscriber(self, channel, subscriber):
-        assert isinstance(subscriber, Subscriber)
+        assert isinstance(subscriber, BaseSubscriber)
         self._channels[channel].add_subscriber(subscriber)
 
     def remove_subscriber(self, channel=None, subscriber=None):
@@ -76,11 +82,15 @@ class ChannelPublisher():
             self.publish(message)
 
 class Observer(Subscriber):
-    def __init__(self, subject):
+    def __init__(self, subject, channel=None):
         super().__init__()
-        assert isinstance(subject, Observable)
+        assert isinstance(subject, BaseObservable)
         self.subject = subject
-        subject.add_subscriber(self)
+        if channel is None:
+            subject.add_subscriber(self)
+        else:
+            assert isinstance(subject, ChannelObservable)
+            subject.add_subscriber(channel, self)
         
     def update(self, message):
         """Should be implemented in inheriting classes to fetch the appropriate
@@ -88,10 +98,17 @@ class Observer(Subscriber):
         Note: be careful when using TKinter objects, they have an update function"""
         raise NotImplementedError()
     
-class Observable(Publisher):
+# Base class for isinstance checking
+class BaseObservable:
+    pass
+
+class Observable(Publisher, BaseObservable):
     """
     Instead of publishing a message, the Publish function just serves to alert
     subscribers that a change has happened
     """
     def __init__(self):
         super().__init__()
+        
+class ChannelObservable(ChannelPublisher, BaseObservable):
+    """Variant of Observable that has different channels"""
