@@ -22,6 +22,7 @@ class channels(Enum):
 # Use Python convention to hide constructor
 class __Model(ChannelPublisher):
     def __init__(self):
+        print("Initializing Model")
         super().__init__()
         for channel in channels:
             self.add_channel(channel)

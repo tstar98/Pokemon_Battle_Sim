@@ -7,7 +7,8 @@ from moves.move import move_factory
 from moves.attacks import Struggle
 from pubsub import Subscriber
 from enums import Screen
-from Model import Model, channels
+# MUST import from top-level or it gets a different instance from GUI scripts
+from Pokemon_Battle_Sim.Model import Model, channels
 
 
 def select_team():
