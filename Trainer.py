@@ -6,6 +6,7 @@ import attacks
 from move import Move
 import enums
 import status_moves
+from attacks import Attack
 
 from Pokemon_Battle_Sim import enums
 from Pokemon_Battle_Sim.pubsub import ChannelObservable
@@ -127,9 +128,8 @@ class Player(Trainer):
 
 
 class Opponent(Trainer):
-    def make_selection(self, target_trainer):
+    def make_selection(self, target_pokemon):
         pokemon1 = self.pokemon_out()
-        pokemon2 = self.pokemon_out()
         best_moves = pokemon1.moves
         # adds some variance
         random.shuffle(best_moves)
@@ -139,20 +139,22 @@ class Opponent(Trainer):
             if move.pp == 0:
                 best_moves.remove(move)
 
+            effectiveness = Move.get_effectiveness(move.type, target_pokemon.type1) *\
+                    Move.get_effectiveness(move.type, target_pokemon.type2)
+
             # remove attacks that don't affect target pokemon from best moves
-            elif isinstance(move, attacks.Attack) \
-                    and Move.get_effectiveness(move.type, pokemon2.type1) \
-                    * Move.get_effectiveness(move.type, pokemon2.type1) == 0:
+            # due to cyclical imports, classes have been reloaded and this is how checking types have to be done
+            if "attacks" in str(repr(move)) and effectiveness == 0:
                 best_moves.remove(move)
 
         # prefer lowering target's speed if slower than target
-        if pokemon2.speed > pokemon1.speed:
+        if target_pokemon.speed > pokemon1.speed:
             # try paralyzing first (if pokemon has a paralysis move)
             for move in best_moves:
-                if isinstance(move, status_moves.StatusEffectMove) \
-                        and move.status_effect == enums.StatusEffect.PARALYSIS.value:
+                # due to cyclical imports, classes have been reloaded and this is how checking types have to be done
+                if "StatusEffectMove" in str(repr(move)) and move.status_effect == enums.StatusEffect.PARALYSIS.value:
 
-                    if pokemon2.status_effect != enums.StatusEffect.NONE.value:
+                    if target_pokemon.status_effect != enums.StatusEffect.NONE.value:
                         # remove from best options
                         best_moves.remove(move)
 
@@ -161,8 +163,9 @@ class Opponent(Trainer):
 
             # speed lowering move
             for move in best_moves:
-                if isinstance(move, status_moves.StatAlteringMove) and move.stat == enums.Stat.SPEED.value:
-                    if pokemon2.spe_stage == -6:
+                # due to cyclical imports, classes have been reloaded and this is how checking types have to be done
+                if "StatAlteringMove" in str(repr(move)) and move.stat == enums.Stat.SPEED.value:
+                    if target_pokemon.spe_stage == -6:
                         # speed won't go lower, remove move from best list
                         best_moves.remove(move)
                     else:
@@ -170,7 +173,8 @@ class Opponent(Trainer):
 
         # next, try setting up screens
         for move in best_moves:
-            if isinstance(move, status_moves.ScreenMove):
+            # due to cyclical imports, classes have been reloaded and this is how checking types have to be done
+            if "ScreenMove" in str(repr(move)):
                 # light screen
                 if move.screen_type == enums.Screen.LIGHT.value:
                     # remove from best list if already up
@@ -188,21 +192,21 @@ class Opponent(Trainer):
 
         # next, try giving target pokemon a status condition
         for move in best_moves:
-            if isinstance(move, status_moves.StatusEffectMove):
-                if pokemon2.status_effect == enums.StatusEffect.NONE.value:
+            if "StatusEffectMove" in str(repr(move)):
+                if target_pokemon.status_effect == enums.StatusEffect.NONE.value:
                     return move
                 else:
                     best_moves.remove(move)
 
-            if isinstance(move, status_moves.ConfusingMove):
-                if pokemon2.is_confused:
+            if "ConfusingMove" in str(repr(move)):
+                if target_pokemon.is_confused:
                     best_moves.remove(move)
                 else:
                     return move
 
         # next, heal if below 1/3 health
         for move in best_moves:
-            if isinstance(move, status_moves.HealingMove):
+            if "HealingMove" in str(repr(move)):
                 if pokemon1.hp <= math.floor(pokemon1.max_hp / 3):
                     return move
                 else:

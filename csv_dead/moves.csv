@@ -105,7 +105,7 @@
 104,Recover,NORMAL,Status,,,10,User recovers half its max HP.,16
 105,Reflect,PSYCHIC,Status,,,20,Halves damage from Physical attacks for 5 turns.,12
 106,Rest,PSYCHIC,Status,,,10,User sleeps for 2 turns but user is fully healed.,29
-107,Roar,NORMAL,Status,,,20,In battles the opponent switches. In the wild the Pokémon runs.,13
+# 107,Roar,NORMAL,Status,,,20,In battles the opponent switches. In the wild the Pokémon runs.,13
 108,Rock Slide,ROCK,Physical,75,90,10,May cause flinching.,0
 109,Rock Throw,ROCK,Physical,50,90,15,,0
 110,Rolling Kick,FIGHTING,Physical,60,85,15,May cause flinching.,3
@@ -160,7 +160,7 @@
 159,Vise Grip,NORMAL,Physical,55,100,30,,0
 160,Water Gun,WATER,Special,40,100,25,,0
 161,Waterfall,WATER,Physical,80,100,15,,0
-162,Whirlwind,NORMAL,Status,,,20,In battles the opponent switches. In the wild the Pokémon runs.,13
+# 162,Whirlwind,NORMAL,Status,,,20,In battles the opponent switches. In the wild the Pokémon runs.,13
 163,Wing Attack,FLYING,Physical,60,100,35,,0
 164,Withdraw,WATER,Status,,,40,Raises user's Defense.,14
 165,Wrap,NORMAL,Physical,15,90,20,Traps opponent damaging them for 2-5 turns.,21

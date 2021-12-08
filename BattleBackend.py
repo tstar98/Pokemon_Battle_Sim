@@ -30,6 +30,7 @@ class Battle():
         else:
             player_move = Model.player.make_selection(Model.opponent.pokemon_out())
 
+
         opponent_move = Model.opponent.make_selection(Model.player.pokemon_out())
         
         self.execute_moves(player_move, opponent_move)
