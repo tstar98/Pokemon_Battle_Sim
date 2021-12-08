@@ -6,15 +6,19 @@ Created on Sat Nov 20 15:30:21 2021
 """
 
 import itertools
+import random
 import tkinter as tk
 
 from Pokemon_Battle_Sim.gui import util
 from Pokemon_Battle_Sim.database import database as db
 from Pokemon_Battle_Sim.pubsub import Subscriber, Observer
 from Pokemon_Battle_Sim.pokemon import Pokemon
-from Pokemon_Battle_Sim.moves.move import Move, move_factory, get_learnset
+from Pokemon_Battle_Sim.moves.move import move_factory, get_learnset
 from Pokemon_Battle_Sim.Model import Model, channels
 from Pokemon_Battle_Sim import MAX_TEAM, MAX_MOVES
+from Pokemon_Battle_Sim.Trainer import channels as trainer_channels
+from Pokemon_Battle_Sim import demo
+from Pokemon_Battle_Sim.Printer import ConsolePrinter
 
 class team_select(tk.Frame):
     def __init__(self, parent):
@@ -23,11 +27,16 @@ class team_select(tk.Frame):
         
         # Back button (top left)
         def command():
+            demo_func = demo.demos[random.randint(0, len(demo.demos)-1)]
+            print(demo_func)
+            demo_func(make_player=False)
+            ConsolePrinter.update("Player team: " + ', '.join(p.name for p in Model.player.team()))
+            ConsolePrinter.update("Opponent team: " + ', '.join(p.name for p in Model.opponent.team()))
             try:
-                self.master.open_menu("MAIN MENU")
+                self.master.open_menu("BATTLE")
             except AttributeError:
-                print("Go back to main menu")
-        back = util.Button(self, text="Main Menu", command=command)
+                print("<This would start the battle>")
+        back = util.Button(self, text="Battle!", command=command)
         back['font'] = (util.font[0], 10) # Not sure why "font" kwarg doesn't seem to work
         back.grid(row=0, column=0, sticky='NSW')
         
@@ -120,7 +129,7 @@ class team_select(tk.Frame):
             # Moves
             self.move_buttons = []
             for col in range(MAX_MOVES):
-                button = util.Button(self)
+                button = tk.Label(self, relief='ridge', borderwidth=1*util.scale)
                 button.grid(row=1, column=col, sticky='NSEW')
                 self.move_buttons.append(button)
             
@@ -219,7 +228,7 @@ class team_select(tk.Frame):
                 self.details.append(frame)
             
             # Initialize the Observer
-            Observer.__init__(self, Model.player.team())
+            Observer.__init__(self, Model.player, trainer_channels.TEAM)
         
         def update(self, message=None):
             if message == "append":

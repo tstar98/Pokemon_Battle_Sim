@@ -3,6 +3,9 @@
 Created on Thu Nov 11 19:46:54 2021
 
 @author: Brian
+
+For choosing a move to use during battle
+(Not for selecting moves during team select)
 """
 
 import tkinter as tk
@@ -21,9 +24,13 @@ class Move_Select(tk.Frame, Publisher):
         backFrame = tk.Frame(self)
         backFrame.grid(row=0, sticky='NSEW')
         util.gridconfigure(backFrame)
+        # TODO enable this when/if there are more options than fighting to the faint
+        # def go_back():
+        #     print("Go back")
+        # back = util.Button(self, text='Back', command=go_back)
         def go_back():
-            print("Go back")
-        back = util.Button(self, text='Back', command=go_back)
+            pass
+        back = util.Button(self, text='', command=None, state='disabled')
         back.grid(row=0, column=0, sticky='NSEW')
         
         # Moves section

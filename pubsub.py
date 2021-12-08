@@ -86,11 +86,12 @@ class Observer(Subscriber):
         super().__init__()
         assert isinstance(subject, BaseObservable)
         self.subject = subject
-        if channel is None:
-            subject.add_subscriber(self)
-        else:
-            assert isinstance(subject, ChannelObservable)
+        if isinstance(subject, ChannelObservable):
+            if channel is None:
+                raise ValueError("Must provide channel to subscribe to a ChannelObservable")
             subject.add_subscriber(channel, self)
+        else:
+            subject.add_subscriber(self)
         
     def update(self, message):
         """Should be implemented in inheriting classes to fetch the appropriate

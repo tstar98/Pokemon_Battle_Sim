@@ -10,6 +10,8 @@ from Pokemon_Battle_Sim.pubsub import Subscriber
 from Pokemon_Battle_Sim.enums import Screen
 from Pokemon_Battle_Sim.Model import Model, channels
 from Pokemon_Battle_Sim import use_gui
+from Pokemon_Battle_Sim.Printer import ConsolePrinter, Printer
+from Pokemon_Battle_Sim import demo
 from Pokemon_Battle_Sim.Printer import ConsolePrinter
 
 def select_team():
@@ -187,7 +189,7 @@ def use_moves(move, attacking_trainer, target_trainer):
 
     # if all moves have 0 pp, struggle
     if not pokemon1.has_moves:
-        subscriber.update(f"{pokemon1.name} has no moves left.")
+        Printer.update(f"{pokemon1.name} has no moves left.")
         struggle = Struggle()
         struggle.use_move(pokemon1, pokemon2)
         return
@@ -210,25 +212,23 @@ class GUIPrinter(Subscriber):
     """Prints any messages to the appropriate textbox"""
 
 if __name__ == '__main__':
-    # make_player = not use_gui
-    make_player = True
-    
-    #
-    # demo1(make_player)
-    #
-    # input("Press enter to continue.")
-    demo2(make_player)
-    #
-    # input("Press enter to continue.")
-    # demo3(make_player)
-    
+    printer = Printer
     if use_gui:
         # Initialize GUI
         from gui.root import Root, menus
         root = Root()
-        root.open_menu(menus.BATTLE)
+        # root.open_menu(menus.BATTLE)
+        root.open_menu(menus.MAIN_MENU)
         root.mainloop()
     else:
         # Run in console
+        #
+        demo.demo0(make_player=True)
+        #
+        # input("Press enter to continue.")
+        # demo.demo1(make_player=True)
+        #
+        # input("Press enter to continue.")
+        # demo.demo2(make_player=True)
         battle = Battle()
         battle.console_battle()

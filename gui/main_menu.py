@@ -5,15 +5,19 @@ Created on Sat Nov 20 14:51:18 2021
 @author: Brian
 """
 
+import functools
 import tkinter as tk
 
 from Pokemon_Battle_Sim.gui import util
+from Pokemon_Battle_Sim import demo
+from Pokemon_Battle_Sim.Printer import ConsolePrinter
+from Pokemon_Battle_Sim.Model import Model
 
 class main_menu(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent, bg='red') # Make it red so it's obvious where there's empty space
         
-        util.gridconfigure(self, rw=[4, 1, 1, 2]) # Title, Assemble Team, Reserved for future buttons
+        util.gridconfigure(self, rw=[4, 1, 1, 1, 1]) # Title, Assemble Team, Three Demos
         
         # Title splash
         title_splash = self.title_splash(self)
@@ -21,21 +25,28 @@ class main_menu(tk.Frame):
         
         # "Assemble Team" button
         def assemble_team():
-            self.master.open_menu("TEAM SELECT")
+            try:
+                self.master.open_menu("TEAM SELECT")
+            except AttributeError:
+                print("Go to team select")
         button = util.Button(self, text='Assemble Team', command=assemble_team)
         button.grid(row=1, column=0, sticky='NSEW')
         
-        # "Start Battle" button
-        def battle():
-            self.master.open_menu("BATTLE")
-        button = util.Button(self, text='Start Battle', command=battle)
-        button.grid(row=2, column=0, sticky='NSEW')
+        # "Demo Team" buttons
+        def launch_demo(demo_func):
+            demo_func(make_player=True)
+            ConsolePrinter.update("Player team: " + ', '.join(p.name for p in Model.player.team()))
+            ConsolePrinter.update("Opponent team: " + ', '.join(p.name for p in Model.opponent.team()))
+            
+            try:
+                self.master.open_menu("BATTLE")
+            except AttributeError:
+                print("Start battle")
+        for i in range(3):
+            command = functools.partial(launch_demo, demo.demos[i])
+            button = util.Button(self, text=f"Demo {i}", command=command)
+            util.grid(button, row=i+2)
         
-        # TODO?
-        # Other buttons (high scores?)
-        reserved = tk.Frame(self, bg='grey')
-        reserved.grid(row=3, column=0, sticky='NSEW')
-    
     def title_splash(self, parent):
         """Creates the title splash
         Used as a helper function when creating the main menu"""
@@ -58,7 +69,7 @@ class main_menu(tk.Frame):
         return frame
     
 if __name__ == "__main__":
-    root = tk.Tk()
+    root = util.Default_Window()
     mm = main_menu(root)
-    mm.grid(row=0, column=0)
+    util.grid(mm)
     root.mainloop()
