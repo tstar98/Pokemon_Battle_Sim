@@ -3,6 +3,9 @@
 Created on Thu Nov 11 19:46:54 2021
 
 @author: Brian
+
+For choosing a move to use during battle
+(Not for selecting moves during team select)
 """
 
 import tkinter as tk

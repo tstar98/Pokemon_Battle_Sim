@@ -10,87 +10,8 @@ from Pokemon_Battle_Sim.pubsub import Subscriber
 from Pokemon_Battle_Sim.enums import Screen
 from Pokemon_Battle_Sim.Model import Model, channels
 from Pokemon_Battle_Sim import use_gui
-from Pokemon_Battle_Sim.Printer import ConsolePrinter
-
-def select_team():
-    """ player selects pokemon and moves """
-    pass
-
-
-def demo1(make_player=True):
-    pokemon = Pokemon(51)
-    move = move_factory('Earthquake')
-    pokemon.add_move(move)
-    move = move_factory('Rest')
-    pokemon.add_move(move)
-    move = move_factory('Rock Slide')
-    pokemon.add_move(move)
-    move = move_factory('Double Team')
-    pokemon.add_move(move)
-    Model.opponent.add_to_team(pokemon)
-
-    if make_player:
-        pokemon = Pokemon(28)
-        move = move_factory('Fury Swipes')
-        pokemon.add_move(move)
-        move = move_factory('Swords Dance')
-        pokemon.add_move(move)
-        move = move_factory('Rest')
-        pokemon.add_move(move)
-        move = move_factory('Take Down')
-        pokemon.add_move(move)
-        Model.player.add_to_team(pokemon)
-
-
-def demo2(make_player=True):
-    pokemon = Pokemon(65)
-    move = move_factory('Thunder Wave')
-    pokemon.add_move(move)
-    move = move_factory('Confusion')
-    pokemon.add_move(move)
-    move = move_factory('Mega Punch')
-    pokemon.add_move(move)
-    move = move_factory('Recover')
-    pokemon.add_move(move)
-    Model.opponent.add_to_team(pokemon)
-
-    if make_player:
-        pokemon = Pokemon(94)
-        move = move_factory('Hypnosis')
-        pokemon.add_move(move)
-        move = move_factory('Dream Eater')
-        pokemon.add_move(move)
-        move = move_factory('Mimic')
-        pokemon.add_move(move)
-        move = move_factory('Confuse Ray')
-        pokemon.add_move(move)
-        Model.player.add_to_team(pokemon)
-
-
-def demo3(make_player=True):
-    pokemon = Pokemon(51)
-    move = move_factory('Dragon Rage')
-    pokemon.add_move(move)
-    move = move_factory('Rest')
-    pokemon.add_move(move)
-    move = move_factory('Rock Slide')
-    pokemon.add_move(move)
-    move = move_factory('Double Team')
-    pokemon.add_move(move)
-    Model.opponent.add_to_team(pokemon)
-
-    if make_player:
-        pokemon = Pokemon(28)
-        move = move_factory('Fury Swipes')
-        pokemon.add_move(move)
-        move = move_factory('Swords Dance')
-        pokemon.add_move(move)
-        move = move_factory('Rest')
-        pokemon.add_move(move)
-        move = move_factory('Take Down')
-        pokemon.add_move(move)
-        Model.player.add_to_team(pokemon)
-
+from Pokemon_Battle_Sim.Printer import ConsolePrinter, Printer
+from Pokemon_Battle_Sim import demo
 
 class Battle(Subscriber):
     """ where the battle occurs"""
@@ -160,7 +81,7 @@ def use_moves(move, attacking_trainer, target_trainer):
 
     # if all moves have 0 pp, struggle
     if not pokemon1.has_moves:
-        subscriber.update(f"{pokemon1.name} has no moves left.")
+        Printer.update(f"{pokemon1.name} has no moves left.")
         struggle = Struggle()
         struggle.use_move(pokemon1, pokemon2)
         return
@@ -183,25 +104,23 @@ class GUIPrinter(Subscriber):
     """Prints any messages to the appropriate textbox"""
 
 if __name__ == '__main__':
-    # make_player = not use_gui
-    make_player = True
-    
-    #
-    # demo1(make_player)
-    #
-    # input("Press enter to continue.")
-    demo2(make_player)
-    #
-    # input("Press enter to continue.")
-    # demo3(make_player)
-    
+    printer = Printer
     if use_gui:
         # Initialize GUI
         from gui.root import Root, menus
         root = Root()
-        root.open_menu(menus.BATTLE)
+        # root.open_menu(menus.BATTLE)
+        root.open_menu(menus.MAIN_MENU)
         root.mainloop()
     else:
         # Run in console
+        #
+        demo.demo0(make_player=True)
+        #
+        # input("Press enter to continue.")
+        # demo.demo1(make_player=True)
+        #
+        # input("Press enter to continue.")
+        # demo.demo2(make_player=True)
         battle = Battle()
         battle.console_battle()

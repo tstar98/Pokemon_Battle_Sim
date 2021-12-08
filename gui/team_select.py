@@ -35,7 +35,7 @@ class team_select(tk.Frame):
             try:
                 self.master.open_menu("BATTLE")
             except AttributeError:
-                print("Start the battle")
+                print("<This would start the battle>")
         back = util.Button(self, text="Battle!", command=command)
         back['font'] = (util.font[0], 10) # Not sure why "font" kwarg doesn't seem to work
         back.grid(row=0, column=0, sticky='NSW')
@@ -129,7 +129,7 @@ class team_select(tk.Frame):
             # Moves
             self.move_buttons = []
             for col in range(MAX_MOVES):
-                button = util.Button(self, state='disabled')
+                button = tk.Label(self, relief='ridge', borderwidth=1*util.scale)
                 button.grid(row=1, column=col, sticky='NSEW')
                 self.move_buttons.append(button)
             
