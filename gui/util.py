@@ -34,6 +34,8 @@ class Default_Window(tk.Tk):
         # and where it is placed
         self.geometry('%dx%d+%d+%d' % (res[0], res[1], x, y))
         
+        gridconfigure(self)
+        
 def Button(*args, **kwargs):
     """Sugar syntax to make a button using a standard set of settings"""
     # kwargs.update(relief='ridge', borderwidth=1*scale, font=font)
