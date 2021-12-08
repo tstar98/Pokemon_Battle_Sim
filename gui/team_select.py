@@ -121,7 +121,7 @@ class team_select(tk.Frame):
             # Moves
             self.move_buttons = []
             for col in range(MAX_MOVES):
-                button = util.Button(self)
+                button = util.Button(self, state='disabled')
                 button.grid(row=1, column=col, sticky='NSEW')
                 self.move_buttons.append(button)
             

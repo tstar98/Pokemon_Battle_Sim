@@ -21,9 +21,13 @@ class Move_Select(tk.Frame, Publisher):
         backFrame = tk.Frame(self)
         backFrame.grid(row=0, sticky='NSEW')
         util.gridconfigure(backFrame)
+        # TODO enable this when/if there are more options than fighting to the faint
+        # def go_back():
+        #     print("Go back")
+        # back = util.Button(self, text='Back', command=go_back)
         def go_back():
-            print("Go back")
-        back = util.Button(self, text='Back', command=go_back)
+            pass
+        back = util.Button(self, text='', command=None, state='disabled')
         back.grid(row=0, column=0, sticky='NSEW')
         
         # Moves section
