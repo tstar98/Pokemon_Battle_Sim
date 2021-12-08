@@ -1,5 +1,6 @@
+import math
 from enum import Enum
-
+import enums
 from Pokemon_Battle_Sim.pubsub import ChannelObservable
 from Pokemon_Battle_Sim import use_gui, MAX_TEAM
 # from Pokemon_Battle_Sim.Model import Model # just-in-time import to avoid circular import
@@ -36,6 +37,9 @@ class Trainer(ChannelObservable):
         """ trainer makes selection to either fight or switch """
         raise NotImplementedError()
 
+    def random_move(self):
+        return self.pokemon_out().get_random_move()
+
     def next_turn(self):
         """performs functions that occur in between turns"""
         self._light_screen = 0 if self._light_screen <= 0 else self._light_screen - 1
@@ -56,9 +60,6 @@ class Trainer(ChannelObservable):
     def switch_pokemon(self, pokemon):
         """Switches pokemon_out with given pokemon"""
         self.publish(f"{self._team[0].name} was removed from battle.")
-
-        #TODO: remove
-        self._team[0].take_damage(1000)
 
         i = self._team.index(pokemon)
         self._team[0], self._team[i] = self._team[i], self._team[0]
@@ -117,10 +118,30 @@ class Player(Trainer):
 
 
 class Opponent(Trainer):
-    def make_selection(self, opponent):
-        # TODO: Change. For now, it just selects the first move of the pokemon out
-        move_use = self.pokemon_out().get_random_move()
-        return move_use
+    def make_selection(self, target_trainer):
+        # pokemon1 = self.pokemon_out()
+        # pokemon2 = self.pokemon_out()
+        # # best_moves = pokemon1.moves()
+        #
+        # # prefer lowering target's speed if slower than target
+        # if pokemon2.speed > pokemon1().speed:
+        #     # try paralyzing first (if pokemon has a paralysis move)
+        #
+        #     # speed lowering move
+        #     pass
+        #
+        # # next, try giving target pokemon a status condition
+        # if pokemon2.status_condition == enums.StatusEffect.NONE.value:
+        #     pass
+        #
+        # # heal if below 1/3 health
+        # if pokemon1.hp <= math.floor(pokemon1):
+        #     pass
+        #
+        # # choose best attack
+        #
+        # # return random move if no move has been returned yet
+        return self.random_move()
 
     def switch_pokemon(self, pokemon):
         super(Opponent, self).switch_pokemon(pokemon)

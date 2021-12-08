@@ -21,7 +21,7 @@ class Attack(Move):
         return self._do_damage(pokemon1, pokemon2, reflect, light_screen)
 
     def _do_damage(self, pokemon1, pokemon2, reflect, light_screen):
-        effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2)
+        effectiveness = Move.get_effectiveness(self._type, pokemon2.type1) * Move.get_effectiveness(self._type, pokemon2.type2)
 
         if effectiveness == 0:
             self.publish(f"It doesn't affect {pokemon2.name}.")
@@ -114,7 +114,7 @@ class SetDamageAttack(Attack):
         self.publish(f"{pokemon1.name} used {self.name}")
         self._pp -= 1
 
-        effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2)
+        effectiveness = Move.get_effectiveness(self._type, pokemon2.type1) * Move.get_effectiveness(self._type, pokemon2.type2)
         if effectiveness == 0:
             self.publish(f"It doesn't affect {pokemon2.name}.")
 
@@ -153,7 +153,7 @@ class LevelBasedAttack(Attack):
         if not self._does_hit(pokemon1, pokemon2):
             return False
 
-        if self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2) == 0:
+        if Move.get_effectiveness(self._type, pokemon2.type1) * Move.get_effectiveness(self._type, pokemon2.type2) == 0:
             self.publish(f"It doesn't affect {pokemon2.name}.")
             return False
 
@@ -173,7 +173,7 @@ class HalfHealthAttack(Attack):
         if not self._does_hit(pokemon1, pokemon2):
             return False
 
-        effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2)
+        effectiveness = Move.get_effectiveness(self._type, pokemon2.type1) * Move.get_effectiveness(self._type, pokemon2.type2)
         if effectiveness == 0:
             self.publish(f"It doesn't affect {pokemon2.name}")
             return False
@@ -200,7 +200,7 @@ class OHKO(Attack):
         if not self._does_hit(pokemon1, pokemon2):
             return False
 
-        if self._get_effectiveness(pokemon2.type1) == 0 or self._get_effectiveness(pokemon2.type2) == 0:
+        if Move.get_effectiveness(self._type, pokemon2.type1) == 0 or Move.get_effectiveness(self._type, pokemon2.type2) == 0:
             self.publish(f"It doesn't affect {pokemon2.name}.")
             return False
 
@@ -356,7 +356,7 @@ class MultiAttack(Attack):
         self.publish(f"{pokemon1.name} used {self.name}")
         self._pp -= 1
 
-        effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2)
+        effectiveness = Move.get_effectiveness(self._type, pokemon2.type1) * Move.get_effectiveness(self._type, pokemon2.type2)
         if effectiveness == 0:
             self.publish(f"It doesn't affect {pokemon2.name}.")
 
@@ -472,7 +472,7 @@ class SelfDestruct(Attack):
         # user faints and then does damage
         pokemon1.take_damage(pokemon1.max_hp)
 
-        effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type1)
+        effectiveness = Move.get_effectiveness(self._type, pokemon2.type1) * Move.get_effectiveness(self._type, pokemon2.type1)
         if effectiveness == 0:
             self.publish(f"It doesn't affect {pokemon2.name}.")
             return False

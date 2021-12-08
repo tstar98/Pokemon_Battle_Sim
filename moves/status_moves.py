@@ -110,7 +110,7 @@ class StatusEffectMove(Move):
             return False
 
         # check if it does not effect
-        effectiveness = self._get_effectiveness(pokemon2.type1) * self._get_effectiveness(pokemon2.type2)
+        effectiveness = Move.get_effectiveness(self._type, pokemon2.type1) * Move.get_effectiveness(self._type, pokemon2.type2)
         if effectiveness == 0:
             self.publish(f"It doesn't affect {pokemon2.name}.")
             return False

@@ -95,12 +95,13 @@ class Move(Publisher):
 
         return True
 
-    def _get_effectiveness(self, defend_type):
-        if defend_type in super_effective[self._type]:
+    @staticmethod
+    def get_effectiveness(attack_type, defend_type):
+        if defend_type in super_effective[attack_type]:
             return 2
-        if defend_type in not_very_effective[self._type]:
+        if defend_type in not_very_effective[attack_type]:
             return .5
-        if defend_type in no_effect[self._type]:
+        if defend_type in no_effect[attack_type]:
             return 0
         return 1
 

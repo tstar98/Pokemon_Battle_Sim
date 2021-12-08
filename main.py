@@ -44,13 +44,11 @@ def demo1(make_player=True):
 
 def demo2(make_player=True):
     pokemon = Pokemon(65)
-    move = move_factory('Thunder Wave')
+    move = move_factory('Explosion')
     pokemon.add_move(move)
-    move = move_factory('Confusion')
-    pokemon.add_move(move)
-    move = move_factory('Mega Punch')
-    pokemon.add_move(move)
-    move = move_factory('Recover')
+    Model.opponent.add_to_team(pokemon)
+    pokemon = Pokemon(150)
+    move = move_factory('Psychic')
     pokemon.add_move(move)
     Model.opponent.add_to_team(pokemon)
 
@@ -118,7 +116,10 @@ class Battle(Subscriber):
     
         move1 = Model.player.make_selection(Model.opponent.pokemon_out())
         move2 = Model.opponent.make_selection(Model.player.pokemon_out())
-    
+
+        switch1 = False
+        switch2 = False
+
         # determine order of moves
         if move1.priority == move2.priority:
             if Model.player.pokemon_out().speed > Model.opponent.pokemon_out().speed:
@@ -136,15 +137,41 @@ class Battle(Subscriber):
     
         if move_order == 1:
             use_moves(move1, Model.player, Model.opponent)
+
             # only use the move if both the attacker and target are still in battle
+            if Model.player.pokemon_out().hp == 0:
+                switch1 = True
+            if Model.opponent.pokemon_out().hp == 0:
+                switch2 = True
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
                 use_moves(move2, Model.opponent, Model.player)
     
         else:
             use_moves(move2, Model.opponent, Model.player)
+
             # only use the move if both the attacker and target are still in battle
+            if Model.player.pokemon_out().hp == 0:
+                switch1 = True
+            if Model.opponent.pokemon_out().hp == 0:
+                switch2 = True
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
-                use_moves(move1, Model.player, Model.opponent)
+                use_moves(move2, Model.opponent, Model.player)
+
+        # player switches to next pokemon
+        if switch1:
+            for pokemon in Model.player.team():
+                if pokemon == Model.player.pokemon_out():
+                    continue
+                if pokemon.hp > 0:
+                    Model.player.switch_pokemon(pokemon)
+
+        # opponent switches to next pokemon
+        if switch2:
+            for pokemon in Model.opponent.team():
+                if pokemon == Model.opponent.pokemon_out():
+                    continue
+                if pokemon.hp > 0:
+                    Model.opponent.switch_pokemon(pokemon)
 
         print()
 
