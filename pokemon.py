@@ -153,13 +153,17 @@ class Pokemon(ChannelObservable):
         self.__hp -= damage
         if self.__hp <= 0:
             self.__hp = 0
-            self.publish(f'{self.__name} fainted.')
+            self.publish(channels.PRINT, f'{self.__name} fainted.')
+            self.publish(channels.POKEMON, "fainted")
+        else:
+            self.publish(channels.POKEMON, "health")
 
     def heal(self, health):
         """ heals pokemon by given amount """
         self.__hp += health
         if self.__hp > self.__max_hp:
             self.__hp = self.__max_hp
+        self.publish(channels.POKEMON, "health")
 
     def next_turn(self):
         # take damage from status effects
