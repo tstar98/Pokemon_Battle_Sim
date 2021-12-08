@@ -9,9 +9,11 @@ from Pokemon_Battle_Sim.pubsub import ChannelObservable
 from Pokemon_Battle_Sim import MAX_MOVES
 from Pokemon_Battle_Sim.Printer import Printer
 
+
 class channels(Enum):
     PRINT = "PRINT"
     POKEMON = "POKEMON"
+
 
 class Pokemon(ChannelObservable):
     def __init__(self, pokemon_id):

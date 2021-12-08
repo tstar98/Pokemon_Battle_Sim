@@ -8,17 +8,29 @@ Created on Tue Dec  7 20:43:56 2021
 import random
 
 # MUST import from top-level or it gets a different instance from GUI scripts
+import attacks
 from Pokemon_Battle_Sim.moves.attacks import Struggle
 from Pokemon_Battle_Sim.enums import Screen
 from Pokemon_Battle_Sim.Model import Model
 from Pokemon_Battle_Sim.Printer import ConsolePrinter, Printer
 
+
 class Battle():
     """ where the battle occurs"""
     
     def battle_round(self):
-        # TODO: add checks for last move used
-        player_move = Model.player.make_selection(Model.opponent.pokemon_out())
+        # check for last move used, certain classes of moves take multiple turns
+        last_move = Model.player.pokemon_out().last_move
+        if isinstance(last_move, attacks.ChargingAttack) and last_move.is_charged:
+            player_move = last_move
+        elif isinstance(last_move, attacks.RechargeAttack) and not last_move.is_charged:
+            player_move = last_move
+        elif isinstance(last_move, attacks.ConfusingContinuousAttack) and last_move.counter > 0:
+            player_move = last_move
+        else:
+            player_move = Model.player.make_selection(Model.opponent.pokemon_out())
+
+
         opponent_move = Model.opponent.make_selection(Model.player.pokemon_out())
         
         self.execute_moves(player_move, opponent_move)
@@ -33,6 +45,19 @@ class Battle():
         ConsolePrinter.update()
         ConsolePrinter.update(Model.opponent.pokemon_out())
         ConsolePrinter.update()
+
+    def get_move(self, trainer):
+        """checks for last move used and returns correct move selection"""
+        # certain move classes take multiple turns
+        last_move = trainer.pokemon_out().last_move
+        if isinstance(last_move, attacks.ChargingAttack) and last_move.is_charged:
+            return last_move
+        elif isinstance(last_move, attacks.RechargeAttack) and not last_move.is_charged:
+            return last_move
+        elif isinstance(last_move, attacks.ConfusingContinuousAttack) and last_move.counter > 0:
+            return last_move
+        else:
+            return Model.player.make_selection(Model.opponent.pokemon_out())
 
     def execute_moves(self, player_move, opponent_move):
 

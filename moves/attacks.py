@@ -302,8 +302,10 @@ class ConfusingContinuousAttack(Attack):
         damage = self._do_damage(pokemon1, pokemon2, reflect, light_screen)
 
         # user becomes confused if the end of the counter
-        if counter == 0:
+        if self.__counter == 0:
             pokemon1.is_confused = True
+
+        return damage
 
     @property
     def counter(self):
