@@ -222,9 +222,12 @@ class Pokemon(ChannelObservable):
         return self.__moves[itr]
 
     def get_random_move(self):
-        if len(self.__moves) == 0:
-            return None
-        return self.__moves[random.randint(0, len(self.__moves) - 1)]
+        moves = self.__moves
+        random.shuffle(moves)
+
+        for move in moves:
+            if move.pp > 0:
+                return move
 
     def has_moves(self):
         """returns False if all moves have 0 pp"""
@@ -488,16 +491,32 @@ class Pokemon(ChannelObservable):
         return self.__battle_stat(self.__battle_atk)
 
     @property
+    def atk_stage(self):
+        return self.__base_atk
+
+    @property
     def battle_def(self):
         return self.__battle_stat(self.__battle_def)
+
+    @property
+    def def_stage(self):
+        return self.__battle_def
 
     @property
     def battle_spc(self):
         return self.__battle_stat(self.__battle_spc)
 
     @property
+    def spc_stage(self):
+        return self.__battle_spc
+
+    @property
     def battle_spe(self):
         return self.__battle_stat(self.__battle_spe)
+
+    @property
+    def spe_stage(self):
+        return self.__battle_spe
 
     @property
     def accuracy(self):
@@ -513,6 +532,10 @@ class Pokemon(ChannelObservable):
         return num / den
 
     @property
+    def acc_stage(self):
+        return self.__accuracy
+
+    @property
     def evasion(self):
         # accuracy and evasion use a different formula, every stage raises / lowers by 1/3
         num = 3
@@ -524,6 +547,10 @@ class Pokemon(ChannelObservable):
             den += self.__evasion
 
         return num / den
+
+    @property
+    def eva_stage(self):
+        return self.__evasion
 
     def __battle_stat(self, stage):
         """ stage is the battle stat to be calculated as a floating point value

@@ -1,14 +1,21 @@
 import math
+import random
 from enum import Enum
+
+import attacks
+from move import Move
 import enums
+import status_moves
 from Pokemon_Battle_Sim.pubsub import ChannelObservable
 from Pokemon_Battle_Sim import use_gui, MAX_TEAM
 # from Pokemon_Battle_Sim.Model import Model # just-in-time import to avoid circular import
 from Pokemon_Battle_Sim.Printer import Printer
 
+
 class channels(Enum):
     PRINT = "PRINT"
     TEAM = "TEAM"
+
     
 class Trainer(ChannelObservable):
     def __init__(self):
@@ -33,7 +40,7 @@ class Trainer(ChannelObservable):
             return False
 
     # abstract function to be implemented in subclass
-    def make_selection(self):
+    def make_selection(self, target_trainer):
         """ trainer makes selection to either fight or switch """
         raise NotImplementedError()
 
@@ -86,7 +93,7 @@ class Trainer(ChannelObservable):
 class Player(Trainer):
     def make_selection(self, opponent):
         if use_gui:
-            from Pokemon_Battle_Sim.Model import Model # just-in-time import to avoid circular import
+            from Pokemon_Battle_Sim.Model import Model  # just-in-time import to avoid circular import
             move_use = Model.sel_move
         else:
             move_use = self.pokemon_out().get_random_move()
@@ -94,7 +101,7 @@ class Player(Trainer):
 
     def switch_pokemon(self, pokemon):
         super(Player, self).switch_pokemon(pokemon)
-        self.publish(f"You sent out {pokemon.name}.")
+        self.publish(channels.PRINT, f"You sent out {pokemon.name}.")
 
     @property
     def reflect(self):
@@ -103,7 +110,7 @@ class Player(Trainer):
     @reflect.setter
     def reflect(self, boolean):
         if boolean:
-            self.publish("Reflect raised your team's Defense.")
+            self.publish(channels.PRINT, "Reflect raised your team's Defense.")
         self._reflect = boolean
 
     @property
@@ -113,34 +120,96 @@ class Player(Trainer):
     @light_screen.setter
     def light_screen(self, boolean):
         if boolean:
-            self.publish("Light Screen raised your team's Special.")
+            self.publish(channels.PRINT, "Light Screen raised your team's Special.")
         self._reflect = boolean
 
 
 class Opponent(Trainer):
     def make_selection(self, target_trainer):
-        # pokemon1 = self.pokemon_out()
-        # pokemon2 = self.pokemon_out()
-        # # best_moves = pokemon1.moves()
-        #
-        # # prefer lowering target's speed if slower than target
-        # if pokemon2.speed > pokemon1().speed:
-        #     # try paralyzing first (if pokemon has a paralysis move)
-        #
-        #     # speed lowering move
-        #     pass
-        #
-        # # next, try giving target pokemon a status condition
-        # if pokemon2.status_condition == enums.StatusEffect.NONE.value:
-        #     pass
-        #
-        # # heal if below 1/3 health
-        # if pokemon1.hp <= math.floor(pokemon1):
-        #     pass
-        #
-        # # choose best attack
-        #
-        # # return random move if no move has been returned yet
+        pokemon1 = self.pokemon_out()
+        pokemon2 = self.pokemon_out()
+        best_moves = pokemon1.moves
+        # adds some variance
+        random.shuffle(best_moves)
+
+        for move in best_moves:
+            # remove moves with no pp from best moves
+            if move.pp == 0:
+                best_moves.remove(move)
+
+            # remove attacks that don't affect target pokemon from best moves
+            elif isinstance(move, attacks.Attack) \
+                    and Move.get_effectiveness(move.type, pokemon2.type1) \
+                    * Move.get_effectiveness(move.type, pokemon2.type1) == 0:
+                best_moves.remove(move)
+
+        # prefer lowering target's speed if slower than target
+        if pokemon2.speed > pokemon1.speed:
+            # try paralyzing first (if pokemon has a paralysis move)
+            for move in best_moves:
+                if isinstance(move, status_moves.StatusEffectMove) \
+                        and move.status_effect == enums.StatusEffect.PARALYSIS.value:
+
+                    if pokemon2.status_effect != enums.StatusEffect.NONE.value:
+                        # remove from best options
+                        best_moves.remove(move)
+
+                    else:
+                        return move
+
+            # speed lowering move
+            for move in best_moves:
+                if isinstance(move, status_moves.StatAlteringMove) and move.stat == enums.Stat.SPEED.value:
+                    if pokemon2.spe_stage == -6:
+                        # speed won't go lower, remove move from best list
+                        best_moves.remove(move)
+                    else:
+                        return move
+
+        # next, try setting up screens
+        for move in best_moves:
+            if isinstance(move, status_moves.ScreenMove):
+                # light screen
+                if move.screen_type == enums.Screen.LIGHT.value:
+                    # remove from best list if already up
+                    if self._light_screen:
+                        best_moves.remove(move)
+                    else:
+                        return move
+
+                # reflect
+                else:
+                    if self._reflect:
+                        best_moves.remove(move)
+                    else:
+                        return move
+
+        # next, try giving target pokemon a status condition
+        for move in best_moves:
+            if isinstance(move, status_moves.StatusEffectMove):
+                if pokemon2.status_effect == enums.StatusEffect.NONE.value:
+                    return move
+                else:
+                    best_moves.remove(move)
+
+            if isinstance(move, status_moves.ConfusingMove):
+                if pokemon2.is_confused:
+                    best_moves.remove(move)
+                else:
+                    return move
+
+        # next, heal if below 1/3 health
+        for move in best_moves:
+            if isinstance(move, status_moves.HealingMove):
+                if pokemon1.hp <= math.floor(pokemon1.max_hp / 3):
+                    return move
+                else:
+                    best_moves.remove(move)
+
+        if len(best_moves) > 0:
+            return best_moves[0]
+
+        # return random move if no move has been returned yet
         return self.random_move()
 
     def switch_pokemon(self, pokemon):
@@ -154,7 +223,7 @@ class Opponent(Trainer):
     @reflect.setter
     def reflect(self, boolean):
         if boolean:
-            self.publish("Reflect raised your opponent's Defense.")
+            self.publish(channels.PRINT, "Reflect raised your opponent's Defense.")
         self._reflect = boolean
 
     @property
@@ -164,7 +233,7 @@ class Opponent(Trainer):
     @light_screen.setter
     def light_screen(self, boolean):
         if boolean:
-            self.publish("Light Screen raised your opponent's Special.")
+            self.publish(channels.PRINT, "Light Screen raised your opponent's Special.")
         self._reflect = boolean
 
 

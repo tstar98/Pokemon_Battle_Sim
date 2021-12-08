@@ -23,6 +23,10 @@ class ScreenMove(Move):
 
         return Screen.REFLECT if self.__screen_type == Screen.REFLECT.value else Screen.LIGHT
 
+    @property
+    def screen_type(self):
+        return self.__screen_type
+
 
 class SwitchingMove(Move):
     def __init__(self, name):
@@ -89,6 +93,10 @@ class StatAlteringMove(Move):
 
         return True
 
+    @property
+    def stat(self):
+        return self._stat
+
 
 class StatusEffectMove(Move):
     def __init__(self, name):
@@ -117,6 +125,10 @@ class StatusEffectMove(Move):
 
         pokemon2.status_effect = self.__status_effect
         return True
+
+    @property
+    def status_effect(self):
+        return self.__status_effect
 
 
 class HealingMove(Move):
