@@ -15,6 +15,7 @@ from Pokemon_Battle_Sim.pokemon import Pokemon
 from Pokemon_Battle_Sim.moves.move import Move, move_factory, get_learnset
 from Pokemon_Battle_Sim.Model import Model, channels
 from Pokemon_Battle_Sim import MAX_TEAM, MAX_MOVES
+from Pokemon_Battle_Sim.Trainer import channels as trainer_channels
 
 class team_select(tk.Frame):
     def __init__(self, parent):
@@ -219,7 +220,7 @@ class team_select(tk.Frame):
                 self.details.append(frame)
             
             # Initialize the Observer
-            Observer.__init__(self, Model.player.team())
+            Observer.__init__(self, Model.player, trainer_channels.TEAM)
         
         def update(self, message=None):
             if message == "append":
