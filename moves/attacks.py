@@ -38,6 +38,11 @@ class Attack(Move):
             d = pokemon2.special * pokemon2.battle_spc
             screen = True if light_screen > 0 else False
 
+        if effectiveness > 1:
+            self.publish(f"It's super effective.")
+        elif effectiveness < 1:
+            self.publish(f"It's not very effective.")
+
         # in gen 1 critical hit damage is based on level
         level = pokemon1.level
         if self._is_crit(pokemon1.base_spe):
@@ -52,11 +57,6 @@ class Attack(Move):
         if screen:
             damage /= 2
         damage = math.ceil(damage * random.randint(85, 100) / 100)
-
-        if effectiveness > 1:
-            self.publish(f"It's super effective.")
-        elif effectiveness < 1:
-            self.publish(f"It's not very effective.")
 
         pokemon2.take_damage(damage)
         return damage
@@ -85,7 +85,7 @@ class StatAlteringAttack(Attack):
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         damage = super(StatAlteringAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
 
-        if damage and self.__adds_effect():
+        if damage and pokemon2.hp > 0 and self.__adds_effect():
             # find correct stat, don't change if it can't go any lower (-6)
             if self.__stat == Stat.ATTACK.value and pokemon2.change_atk(self.__stages):
                 self.publish(f"{pokemon2.name}'s attack was lowered.")
@@ -141,7 +141,7 @@ class LevelBasedAttack(Attack):
 
     def __psywave(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         """Does damage equal to the user's level * random number between 1 - 1.5"""
-        if not does_hit(pokemon1, pokemon2):
+        if not self._does_hit(pokemon1, pokemon2):
             return False
 
         damage = math.floor(pokemon1.level * random.randint(100, 150) / 100)
@@ -221,7 +221,7 @@ class FlinchAttack(Attack):
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         damage = super(FlinchAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
 
-        if self.__adds_effect():
+        if pokemon2.hp > 0 and self.__adds_effect():
             pokemon2.flinch = True
 
         return damage
@@ -271,7 +271,7 @@ class StatusEffectAttack(Attack):
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         damage = super(StatusEffectAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
 
-        if damage and self.__adds_effect():
+        if damage and pokemon2.hp > 0 and self.__adds_effect():
             # add status effect
             pokemon2.status_effect = self.__status_effect
 
@@ -405,7 +405,7 @@ class ConfusingAttack(Attack):
     def use_move(self, pokemon1, pokemon2, reflect=0, light_screen=0):
         damage = super(ConfusingAttack, self).use_move(pokemon1, pokemon2, reflect, light_screen)
 
-        if damage and self.__adds_effect():
+        if damage and pokemon2.hp > 0 and self.__adds_effect():
             pokemon2.is_confused = True
 
         return damage
@@ -487,6 +487,11 @@ class SelfDestruct(Attack):
         d = pokemon2.defense * pokemon2.battle_def
         screen = True if reflect > 0 else False
 
+        if effectiveness > 1:
+            self.publish(f"It's super effective.")
+        elif effectiveness < 1 and effectiveness != 0:
+            self.publish(f"It's not very effective.")
+
         # in gen 1 critical hit damage is based on level
         level = pokemon1.level
         if self._is_crit(pokemon1.base_spe):
@@ -501,11 +506,6 @@ class SelfDestruct(Attack):
         if screen:
             damage /= 2
         damage = math.ceil(damage * random.randint(85, 100) / 100)
-
-        if effectiveness > 1:
-            self.publish(f"It's super effective.")
-        elif effectiveness < 1 and effectiveness != 0:
-            self.publish(f"It's not very effective.")
 
         pokemon2.take_damage(damage)
         return damage

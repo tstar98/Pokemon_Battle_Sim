@@ -1,6 +1,6 @@
 
 
-use_gui = True
+use_gui = False
 
 # Most Pokemon allowed on a team
 MAX_TEAM = 3

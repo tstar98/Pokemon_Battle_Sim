@@ -30,7 +30,6 @@ class Battle():
         else:
             player_move = Model.player.make_selection(Model.opponent.pokemon_out())
 
-
         opponent_move = Model.opponent.make_selection(Model.player.pokemon_out())
         
         self.execute_moves(player_move, opponent_move)
@@ -60,11 +59,6 @@ class Battle():
             return Model.player.make_selection(Model.opponent.pokemon_out())
 
     def execute_moves(self, player_move, opponent_move):
-
-        # Whether to switch Pokemon at the end of the round
-        switch1 = False
-        switch2 = False
-        
         # determine order of moves
         if player_move.priority == opponent_move.priority:
             if Model.player.pokemon_out().speed > Model.opponent.pokemon_out().speed:
@@ -84,23 +78,22 @@ class Battle():
             self.use_moves(player_move, Model.player, Model.opponent)
 
             # only use the move if both the attacker and target are still in battle
-            if Model.player.pokemon_out().hp == 0:
-                switch1 = True
-            if Model.opponent.pokemon_out().hp == 0:
-                switch2 = True
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
                 self.use_moves(opponent_move, Model.opponent, Model.player)
-    
         else:
             self.use_moves(opponent_move, Model.opponent, Model.player)
 
             # only use the move if both the attacker and target are still in battle
-            if Model.player.pokemon_out().hp == 0:
-                switch1 = True
-            if Model.opponent.pokemon_out().hp == 0:
-                switch2 = True
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
                 self.use_moves(player_move, Model.player, Model.opponent)
+
+        # Whether to switch Pokemon at the end of the round
+        switch1 = False
+        switch2 = False
+        if Model.player.pokemon_out().hp == 0:
+            switch1 = True
+        if Model.opponent.pokemon_out().hp == 0:
+            switch2 = True
 
         # player switches to next pokemon
         if switch1:

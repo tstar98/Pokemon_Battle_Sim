@@ -48,6 +48,9 @@ def demo1(make_player=True):
     move = move_factory('Recover')
     pokemon.add_move(move)
     Model.opponent.add_to_team(pokemon)
+    pokemon = Pokemon(150)
+    pokemon.add_move(move_factory("Psychic"))
+    Model.opponent.add_to_team(pokemon)
 
     if make_player:
         Model.player.team().clear()

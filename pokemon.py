@@ -139,8 +139,8 @@ class Pokemon(ChannelObservable):
                 # pokemon takes damage and can't move
                 if 50 >= random.randint(1, 100):
                     # cannot move due to confusion and hurts itself
-                    Confused().use_move(self)
                     self.publish("It hurt itself in confusion.\n")
+                    Confused().use_move(self)
                     return False
 
         # pokemon can't move if they are trapped
