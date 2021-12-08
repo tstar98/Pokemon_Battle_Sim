@@ -59,7 +59,7 @@ class Trainer(ChannelObservable):
 
     def switch_pokemon(self, pokemon):
         """Switches pokemon_out with given pokemon"""
-        self.publish(f"{self._team[0].name} was removed from battle.")
+        self.publish(channels.PRINT, f"{self._team[0].name} was removed from battle.")
 
         i = self._team.index(pokemon)
         self._team[0], self._team[i] = self._team[i], self._team[0]
@@ -145,7 +145,7 @@ class Opponent(Trainer):
 
     def switch_pokemon(self, pokemon):
         super(Opponent, self).switch_pokemon(pokemon)
-        self.publish(f"Your opponent sent out {pokemon.name}.")
+        self.publish(channels.PRINT, f"Your opponent sent out {pokemon.name}.")
 
     @property
     def reflect(self):

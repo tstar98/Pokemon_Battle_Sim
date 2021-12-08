@@ -223,7 +223,7 @@ if __name__ == '__main__':
     else:
         # Run in console
         #
-        demo.demo0(make_player=True)
+        demo.demo1(make_player=True)
         #
         # input("Press enter to continue.")
         # demo.demo1(make_player=True)
