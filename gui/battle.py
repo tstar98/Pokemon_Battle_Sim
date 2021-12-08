@@ -48,6 +48,7 @@ class Battle(tk.Frame, Publisher, Subscriber): # The pokemon fighting and the mo
         self.battle_round()
         
     def battle_round(self):
+        # TODO: add checks for last move used
         player_move = Model.player.make_selection(Model.opponent.pokemon_out())
         opponent_move = Model.opponent.make_selection(Model.player.pokemon_out())
         
@@ -64,13 +65,16 @@ class Battle(tk.Frame, Publisher, Subscriber): # The pokemon fighting and the mo
         ConsolePrinter.update(Model.opponent.pokemon_out())
         ConsolePrinter.update()
                 
-    def gui_battle(self):
-        while Model.player.has_pokemon() and Model.opponent.has_pokemon():
-            self.battle_round()
+    # def gui_battle(self):
+    #     while Model.player.has_pokemon() and Model.opponent.has_pokemon():
+    #         self.battle_round()
 
     def execute_moves(self, player_move, opponent_move):
-        # TODO: add checks for last move used
-    
+
+        # Whether to switch Pokemon at the end of the round
+        switch1 = False
+        switch2 = False
+        
         # determine order of moves
         if player_move.priority == opponent_move.priority:
             if Model.player.pokemon_out().speed > Model.opponent.pokemon_out().speed:
@@ -88,15 +92,43 @@ class Battle(tk.Frame, Publisher, Subscriber): # The pokemon fighting and the mo
     
         if move_order == 1:
             self.use_moves(player_move, Model.player, Model.opponent)
+
             # only use the move if both the attacker and target are still in battle
+            if Model.player.pokemon_out().hp == 0:
+                switch1 = True
+            if Model.opponent.pokemon_out().hp == 0:
+                switch2 = True
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
                 self.use_moves(opponent_move, Model.opponent, Model.player)
     
         else:
             self.use_moves(opponent_move, Model.opponent, Model.player)
+
             # only use the move if both the attacker and target are still in battle
+            if Model.player.pokemon_out().hp == 0:
+                switch1 = True
+            if Model.opponent.pokemon_out().hp == 0:
+                switch2 = True
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
                 self.use_moves(player_move, Model.player, Model.opponent)
+
+        # player switches to next pokemon
+        if switch1:
+            self.switch(Model.player)
+
+        # opponent switches to next pokemon
+        if switch2:
+            self._switch(Model.opponent)
+
+        print()
+        
+    def _switch(self, trainer):
+        """Convenience function to make Player/Opponent switch to next pokemon"""
+        for pokemon in trainer.team():
+            if pokemon == trainer.pokemon_out():
+                continue
+            if pokemon.hp > 0:
+                trainer.switch_pokemon(pokemon)
                 
     def use_moves(self, move, attacking_trainer, target_trainer):
         pokemon1 = attacking_trainer.pokemon_out()
@@ -123,7 +155,6 @@ class Battle(tk.Frame, Publisher, Subscriber): # The pokemon fighting and the mo
             attacking_trainer.reflect = True
         elif result is Screen.LIGHT:
             attacking_trainer.light_screen = True
-
     
     class Battlefield(tk.Frame): # Just the pokemon fighting
         def __init__(self, parent, *args, **kwargs):

@@ -96,7 +96,11 @@ class Battle(Subscriber):
     """ where the battle occurs"""
     
     def battle_round(self):
-        self.make_selection()
+        # TODO: add checks for last move used
+        player_move = Model.player.make_selection(Model.opponent.pokemon_out())
+        opponent_move = Model.opponent.make_selection(Model.player.pokemon_out())
+        
+        self.execute_moves(player_move, opponent_move)
 
         Model.player.next_turn()
         Model.player.pokemon_out().next_turn()
@@ -113,17 +117,14 @@ class Battle(Subscriber):
         while Model.player.has_pokemon() and Model.opponent.has_pokemon():
             self.battle_round()
 
-    def make_selection(self):
-        # TODO: add checks for last move used
-    
-        move1 = Model.player.make_selection(Model.opponent.pokemon_out())
-        move2 = Model.opponent.make_selection(Model.player.pokemon_out())
+    def execute_moves(self, player_move, opponent_move):
 
+        # Whether to switch Pokemon at the end of the round
         switch1 = False
         switch2 = False
-
+        
         # determine order of moves
-        if move1.priority == move2.priority:
+        if player_move.priority == opponent_move.priority:
             if Model.player.pokemon_out().speed > Model.opponent.pokemon_out().speed:
                 move_order = 1
             elif Model.player.pokemon_out().speed < Model.opponent.pokemon_out().speed:
@@ -132,13 +133,13 @@ class Battle(Subscriber):
                 # randomly select order if priority and speed are the same
                 move_order = random.randint(1, 2)
     
-        elif move1.priority > move2.priority:
+        elif player_move.priority > opponent_move.priority:
             move_order = 1
         else:
             move_order = 2
     
         if move_order == 1:
-            use_moves(move1, Model.player, Model.opponent)
+            use_moves(player_move, Model.player, Model.opponent)
 
             # only use the move if both the attacker and target are still in battle
             if Model.player.pokemon_out().hp == 0:
@@ -146,10 +147,10 @@ class Battle(Subscriber):
             if Model.opponent.pokemon_out().hp == 0:
                 switch2 = True
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
-                use_moves(move2, Model.opponent, Model.player)
+                use_moves(opponent_move, Model.opponent, Model.player)
     
         else:
-            use_moves(move2, Model.opponent, Model.player)
+            use_moves(opponent_move, Model.opponent, Model.player)
 
             # only use the move if both the attacker and target are still in battle
             if Model.player.pokemon_out().hp == 0:
@@ -157,25 +158,25 @@ class Battle(Subscriber):
             if Model.opponent.pokemon_out().hp == 0:
                 switch2 = True
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
-                use_moves(move2, Model.opponent, Model.player)
+                use_moves(player_move, Model.player, Model.opponent)
 
         # player switches to next pokemon
         if switch1:
-            for pokemon in Model.player.team():
-                if pokemon == Model.player.pokemon_out():
-                    continue
-                if pokemon.hp > 0:
-                    Model.player.switch_pokemon(pokemon)
+            self.switch(Model.player)
 
         # opponent switches to next pokemon
         if switch2:
-            for pokemon in Model.opponent.team():
-                if pokemon == Model.opponent.pokemon_out():
-                    continue
-                if pokemon.hp > 0:
-                    Model.opponent.switch_pokemon(pokemon)
+            self.switch(Model.opponent)
 
         print()
+        
+    def switch(self, trainer):
+        """Player/Opponent switches to next pokemon"""
+        for pokemon in trainer.team():
+            if pokemon == trainer.pokemon_out():
+                continue
+            if pokemon.hp > 0:
+                trainer.switch_pokemon(pokemon)
 
 
 def use_moves(move, attacking_trainer, target_trainer):
