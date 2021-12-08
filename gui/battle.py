@@ -5,21 +5,18 @@ Created on Wed Nov 17 18:16:03 2021
 @author: Brian
 """
 
-import random
-from warnings import warn
 import tkinter as tk
 
 from Pokemon_Battle_Sim.gui.move_select import Move_Select
 from Pokemon_Battle_Sim.gui import util
-from Pokemon_Battle_Sim.Model import Model, channels
+from Pokemon_Battle_Sim.Model import Model
 from Pokemon_Battle_Sim.pubsub import Publisher, Subscriber, Observer
 from Pokemon_Battle_Sim.pokemon import Pokemon, channels as poke_channels
-from Pokemon_Battle_Sim.enums import Screen
-from Pokemon_Battle_Sim.moves.attacks import Struggle
 from Pokemon_Battle_Sim.Trainer import channels as trainer_channels
-from Pokemon_Battle_Sim.Printer import ConsolePrinter
 
-class Battle(tk.Frame, Publisher, Subscriber): # The pokemon fighting and the move-select menu
+from Pokemon_Battle_Sim import BattleBackend
+
+class Battle(tk.Frame, BattleBackend.Battle, Publisher, Subscriber): # The pokemon fighting and the move-select menu
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         
@@ -46,84 +43,6 @@ class Battle(tk.Frame, Publisher, Subscriber): # The pokemon fighting and the mo
         Note: could get the move from the message, but this way matches the
         method used for console battle"""
         self.battle_round()
-        
-    def battle_round(self):
-        player_move = Model.player.make_selection(Model.opponent.pokemon_out())
-        opponent_move = Model.opponent.make_selection(Model.player.pokemon_out())
-        
-        self.execute_moves(player_move, opponent_move)
-
-        Model.player.next_turn()
-        Model.player.pokemon_out().next_turn()
-
-        Model.opponent.next_turn()
-        Model.opponent.pokemon_out().next_turn()
-        
-        ConsolePrinter.update(Model.player.pokemon_out())
-        ConsolePrinter.update()
-        ConsolePrinter.update(Model.opponent.pokemon_out())
-        ConsolePrinter.update()
-                
-    def gui_battle(self):
-        while Model.player.has_pokemon() and Model.opponent.has_pokemon():
-            self.battle_round()
-
-    def execute_moves(self, player_move, opponent_move):
-        # TODO: add checks for last move used
-    
-        # determine order of moves
-        if player_move.priority == opponent_move.priority:
-            if Model.player.pokemon_out().speed > Model.opponent.pokemon_out().speed:
-                move_order = 1
-            elif Model.player.pokemon_out().speed < Model.opponent.pokemon_out().speed:
-                move_order = 2
-            else:
-                # randomly select order if priority and speed are the same
-                move_order = random.randint(1, 2)
-    
-        elif player_move.priority > opponent_move.priority:
-            move_order = 1
-        else:
-            move_order = 2
-    
-        if move_order == 1:
-            self.use_moves(player_move, Model.player, Model.opponent)
-            # only use the move if both the attacker and target are still in battle
-            if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
-                self.use_moves(opponent_move, Model.opponent, Model.player)
-    
-        else:
-            self.use_moves(opponent_move, Model.opponent, Model.player)
-            # only use the move if both the attacker and target are still in battle
-            if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
-                self.use_moves(player_move, Model.player, Model.opponent)
-                
-    def use_moves(self, move, attacking_trainer, target_trainer):
-        pokemon1 = attacking_trainer.pokemon_out()
-        pokemon2 = target_trainer.pokemon_out()
-        reflect = target_trainer.reflect
-        light_screen = target_trainer.light_screen
-    
-        if not pokemon1.can_move():
-            return
-    
-        # if all moves have 0 pp, struggle
-        if not pokemon1.has_moves:
-            self.publish(f"{pokemon1.name} has no moves left.")
-            struggle = Struggle()
-            struggle.use_move(pokemon1, pokemon2)
-            return
-    
-        result = move.use_move(pokemon1, pokemon2, reflect, light_screen)
-    
-        pokemon1.last_move = move
-    
-        # set up screens if the move did so
-        if result is Screen.REFLECT:
-            attacking_trainer.reflect = True
-        elif result is Screen.LIGHT:
-            attacking_trainer.light_screen = True
-
     
     class Battlefield(tk.Frame): # Just the pokemon fighting
         def __init__(self, parent, *args, **kwargs):

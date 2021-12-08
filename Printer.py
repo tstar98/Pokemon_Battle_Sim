@@ -12,12 +12,14 @@ from Pokemon_Battle_Sim import use_gui
 
 # Use Python convention to hide constructor
 class __ConsolePrinter(Subscriber):
+    # Prints any messages to the console
     def update(self, message=''):
         """Prints the given message"""
         print(message)
 ConsolePrinter = __ConsolePrinter()
 
 class __GUIPrinter(Subscriber):
+	# Prints any messages to the appropriate textbox
     def update(self, message=''):
         # TODO use text boxes instead
         """Prints the given message"""

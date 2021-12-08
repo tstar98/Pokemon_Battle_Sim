@@ -6,6 +6,8 @@ import attacks
 from move import Move
 import enums
 import status_moves
+
+from Pokemon_Battle_Sim import enums
 from Pokemon_Battle_Sim.pubsub import ChannelObservable
 from Pokemon_Battle_Sim import use_gui, MAX_TEAM
 # from Pokemon_Battle_Sim.Model import Model # just-in-time import to avoid circular import
@@ -16,7 +18,7 @@ class channels(Enum):
     PRINT = "PRINT"
     TEAM = "TEAM"
 
-    
+
 class Trainer(ChannelObservable):
     def __init__(self):
         self._team = []
