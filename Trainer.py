@@ -1,35 +1,32 @@
-from Pokemon_Battle_Sim.pubsub import Publisher, Observable
+from enum import Enum
+
+from Pokemon_Battle_Sim.pubsub import ChannelObservable
 from Pokemon_Battle_Sim import use_gui, MAX_TEAM
 # from Pokemon_Battle_Sim.Model import Model # just-in-time import to avoid circular import
 from Pokemon_Battle_Sim.Printer import Printer
 
-class Trainer(Publisher):
+class channels(Enum):
+    PRINT = "PRINT"
+    TEAM = "TEAM"
+    
+class Trainer(ChannelObservable):
     def __init__(self):
-        self._team = self.__Team()
+        self._team = []
         self._reflect = 0
         self._light_screen = 0
         self._max_team = MAX_TEAM
         
-        # Publish to Printer for printing Reflect and Light Screen effects
         super().__init__()
-        self.add_subscriber(Printer)
-        
-        
-    class __Team(list, Observable):
-        """Needed to separate the Trainer publishing text from changes to the
-        Observable team (i.e. Pokemon added/dropped, switched, etc.)"""
-        def __init__(self):
-            super().__init__()
-            Observable.__init__(self)
-            
-        def append(self, object, /):
-            super().append(object)
-            self.publish("append")
+        for channel in channels:
+            self.add_channel(channel)
+        # Publish PRINT channel to Printer for printing Reflect and Light Screen effects
+        self.add_subscriber(channels.PRINT, Printer)
 
     def add_to_team(self, pokemon):
         if len(self._team) < self._max_team:
             self._team.append(pokemon)
             pokemon.add_subscriber(Printer)
+            self.publish(channels.TEAM, "append")
             return True
         else:
             return False
@@ -65,6 +62,8 @@ class Trainer(Publisher):
 
         i = self._team.index(pokemon)
         self._team[0], self._team[i] = self._team[i], self._team[0]
+        
+        self.publish(channels.TEAM, "switched")
 
     @property
     def reflect(self):

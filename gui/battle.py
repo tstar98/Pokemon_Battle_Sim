@@ -16,6 +16,7 @@ from Pokemon_Battle_Sim.pubsub import Publisher, Subscriber, Observer
 from Pokemon_Battle_Sim.pokemon import Pokemon, channels as poke_channels
 from Pokemon_Battle_Sim.enums import Screen
 from Pokemon_Battle_Sim.moves.attacks import Struggle
+from Pokemon_Battle_Sim.Trainer import channels as trainer_channels
 from Pokemon_Battle_Sim.Printer import ConsolePrinter
 
 class Battle(tk.Frame, Publisher, Subscriber): # The pokemon fighting and the move-select menu
@@ -133,49 +134,65 @@ class Battle(tk.Frame, Publisher, Subscriber): # The pokemon fighting and the mo
             util.gridconfigure(self, rw=[1, 1], cw=[5, 1, 5])
             
             # Pokemon
-            if Model.player.has_pokemon():
-                self.player = self.Pokemon_Detail(self, Model.player.pokemon_out(), bg='green')
-            else:
-                print("Player has no Pokemon to battle with")
-                self.player = self.Pokemon_Detail(self, Pokemon(None), bg='green')
+            self.player = self.Team_Detail(self, Model.player, bg='green')
             self.player.grid(row=1, column=0, sticky='NSEW')
-            if Model.opponent.has_pokemon():
-                self.opponent = self.Pokemon_Detail(self, Model.opponent.pokemon_out(), bg='red')
-            else:
-                print("Opponent has no Pokemon to battle with")
-                self.opponent = self.Pokemon_Detail(self, Pokemon(None), bg='red')
+            self.opponent = self.Team_Detail(self, Model.opponent, bg='red')
             self.opponent.grid(row=0, column=2, sticky='NSEW')
-        
-        class Pokemon_Detail(tk.Frame, Observer):
-            def __init__(self, parent, pokemon, *args, **kwargs):
-                super().__init__(parent, relief='raised', borderwidth=2*util.scale,
-                                  *args, **kwargs)
-                # self.grid(row=0, column=1, columnspan=2, sticky="NSEW",
-                #           padx=3*util.scale, pady=1*util.scale)
+            
+        class Team_Detail(tk.Frame, Observer):
+            """Frame to hold the Pokemon_Detail. Split off into a separate class
+            because it needs to observe the team instead of the Pokemon"""
+            def __init__(self, parent, team, *args, **kwargs):
+                super().__init__(parent)
+                util.gridconfigure(self)
                 
-                # Setup grid:
-                #  -----------------------------------------
-                # | Pokemon name          Team status icons |
-                # | Pokemon types                           |
-                # | [Spacer]                                |
-                # | Health                                  |
-                #  -----------------------------------------
-                util.gridconfigure(self, rw=[1,1,1,1], cw=[3,1])
-                # Pokemon name
-                self.name = tk.Label(self, text=pokemon.name, bg=self["background"])
-                self.name.grid(row=0, column=0, columnspan=1, sticky="NSEW")
-                # Pokemon types
-                # TODO
-                # Health
-                self.health = tk.Label(self, text=pokemon.hp, bg=self["background"])
-                self.health.grid(row=3, column=0, columnspan=2, sticky="NSEW")
+                # Store args/kwargs for re-creating the detail later
+                self.args = args
+                self.kwargs = kwargs
+                self.team = team
+                self.create_detail()
                 
                 # Initialize Observer
-                Observer.__init__(self, pokemon, poke_channels.POKEMON)
+                Observer.__init__(self, team, trainer_channels.TEAM)
                 
-            def update(self, message=None):
-                self.name['text'] = self.subject.name
-                self.health['text'] = self.subject.hp
+            def create_detail(self):
+                self.pokemon = self.Pokemon_Detail(self, self.team.pokemon_out(), *self.args, **self.kwargs)
+                util.grid(self.pokemon)
+                
+            def update(self, message):
+                """Team lineup changed, re-create the Pokemon_Detail"""
+                self.create_detail()
+        
+            class Pokemon_Detail(tk.Frame, Observer):
+                def __init__(self, parent, pokemon, *args, **kwargs):
+                    super().__init__(parent, relief='raised', borderwidth=2*util.scale,
+                                      *args, **kwargs)
+                    # self.grid(row=0, column=1, columnspan=2, sticky="NSEW",
+                    #           padx=3*util.scale, pady=1*util.scale)
+                    
+                    # Setup grid:
+                    #  -----------------------------------------
+                    # | Pokemon name          Team status icons |
+                    # | Pokemon types                           |
+                    # | [Spacer]                                |
+                    # | Health                                  |
+                    #  -----------------------------------------
+                    util.gridconfigure(self, rw=[1,1,1,1], cw=[3,1])
+                    # Pokemon name
+                    self.name = tk.Label(self, text=pokemon.name, bg=self["background"])
+                    self.name.grid(row=0, column=0, columnspan=1, sticky="NSEW")
+                    # Pokemon types
+                    # TODO
+                    # Health
+                    self.health = tk.Label(self, text=pokemon.hp, bg=self["background"])
+                    self.health.grid(row=3, column=0, columnspan=2, sticky="NSEW")
+                    
+                    # Initialize Observer
+                    Observer.__init__(self, pokemon, poke_channels.POKEMON)
+                    
+                def update(self, message=None):
+                    self.name['text'] = self.subject.name
+                    self.health['text'] = self.subject.hp
                 
     
 if __name__ == "__main__":

@@ -29,9 +29,7 @@ class __Model(ChannelPublisher):
         
         # For managing the two teams
         self.player = Trainer.Player()
-        self.player.add_subscriber(self.get_channel(channels.PLAYER))
         self.opponent = Trainer.Opponent()
-        self.opponent.add_subscriber(self.get_channel(channels.OPPONENT))
         
         # Initialize the channels appropriately
         self.publish(channels.SELECTED_POKEMON, Pokemon(None))
