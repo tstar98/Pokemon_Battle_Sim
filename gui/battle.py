@@ -33,8 +33,8 @@ class Battle(tk.Frame, BattleBackend.Battle, Publisher, Subscriber): # The pokem
         msel.grid(row=1, column=0, sticky='NSEW')
         
         # Get ready for printing
-        printout = self.Printout(self, row=1)
-        GUIPrinter.add_subscriber(printout)
+        self.printout = self.Printout(self, row=1)
+        GUIPrinter.add_subscriber(self.printout)
         
         
         # Initialize the Publisher
@@ -48,7 +48,9 @@ class Battle(tk.Frame, BattleBackend.Battle, Publisher, Subscriber): # The pokem
         """Player selected a move, use it
         Note: could get the move from the message, but this way matches the
         method used for console battle"""
-        self.battle_round()
+        battle_continuing = self.battle_round()
+        if not battle_continuing:
+            self.printout.update("GAME OVER")
         
     class Printout(Subscriber):
         def __init__(self, parent, *grid_args, **grid_kwargs):
@@ -59,9 +61,24 @@ class Battle(tk.Frame, BattleBackend.Battle, Publisher, Subscriber): # The pokem
             
         def update(self, message):
             """Creates a button with the message so that it can be destroyed"""
-            tk_obj = util.Button(self.parent, text=message)
-            tk_obj['command'] = lambda: tk_obj.destroy()
-            util.grid(tk_obj, *self.grid_args, **self.grid_kwargs)
+            if message == "GAME OVER":
+                player = Model.player.has_pokemon()
+                opponent = Model.opponent.has_pokemon()
+                if player and opponent:
+                    raise RuntimeError("Ended early?")
+                elif player and (not opponent):
+                    text = "YOU WIN!!!"
+                elif opponent and (not player):
+                    text = "You lost :("
+                elif (not player) and (not opponent):
+                    text = "It's a draw..."
+                tk_obj = tk.Label(self.parent, text=text,
+                                    relief='ridge', borderwidth=1*util.scale)
+                util.grid(tk_obj, *self.grid_args, **self.grid_kwargs)
+            else:
+                tk_obj = util.Button(self.parent, text=message)
+                tk_obj['command'] = lambda: tk_obj.destroy()
+                util.grid(tk_obj, *self.grid_args, **self.grid_kwargs)
     
     class Battlefield(tk.Frame): # Just the pokemon fighting
         def __init__(self, parent, *args, **kwargs):

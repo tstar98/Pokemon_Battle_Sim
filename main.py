@@ -25,6 +25,7 @@ if __name__ == '__main__':
         # input("Press enter to continue.")
         # demo.demo2(make_player=True)
         
+        battle_continuing = True
         battle = BattleBackend.Battle()
-        while Model.player.has_pokemon() and Model.opponent.has_pokemon():
-            battle.battle_round()
+        while battle_continuing:
+            battle_continuing = battle.battle_round()

@@ -19,6 +19,8 @@ class Battle():
     """ where the battle occurs"""
     
     def battle_round(self):
+        """Carry out one round of battle. Returns False if either trainer is
+        out of Pokemon, True otherwise"""
         # check for last move used, certain classes of moves take multiple turns
         player_move = self.get_move(Model.player)
         opponent_move = self.get_move(Model.opponent)
@@ -37,6 +39,8 @@ class Battle():
         ConsolePrinter.update()
         
         Printer.flush() # FIXME: workaround to get the right printout order
+        
+        return (Model.player.has_pokemon() and Model.opponent.has_pokemon())
 
     def get_move(self, trainer):
         """checks for last move used and returns correct move selection"""
