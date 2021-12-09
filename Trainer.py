@@ -2,11 +2,7 @@ import math
 import random
 from enum import Enum
 
-import attacks
-from move import Move
-import enums
-import status_moves
-from attacks import Attack
+from Pokemon_Battle_Sim.moves.move import Move
 
 from Pokemon_Battle_Sim import enums
 from Pokemon_Battle_Sim.pubsub import ChannelObservable
