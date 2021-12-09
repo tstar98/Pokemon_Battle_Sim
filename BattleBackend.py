@@ -20,19 +20,9 @@ class Battle():
     
     def battle_round(self):
         # check for last move used, certain classes of moves take multiple turns
-        last_move = Model.player.pokemon_out().last_move
-        if isinstance(last_move, attacks.ChargingAttack) and last_move.is_charged:
-            player_move = last_move
-        elif isinstance(last_move, attacks.RechargeAttack) and not last_move.is_charged:
-            player_move = last_move
-        elif isinstance(last_move, attacks.ConfusingContinuousAttack) and last_move.counter > 0:
-            player_move = last_move
-        else:
-            player_move = Model.player.make_selection(Model.opponent.pokemon_out())
+        player_move = self.get_move(Model.player)
+        opponent_move = self.get_move(Model.opponent)
 
-
-        opponent_move = Model.opponent.make_selection(Model.player.pokemon_out())
-        
         self.execute_moves(player_move, opponent_move)
 
         Model.player.next_turn()
@@ -49,6 +39,7 @@ class Battle():
     def get_move(self, trainer):
         """checks for last move used and returns correct move selection"""
         # certain move classes take multiple turns
+        # TODO: fix isinstance
         last_move = trainer.pokemon_out().last_move
         if isinstance(last_move, attacks.ChargingAttack) and last_move.is_charged:
             return last_move
@@ -57,7 +48,7 @@ class Battle():
         elif isinstance(last_move, attacks.ConfusingContinuousAttack) and last_move.counter > 0:
             return last_move
         else:
-            return Model.player.make_selection(Model.opponent.pokemon_out())
+            return trainer.make_selection(Model.opponent.pokemon_out())
 
     def execute_moves(self, player_move, opponent_move):
         # determine order of moves
@@ -77,16 +68,20 @@ class Battle():
     
         if move_order == 1:
             self.use_moves(player_move, Model.player, Model.opponent)
+            # TODO: flush here
 
             # only use the move if both the attacker and target are still in battle
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
                 self.use_moves(opponent_move, Model.opponent, Model.player)
+                # TODO: flush here
         else:
             self.use_moves(opponent_move, Model.opponent, Model.player)
+            # TODO: flush here
 
             # only use the move if both the attacker and target are still in battle
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
                 self.use_moves(player_move, Model.player, Model.opponent)
+                # TODO: flush here
 
         # Whether to switch Pokemon at the end of the round
         switch1 = False
