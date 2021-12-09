@@ -363,6 +363,7 @@ class Pokemon(ChannelObservable):
                 message += "'s frozen solid."
 
             self.publish(message)
+            self.publish(channels.POKEMON, "status")
 
     @property
     def is_confused(self):
