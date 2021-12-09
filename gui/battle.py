@@ -14,6 +14,7 @@ from Pokemon_Battle_Sim.pubsub import Publisher, Subscriber, Observer
 from Pokemon_Battle_Sim.pokemon import Pokemon, channels as poke_channels
 from Pokemon_Battle_Sim.Trainer import channels as trainer_channels
 from Pokemon_Battle_Sim.Printer import GUIPrinter
+from Pokemon_Battle_Sim import enums
 
 from Pokemon_Battle_Sim import BattleBackend
 
@@ -128,7 +129,7 @@ class Battle(tk.Frame, BattleBackend.Battle, Publisher, Subscriber): # The pokem
                     # Setup grid:
                     #  -----------------------------------------
                     # | Pokemon name          Team status icons |
-                    # | Pokemon types                           |
+                    # | Status effects                          |
                     # | [Spacer]                                |
                     # | Health                                  |
                     #  -----------------------------------------
@@ -136,19 +137,35 @@ class Battle(tk.Frame, BattleBackend.Battle, Publisher, Subscriber): # The pokem
                     # Pokemon name
                     self.name = tk.Label(self, text=pokemon.name, bg=self["background"])
                     self.name.grid(row=0, column=0, columnspan=1, sticky="NSEW")
-                    # Pokemon types
-                    # TODO
+                    # Status effects
+                    self.status = tk.Label(self, text='', bg=self["background"])
+                    util.grid(self.status, row=1, columnspan=2)
                     # Health
                     self.health = tk.Label(self, text=pokemon.hp, bg=self["background"])
                     self.health.grid(row=3, column=0, columnspan=2, sticky="NSEW")
                     
                     # Initialize Observer
                     Observer.__init__(self, pokemon, poke_channels.POKEMON)
+                    self.set_status()
                     
                 def update(self, message=None):
                     self.name['text'] = self.subject.name
                     self.health['text'] = self.subject.hp
-                
+                    self.set_status()
+                    
+                def set_status(self):
+                    """Update the status effect display"""
+                    mapper = {enums.StatusEffect.PARALYSIS.value: 'Paralyzed',
+                              enums.StatusEffect.SLEEP.value: 'Asleep',
+                              enums.StatusEffect.BURN.value: 'Burned',
+                              enums.StatusEffect.FREEZE.value: 'Frozen',
+                              enums.StatusEffect.POISON.value: 'Poisoned',
+                              enums.StatusEffect.BAD_POISON.value: 'Poisoned',
+                              enums.StatusEffect.REST.value: 'Asleep',
+                              enums.StatusEffect.NONE.value: ''}
+                    stat_eff = self.subject.status_effect
+                    self.status['text'] = mapper[stat_eff]
+                    
     
 if __name__ == "__main__":
     from Pokemon_Battle_Sim.pokemon import Pokemon

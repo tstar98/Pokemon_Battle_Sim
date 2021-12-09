@@ -245,8 +245,6 @@ class team_select(tk.Frame):
                 
                 # Types
                 # TODO
-                types = tk.Label(frame, text='TODO: types')
-                util.grid(types, row=1)
                 
                 # Moves
                 for i, move in enumerate(pokemon.moves):
