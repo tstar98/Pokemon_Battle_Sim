@@ -30,7 +30,7 @@ class Move_Select(tk.Frame, Publisher):
         # back = util.Button(self, text='Back', command=go_back)
         def go_back():
             pass
-        back = util.Button(self, text='', command=None, state='disabled')
+        back = util.Button(self, text='', command=None, state='disabled', disabledforeground="black")
         back.grid(row=0, column=0, sticky='NSEW')
         
         # Moves section

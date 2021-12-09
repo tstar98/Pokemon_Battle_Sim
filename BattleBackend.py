@@ -35,6 +35,8 @@ class Battle():
         ConsolePrinter.update()
         ConsolePrinter.update(Model.opponent.pokemon_out())
         ConsolePrinter.update()
+        
+        Printer.flush() # FIXME: workaround to get the right printout order
 
     def get_move(self, trainer):
         """checks for last move used and returns correct move selection"""
@@ -68,20 +70,22 @@ class Battle():
     
         if move_order == 1:
             self.use_moves(player_move, Model.player, Model.opponent)
-            Printer.flush()
+            # Printer.flush() # FIXME: battle continues so printout order is wrong
 
             # only use the second move if both the attacker and target are still in battle
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
+                Printer.update('')
                 self.use_moves(opponent_move, Model.opponent, Model.player)
-                Printer.flush()
+                # Printer.flush() # FIXME: battle continues so printout order is wrong
         else:
             self.use_moves(opponent_move, Model.opponent, Model.player)
-            Printer.flush()
+            # Printer.flush() # FIXME: battle continues so printout order is wrong
 
             # only use the second move if both the attacker and target are still in battle
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
+                Printer.update('')
                 self.use_moves(player_move, Model.player, Model.opponent)
-                Printer.flush()
+                # Printer.flush() # FIXME: battle continues so printout order is wrong
 
         # Whether to switch Pokemon at the end of the round
         switch1 = False

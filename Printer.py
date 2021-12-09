@@ -38,6 +38,9 @@ class __GUIPrinter(Subscriber, Publisher):
         """Enqueues the message"""
         self.q.append(message)
         
+        # Also print to console
+        ConsolePrinter.update(message)
+        
     def flush(self):
         """Print all the queued messages"""
         self.publish('\n'.join(self.q))
