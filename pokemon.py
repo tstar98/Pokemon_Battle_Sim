@@ -120,7 +120,16 @@ class Pokemon(ChannelObservable):
                 self.publish(f"{self.name} is fast asleep.\n")
             else:
                 self.publish(f"{self.name} woke up.\n")
-                self.__status_effect = enums.StatusEffect.NONE.value
+                self.status_effect = enums.StatusEffect.NONE.value
+            return False
+
+        # check freeze status
+        if self.__status_effect == enums.StatusEffect.FREEZE.value:
+            if random.randint(1, 100) >= 30:
+                self.publish(f"{self.__name} thawed out.")
+                self.status_effect = enums.StatusEffect.NONE.value
+            else:
+                self.publish(f"{self.__name} is frozen solid.")
             return False
 
         # roll to see if damaged by confusion
@@ -349,6 +358,9 @@ class Pokemon(ChannelObservable):
             if stat_eff == enums.StatusEffect.BAD_POISON.value:
                 message += "'s badly poisoned."
                 self.__poison_counter = 1
+
+            if stat_eff == enums.StatusEffect.FREEZE.value:
+                message += "'s frozen solid."
 
             self.publish(message)
 
