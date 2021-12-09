@@ -8,7 +8,7 @@ Created on Tue Dec  7 20:43:56 2021
 import random
 
 # MUST import from top-level or it gets a different instance from GUI scripts
-import attacks
+from Pokemon_Battle_Sim.moves import attacks
 from Pokemon_Battle_Sim.moves.attacks import Struggle
 from Pokemon_Battle_Sim.enums import Screen
 from Pokemon_Battle_Sim.Model import Model
