@@ -68,20 +68,20 @@ class Battle():
     
         if move_order == 1:
             self.use_moves(player_move, Model.player, Model.opponent)
-            # TODO: flush here
+            Printer.flush()
 
-            # only use the move if both the attacker and target are still in battle
+            # only use the second move if both the attacker and target are still in battle
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
                 self.use_moves(opponent_move, Model.opponent, Model.player)
-                # TODO: flush here
+                Printer.flush()
         else:
             self.use_moves(opponent_move, Model.opponent, Model.player)
-            # TODO: flush here
+            Printer.flush()
 
-            # only use the move if both the attacker and target are still in battle
+            # only use the second move if both the attacker and target are still in battle
             if Model.player.pokemon_out().hp > 0 and Model.opponent.pokemon_out().hp > 0:
                 self.use_moves(player_move, Model.player, Model.opponent)
-                # TODO: flush here
+                Printer.flush()
 
         # Whether to switch Pokemon at the end of the round
         switch1 = False

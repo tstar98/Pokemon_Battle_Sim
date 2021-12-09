@@ -42,7 +42,6 @@ class Move_Select(tk.Frame, Publisher):
         
         # Moves buttons
         def select_move(move):
-            print(f"DEBUG using {move.name}")
             Model.set_sel_move(move)
             self.publish(move)
             go_back()
