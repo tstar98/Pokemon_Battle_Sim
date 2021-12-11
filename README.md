@@ -1,6 +1,9 @@
 # Pokemon Battle Simulator
 Thomas Starnes and Brian Glassman
 
+## Demo
+The demo can be viewed here: https://photos.app.goo.gl/723M2ZNwRY5rpMWb6
+
 ## OOAD
 For this project we used Python 3. 
 
