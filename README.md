@@ -10,7 +10,7 @@ Classes like StatusEffectAttack and StatAlteringAttack are concrete decorators. 
 
 LevelBasedAttack uses strategy to determine the damage done. Most LevelBasedAttacks apply damage equal to the user's level, but Psybeam adds a random modifier of 1 to 1.5 * to that damage.
 
-MVC or PubSub
+We implemented an abbreviated MVC system, where the TKinter GUI functions as both view and controller. The GUI display is kept up-to-date with a combination of Publisher-Subscriber for simple tasks like displaying a selecting Pokemon’s name, and Observer-Observable for more nuanced information like displaying the Pokemon’s health and status effects during combat.
 
 ## Insructions
 ### Main Menu and Team Building
