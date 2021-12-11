@@ -332,6 +332,7 @@ class Pokemon(ChannelObservable):
             self.__status_effect = stat_eff
 
             if stat_eff == enums.StatusEffect.NONE.value:
+                self.publish(channels.POKEMON, "status")
                 return
 
             message = self.__name

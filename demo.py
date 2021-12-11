@@ -11,14 +11,12 @@ from Pokemon_Battle_Sim.Model import Model
 
 def demo0(make_player=True):
     Model.opponent.team().clear()
-    pokemon = Pokemon(51)
-    move = move_factory('Earthquake')
+    pokemon = Pokemon(100)
+    move = move_factory('Self-Destruct')
     pokemon.add_move(move)
-    move = move_factory('Rest')
-    pokemon.add_move(move)
-    move = move_factory('Rock Slide')
-    pokemon.add_move(move)
-    move = move_factory('Double Team')
+    Model.opponent.add_to_team(pokemon)
+    pokemon = Pokemon(101)
+    move = move_factory('Explosion')
     pokemon.add_move(move)
     Model.opponent.add_to_team(pokemon)
 
