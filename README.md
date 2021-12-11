@@ -3,9 +3,13 @@ Thomas Starnes and Brian Glassman
 
 ## OOAD
 For this project we used Python 3. 
+
 The code revolves around an abstract class Move that is inheritted by all Move subclasses. We use move factory to generate the correct class of a given move.
+
 Classes like StatusEffectAttack and StatAlteringAttack are concrete decorators. They call super.use_move() and then add an additional function such as applying a status effect or lowering the opponent's stats.
+
 LevelBasedAttack uses strategy to determine the damage done. Most LevelBasedAttacks apply damage equal to the user's level, but Psybeam adds a random modifier of 1 to 1.5 * to that damage.
+
 MVC or PubSub
 
 ## Insructions
