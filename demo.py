@@ -86,7 +86,7 @@ def demo1(make_player=True):
         pokemon.add_move(move)
         move = move_factory('Amnesia')
         pokemon.add_move(move)
-        move = move_factory('Hyper Beam')
+        move = move_factory('Body Slam')
         pokemon.add_move(move)
         Model.player.add_to_team(pokemon)
 
