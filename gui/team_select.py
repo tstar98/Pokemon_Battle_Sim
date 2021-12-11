@@ -25,15 +25,23 @@ class team_select(tk.Frame):
         super().__init__(parent)
         util.gridconfigure(self, rw=[1, 10, 10, 5], cw=[1, 1, 1, 1])
         
+        def recursive_destroy(obj):
+            children = obj.winfo_children()
+            for child in children:
+                recursive_destroy(child)
+            obj.destroy()
+        
         # Back button (top left)
         def command():
-            demo_func = demo.demos[random.randint(0, len(demo.demos)-1)]
-            print(demo_func)
+            demo_num = random.randint(0, len(demo.demos)-1)
+            demo_func = demo.demos[demo_num]
+            print(f"Demo{demo_num}")
             demo_func(make_player=False)
             ConsolePrinter.update("Player team: " + ', '.join(p.name for p in Model.player.team()))
             ConsolePrinter.update("Opponent team: " + ', '.join(p.name for p in Model.opponent.team()))
             try:
                 self.master.open_menu("BATTLE")
+                recursive_destroy(self)
             except AttributeError:
                 print("<This would start the battle>")
         back = util.Button(self, text="Battle!", command=command)
@@ -137,6 +145,10 @@ class team_select(tk.Frame):
             Subscriber.__init__(self)
             Model.add_subscriber(channels.SELECTED_POKEMON, self)
             
+        def destroy(self):
+            Model.remove_subscriber(channels.SELECTED_POKEMON, self)
+            super().destroy()
+            
         def add_pokemon(self):
             if Model.sel_pokemon is None:
                 pass
@@ -185,6 +197,10 @@ class team_select(tk.Frame):
                 Subscriber.__init__(self)
                 Model.add_subscriber(channels.SELECTED_POKEMON, self)
             
+            def destroy(self):
+                Model.remove_subscriber(channels.SELECTED_POKEMON, self)
+                super().destroy()
+            
             def select(self, event):
                 """Get the current selection and update the Model with it"""
                 selection = self.curselection()
@@ -209,6 +225,10 @@ class team_select(tk.Frame):
                 # Initialize Subscriber
                 Subscriber.__init__(self)
                 Model.add_subscriber(channels.SELECTED_MOVE, self)
+            
+            def destroy(self):
+                Model.remove_subscriber(channels.SELECTED_MOVE, self)
+                super().destroy()
                 
             def update(self, message):
                 if message is None:
@@ -229,6 +249,10 @@ class team_select(tk.Frame):
             
             # Initialize the Observer
             Observer.__init__(self, Model.player, trainer_channels.TEAM)
+            
+        def destroy(self):
+            Model.player.remove_subscriber(trainer_channels.TEAM, self)
+            super().destroy()
         
         def update(self, message=None):
             if message == "append":
