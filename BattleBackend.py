@@ -30,8 +30,16 @@ class Battle():
         Model.player.next_turn()
         Model.player.pokemon_out().next_turn()
 
+        # switch pokemon if they faint from after turn effects
+        if Model.player.pokemon_out().hp == 0:
+            self._switch(Model.player)
+
         Model.opponent.next_turn()
         Model.opponent.pokemon_out().next_turn()
+
+        # switch pokemon if they faint from after turn effects
+        if Model.opponent.pokemon_out().hp == 0:
+            self._switch(Model.opponent)
         
         ConsolePrinter.update(Model.player.pokemon_out())
         ConsolePrinter.update()
@@ -116,6 +124,7 @@ class Battle():
                 continue
             if pokemon.hp > 0:
                 trainer.switch_pokemon(pokemon)
+                break
 
     def use_moves(self, move, attacking_trainer, target_trainer):
         pokemon1 = attacking_trainer.pokemon_out()

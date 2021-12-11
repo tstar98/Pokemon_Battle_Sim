@@ -32,12 +32,12 @@
 32,Nidoran♂,Leer,Tackle,Horn Attack,Poison Sting,Fury Attack,Horn Drill,Double Kick
 33,Nidorino,Leer,Tackle,Horn Attack,Poison Sting,Fury Attack,Horn Drill,Double Kick
 34,Nidoking,Tackle,Horn Attack,Poison Sting,Thrash,Double Kick
-35,Clefairy,Pound,Growl,Sing,Double Slap,Minimize,Metronome,Defense Curl,Light Screen,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Submission,Seismic Toss,Solar Beam,Thunderbolt,Thunder,Psychic,Teleport,Mimic,Double Team,Reflect,Fire Blast,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Strength,Flash
-36,Clefable,Sing,Double Slap,Minimize,Metronome,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Hyper Beam,Submission,Seismic Toss,Solar Beam,Thunderbolt,Thunder,Psychic,Teleport,Mimic,Double Team,Reflect,Fire Blast,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Strength,Flash
+35,Clefairy,Pound,Growl,Sing,Double Slap,Minimize,Metronome,Defense Curl,Light Screen,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Submission,Seismic Toss,Solar Beam,Thunderbolt,Thunder,Psychic,Mimic,Double Team,Reflect,Fire Blast,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Strength,Flash
+36,Clefable,Sing,Double Slap,Minimize,Metronome,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Hyper Beam,Submission,Seismic Toss,Solar Beam,Thunderbolt,Thunder,Psychic,Mimic,Double Team,Reflect,Fire Blast,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Strength,Flash
 37,Vulpix,Ember,Tail Whip,Quick Attack,Confuse Ray,Flamethrower,Fire Spin,Toxic,Body Slam,Take Down,Double-Edge,Dig,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest
 38,Ninetales,Ember,Tail Whip,Quick Attack,Toxic,Body Slam,Take Down,Double-Edge,Hyper Beam,Dig,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest
-39,Jigglypuff,Sing,Pound,Defense Curl,Double Slap,Rest,Body Slam,Double-Edge,Mega Punch,Mega Kick,Toxic,Take Down,Bubble Beam,Water Gun,Ice Beam,Blizzard,Submission,Seismic Toss,Solar Beam,Thunderbolt,Thunder,Psychic,Teleport,Mimic,Double Team,Reflect,Fire Blast,Skull Bash,Thunder Wave,Psywave,Tri Attack,Strength,Flash
-40,Wigglytuff,Sing,Defense Curl,Double Slap,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Hyper Beam,Submission,Seismic Toss,Solar Beam,Thunderbolt,Thunder,Psychic,Teleport,Mimic,Double Team,Reflect,Fire Blast,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Strength,Flash
+39,Jigglypuff,Sing,Pound,Defense Curl,Double Slap,Rest,Body Slam,Double-Edge,Mega Punch,Mega Kick,Toxic,Take Down,Bubble Beam,Water Gun,Ice Beam,Blizzard,Submission,Seismic Toss,Solar Beam,Thunderbolt,Thunder,Psychic,Mimic,Double Team,Reflect,Fire Blast,Skull Bash,Thunder Wave,Psywave,Tri Attack,Strength,Flash
+40,Wigglytuff,Sing,Defense Curl,Double Slap,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Hyper Beam,Submission,Seismic Toss,Solar Beam,Thunderbolt,Thunder,Psychic,Mimic,Double Team,Reflect,Fire Blast,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Strength,Flash
 41,Zubat,Leech Life,Supersonic,Bite,Confuse Ray,Wing Attack,Razor Wind,Toxic,Take Down,Double-Edge,Mega Drain,Mimic,Double Team,Swift,Rest
 42,Golbat,Leech Life,Screech,Bite,Supersonic,Confuse Ray,Wing Attack,Razor Wind,Toxic,Take Down,Double-Edge,Hyper Beam,Mega Drain,Mimic,Double Team,Swift,Rest
 43,Oddish,Absorb,Poison Powder,Stun Spore,Sleep Powder,Acid,Petal Dance,Solar Beam,Swords Dance,Toxic,Take Down,Double-Edge,Mega Drain,Mimic,Double Team,Reflect,Rest,Cut
@@ -56,13 +56,13 @@
 56,Mankey,Scratch,Leer,Karate Chop,Fury Swipes,Seismic Toss,Thrash,Low Kick,Screech
 57,Primeape,Scratch,Leer,Karate Chop,Fury Swipes,Seismic Toss,Thrash,Low Kick,Screech
 58,Growlithe,Bite,Ember,Leer,Take Down,Agility,Flamethrower,Toxic,Body Slam,Double-Edge,Dragon Rage,Dig,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest
-59,Arcanine,Ember,Leer,Take Down,Toxic,Body Slam,Double-Edge,Hyper Beam,Dragon Rage,Dig,Teleport,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest
+59,Arcanine,Ember,Leer,Take Down,Toxic,Body Slam,Double-Edge,Hyper Beam,Dragon Rage,Dig,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest
 60,Poliwag,Bubble,Hypnosis,Water Gun,Double Slap,Body Slam,Amnesia,Hydro Pump,Toxic,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Psychic,Mimic,Double Team,Skull Bash,Rest,Psywave,Surf
 61,Poliwhirl,Bubble,Hypnosis,Water Gun,Double Slap,Body Slam,Amnesia,Hydro Pump,Mega Punch,Mega Kick,Toxic,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Submission,Seismic Toss,Earthquake,Fissure,Psychic,Mimic,Double Team,Metronome,Skull Bash,Rest,Psywave,Surf,Strength
 62,Poliwrath,Hypnosis,Water Gun,Double Slap,Body Slam,Mega Punch,Mega Kick,Toxic,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Hyper Beam,Submission,Seismic Toss,Earthquake,Fissure,Psychic,Mimic,Double Team,Metronome,Skull Bash,Rest,Psywave,Surf,Strength
-63,Abra,Teleport,Mega Punch,Toxic,Body Slam,Take Down,Double-Edge,Submission,Seismic Toss,Psychic,Mimic,Double Team,Reflect,Metronome,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Flash
-64,Kadabra,Teleport,Confusion,Psybeam,Recover,Psychic,Reflect,Kinesis
-65,Alakazam,Teleport,Confusion,Psybeam,Recover,Psychic,Reflect,Kinesis
+63,Abra,Mega Punch,Toxic,Body Slam,Take Down,Double-Edge,Submission,Seismic Toss,Psychic,Mimic,Double Team,Reflect,Metronome,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Flash
+64,Kadabra,Confusion,Psybeam,Recover,Psychic,Reflect,Kinesis
+65,Alakazam,Confusion,Psybeam,Recover,Psychic,Reflect,Kinesis
 66,Machop,Karate Chop,Low Kick,Leer,Seismic Toss,Submission,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Earthquake,Fissure,Dig,Mimic,Double Team,Metronome,Fire Blast,Skull Bash,Rest,Rock Slide,Strength
 67,Machoke,Karate Chop,Low Kick,Leer,Seismic Toss,Submission,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Earthquake,Fissure,Dig,Mimic,Double Team,Metronome,Fire Blast,Skull Bash,Rest,Rock Slide,Strength
 68,Machamp,Karate Chop,Low Kick,Leer,Seismic Toss,Submission,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Hyper Beam,Earthquake,Fissure,Dig,Mimic,Double Team,Metronome,Fire Blast,Skull Bash,Rest,Rock Slide,Strength
@@ -76,10 +76,10 @@
 76,Golem,Tackle,Defense Curl,Rock Throw,Self-Destruct,Harden,Earthquake,Explosion,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Hyper Beam,Submission,Seismic Toss,Fissure,Dig,Mimic,Double Team,Metronome,Fire Blast,Rest,Rock Slide,Strength
 77,Ponyta,Ember,Tail Whip,Stomp,Growl,Fire Spin,Take Down,Agility,Toxic,Horn Drill,Body Slam,Double-Edge,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest
 78,Rapidash,Ember,Tail Whip,Stomp,Growl,Fire Spin,Take Down,Agility,Toxic,Horn Drill,Body Slam,Double-Edge,Hyper Beam,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest
-79,Slowpoke,Confusion,Headbutt,Growl,Water Gun,Amnesia,Psychic,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Pay Day,Earthquake,Fissure,Dig,Teleport,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Surf,Strength,Flash
-80,Slowbro,Confusion,Headbutt,Growl,Water Gun,Withdraw,Amnesia,Psychic,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Hyper Beam,Pay Day,Submission,Seismic Toss,Earthquake,Fissure,Dig,Teleport,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Surf,Strength,Flash
-81,Magnemite,Tackle,Sonic Boom,Thunder Shock,Supersonic,Thunder Wave,Swift,Screech,Toxic,Take Down,Double-Edge,Thunderbolt,Thunder,Teleport,Mimic,Double Team,Reflect,Rest,Flash
-82,Magneton,Tackle,Sonic Boom,Thunder Shock,Supersonic,Thunder Wave,Swift,Screech,Toxic,Take Down,Double-Edge,Hyper Beam,Thunderbolt,Thunder,Teleport,Mimic,Double Team,Reflect,Rest,Flash
+79,Slowpoke,Confusion,Headbutt,Growl,Water Gun,Amnesia,Psychic,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Pay Day,Earthquake,Fissure,Dig,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Surf,Strength,Flash
+80,Slowbro,Confusion,Headbutt,Growl,Water Gun,Withdraw,Amnesia,Psychic,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Hyper Beam,Pay Day,Submission,Seismic Toss,Earthquake,Fissure,Dig,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Surf,Strength,Flash
+81,Magnemite,Tackle,Sonic Boom,Thunder Shock,Supersonic,Thunder Wave,Swift,Screech,Toxic,Take Down,Double-Edge,Thunderbolt,Thunder,Mimic,Double Team,Reflect,Rest,Flash
+82,Magneton,Tackle,Sonic Boom,Thunder Shock,Supersonic,Thunder Wave,Swift,Screech,Toxic,Take Down,Double-Edge,Hyper Beam,Thunderbolt,Thunder,Mimic,Double Team,Reflect,Rest,Flash
 83,Farfetchd,Peck,Sand-Attack,Leer,Fury Attack,Swords Dance,Agility,Slash,Razor Wind,Toxic,Body Slam,Take Down,Double-Edge,Mimic,Double Team,Reflect,Swift,Skull Bash,Rest,Cut,Fly
 84,Doduo,Peck,Growl,Fury Attack,Drill Peck,Tri Attack,Agility,Toxic,Body Slam,Take Down,Double-Edge,Mimic,Double Team,Reflect,Skull Bash,Sky Attack,Rest,Fly
 85,Dodrio,Peck,Growl,Fury Attack,Drill Peck,Tri Attack,Agility,Toxic,Body Slam,Take Down,Double-Edge,Hyper Beam,Mimic,Double Team,Reflect,Skull Bash,Sky Attack,Rest,Fly
@@ -87,20 +87,20 @@
 87,Dewgong,Headbutt,Growl,Aurora Beam,Rest,Take Down,Ice Beam,Toxic,Horn Drill,Body Slam,Double-Edge,Bubble Beam,Water Gun,Blizzard,Hyper Beam,Pay Day,Mimic,Double Team,Skull Bash,Surf,Strength
 88,Grimer,Pound,Poison Gas,Minimize,Sludge,Harden,Screech,Acid Armor,Toxic,Body Slam,Mega Drain,Thunderbolt,Thunder,Mimic,Double Team,Self-Destruct,Fire Blast,Rest,Explosion
 89,Muk,Pound,Poison Gas,Minimize,Sludge,Harden,Screech,Acid Armor,Toxic,Body Slam,Hyper Beam,Mega Drain,Thunderbolt,Thunder,Mimic,Double Team,Self-Destruct,Fire Blast,Rest,Explosion
-90,Shellder,Tackle,Withdraw,Supersonic,Clamp,Aurora Beam,Leer,Ice Beam,Toxic,Take Down,Double-Edge,Bubble Beam,Water Gun,Blizzard,Teleport,Mimic,Double Team,Reflect,Self-Destruct,Swift,Rest,Explosion,Tri Attack,Surf
-91,Cloyster,Withdraw,Supersonic,Clamp,Aurora Beam,Spike Cannon,Toxic,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Hyper Beam,Teleport,Mimic,Double Team,Reflect,Self-Destruct,Swift,Rest,Explosion,Tri Attack,Surf
+90,Shellder,Tackle,Withdraw,Supersonic,Clamp,Aurora Beam,Leer,Ice Beam,Toxic,Take Down,Double-Edge,Bubble Beam,Water Gun,Blizzard,Mimic,Double Team,Reflect,Self-Destruct,Swift,Rest,Explosion,Tri Attack,Surf
+91,Cloyster,Withdraw,Supersonic,Clamp,Aurora Beam,Spike Cannon,Toxic,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Hyper Beam,Mimic,Double Team,Reflect,Self-Destruct,Swift,Rest,Explosion,Tri Attack,Surf
 92,Gastly,Lick,Confuse Ray,Night Shade,Hypnosis,Dream Eater,Toxic,Mega Drain,Thunderbolt,Thunder,Psychic,Mimic,Double Team,Self-Destruct,Rest,Psywave,Explosion
 93,Haunter,Lick,Confuse Ray,Night Shade,Hypnosis,Dream Eater,Toxic,Mega Drain,Thunderbolt,Thunder,Psychic,Mimic,Double Team,Self-Destruct,Rest,Psywave,Explosion
 94,Gengar,Lick,Confuse Ray,Night Shade,Hypnosis,Dream Eater,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Hyper Beam,Submission,Seismic Toss,Mega Drain,Thunderbolt,Thunder,Psychic,Mimic,Double Team,Metronome,Self-Destruct,Skull Bash,Rest,Psywave,Explosion,Strength
 95,Onix,Tackle,Screech,Bind,Rock Throw,Slam,Harden,Toxic,Body Slam,Take Down,Double-Edge,Earthquake,Fissure,Dig,Mimic,Double Team,Self-Destruct,Rest,Explosion,Rock Slide,Strength
-96,Drowzee,Pound,Hypnosis,Confusion,Headbutt,Poison Gas,Psychic,Meditate,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Submission,Seismic Toss,Teleport,Mimic,Double Team,Reflect,Metronome,Skull Bash,Dream Eater,Rest,Thunder Wave,Psywave,Tri Attack,Flash
-97,Hypno,Pound,Hypnosis,Confusion,Headbutt,Poison Gas,Psychic,Meditate,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Hyper Beam,Submission,Seismic Toss,Teleport,Mimic,Double Team,Reflect,Metronome,Skull Bash,Dream Eater,Rest,Thunder Wave,Psywave,Tri Attack,Flash
-98,Krabby,Bubble,Leer,Vice Grip,Guillotine,Stomp,Crabhammer,Harden,Swords Dance,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Mimic,Double Team,Skull Bash,Rest,Cut,Surf,Strength
-99,Kingler,Bubble,Leer,Vice Grip,Guillotine,Stomp,Crabhammer,Harden,Swords Dance,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Hyper Beam,Mimic,Double Team,Skull Bash,Rest,Cut,Surf,Strength
-100,Voltorb,Tackle,Screech,Sonic Boom,Self-Destruct,Light Screen,Swift,Explosion,Toxic,Take Down,Thunderbolt,Thunder,Teleport,Mimic,Double Team,Reflect,Rest,Thunder Wave,Flash
-101,Electrode,Tackle,Screech,Sonic Boom,Self-Destruct,Light Screen,Swift,Explosion,Toxic,Take Down,Hyper Beam,Thunderbolt,Thunder,Teleport,Mimic,Double Team,Reflect,Rest,Thunder Wave,Flash
-102,Exeggcute,Barrage,Hypnosis,Reflect,Stun Spore,Poison Powder,Solar Beam,Sleep Powder,Toxic,Take Down,Double-Edge,Psychic,Teleport,Mimic,Double Team,Self-Destruct,Egg Bomb,Rest,Psywave,Explosion
-103,Exeggutor,Barrage,Hypnosis,Stomp,Toxic,Take Down,Double-Edge,Hyper Beam,Mega Drain,Solar Beam,Psychic,Teleport,Mimic,Double Team,Reflect,Self-Destruct,Egg Bomb,Rest,Psywave,Explosion,Strength
+96,Drowzee,Pound,Hypnosis,Confusion,Headbutt,Poison Gas,Psychic,Meditate,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Submission,Seismic Toss,Mimic,Double Team,Reflect,Metronome,Skull Bash,Dream Eater,Rest,Thunder Wave,Psywave,Tri Attack,Flash
+97,Hypno,Pound,Hypnosis,Confusion,Headbutt,Poison Gas,Psychic,Meditate,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Hyper Beam,Submission,Seismic Toss,Mimic,Double Team,Reflect,Metronome,Skull Bash,Dream Eater,Rest,Thunder Wave,Psywave,Tri Attack,Flash
+98,Krabby,Bubble,Leer,Vise Grip,Guillotine,Stomp,Crabhammer,Harden,Swords Dance,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Mimic,Double Team,Skull Bash,Rest,Cut,Surf,Strength
+99,Kingler,Bubble,Leer,Vise Grip,Guillotine,Stomp,Crabhammer,Harden,Swords Dance,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Hyper Beam,Mimic,Double Team,Skull Bash,Rest,Cut,Surf,Strength
+100,Voltorb,Tackle,Screech,Sonic Boom,Self-Destruct,Light Screen,Swift,Explosion,Toxic,Take Down,Thunderbolt,Thunder,Mimic,Double Team,Reflect,Rest,Thunder Wave,Flash
+101,Electrode,Tackle,Screech,Sonic Boom,Self-Destruct,Light Screen,Swift,Explosion,Toxic,Take Down,Hyper Beam,Thunderbolt,Thunder,Mimic,Double Team,Reflect,Rest,Thunder Wave,Flash
+102,Exeggcute,Barrage,Hypnosis,Reflect,Stun Spore,Poison Powder,Solar Beam,Sleep Powder,Toxic,Take Down,Double-Edge,Psychic,Mimic,Double Team,Self-Destruct,Egg Bomb,Rest,Psywave,Explosion
+103,Exeggutor,Barrage,Hypnosis,Stomp,Toxic,Take Down,Double-Edge,Hyper Beam,Mega Drain,Solar Beam,Psychic,Mimic,Double Team,Reflect,Self-Destruct,Egg Bomb,Rest,Psywave,Explosion,Strength
 104,Cubone,Bone Club,Growl,Leer,Thrash,Bonemerang,Tail Whip,Headbutt
 105,Marowak,Bone Club,Growl,Leer,Thrash,Bonemerang,Tail Whip,Headbutt
 106,Hitmonlee,Double Kick,Meditate,Rolling Kick,Jump Kick,Hi Jump Kick,Mega Kick,Mega Punch,Toxic,Body Slam,Take Down,Double-Edge,Submission,Seismic Toss,Mimic,Double Team,Metronome,Swift,Skull Bash,Rest,Strength
@@ -117,14 +117,14 @@
 117,Seadra,Bubble,Smokescreen,Leer,Water Gun,Agility,Hydro Pump,Toxic,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Hyper Beam,Mimic,Double Team,Swift,Skull Bash,Rest,Surf
 118,Goldeen,Peck,Tail Whip,Supersonic,Horn Attack,Fury Attack,Waterfall,Horn Drill,Agility,Toxic,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Mimic,Double Team,Swift,Skull Bash,Rest,Surf
 119,Seaking,Peck,Tail Whip,Supersonic,Horn Attack,Fury Attack,Waterfall,Horn Drill,Agility,Toxic,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Hyper Beam,Mimic,Double Team,Swift,Skull Bash,Rest,Surf
-120,Staryu,Tackle,Water Gun,Harden,Recover,Swift,Minimize,Light Screen,Hydro Pump,Toxic,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Thunderbolt,Thunder,Psychic,Teleport,Mimic,Double Team,Reflect,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Surf,Flash
-121,Starmie,Tackle,Water Gun,Harden,Toxic,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Hyper Beam,Thunderbolt,Thunder,Psychic,Teleport,Mimic,Double Team,Reflect,Swift,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Surf,Flash
-122,Mr. Mime,Confusion,Barrier,Light Screen,Double Slap,Meditate,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Hyper Beam,Submission,Seismic Toss,Solar Beam,Thunderbolt,Thunder,Psychic,Teleport,Mimic,Double Team,Reflect,Metronome,Skull Bash,Rest,Thunder Wave,Psywave,Flash
+120,Staryu,Tackle,Water Gun,Harden,Recover,Swift,Minimize,Light Screen,Hydro Pump,Toxic,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Thunderbolt,Thunder,Psychic,Mimic,Double Team,Reflect,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Surf,Flash
+121,Starmie,Tackle,Water Gun,Harden,Toxic,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Hyper Beam,Thunderbolt,Thunder,Psychic,Mimic,Double Team,Reflect,Swift,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Surf,Flash
+122,Mr. Mime,Confusion,Barrier,Light Screen,Double Slap,Meditate,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Hyper Beam,Submission,Seismic Toss,Solar Beam,Thunderbolt,Thunder,Psychic,Mimic,Double Team,Reflect,Metronome,Skull Bash,Rest,Thunder Wave,Psywave,Flash
 123,Scyther,Quick Attack,Leer,Double Team,Slash,Swords Dance,Agility,Wing Attack
-124,Jynx,Pound,Lovely Kiss,Lick,Double Slap,Ice Punch,Body Slam,Thrash,Blizzard,Mega Punch,Mega Kick,Toxic,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Hyper Beam,Submission,Seismic Toss,Psychic,Teleport,Mimic,Double Team,Reflect,Metronome,Skull Bash,Rest,Psywave
-125,Electabuzz,Quick Attack,Leer,Thunder Shock,Screech,Thunder Punch,Light Screen,Thunder,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Hyper Beam,Submission,Seismic Toss,Thunderbolt,Psychic,Teleport,Mimic,Double Team,Reflect,Metronome,Swift,Skull Bash,Rest,Thunder Wave,Psywave,Strength,Flash
-126,Magmar,Ember,Leer,Confuse Ray,Fire Punch,Smokescreen,Smog,Flamethrower,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Hyper Beam,Submission,Seismic Toss,Psychic,Teleport,Mimic,Double Team,Metronome,Fire Blast,Skull Bash,Rest,Psywave,Strength
-127,Pinsir,Vice Grip,Seismic Toss,Guillotine,Harden,Slash,Swords Dance,Bind
+124,Jynx,Pound,Lovely Kiss,Lick,Double Slap,Ice Punch,Body Slam,Thrash,Blizzard,Mega Punch,Mega Kick,Toxic,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Hyper Beam,Submission,Seismic Toss,Psychic,Mimic,Double Team,Reflect,Metronome,Skull Bash,Rest,Psywave
+125,Electabuzz,Quick Attack,Leer,Thunder Shock,Screech,Thunder Punch,Light Screen,Thunder,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Hyper Beam,Submission,Seismic Toss,Thunderbolt,Psychic,Mimic,Double Team,Reflect,Metronome,Swift,Skull Bash,Rest,Thunder Wave,Psywave,Strength,Flash
+126,Magmar,Ember,Leer,Confuse Ray,Fire Punch,Smokescreen,Smog,Flamethrower,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Hyper Beam,Submission,Seismic Toss,Psychic,Mimic,Double Team,Metronome,Fire Blast,Skull Bash,Rest,Psywave,Strength
+127,Pinsir,Vise Grip,Seismic Toss,Guillotine,Harden,Slash,Swords Dance,Bind
 128,Tauros,Tackle,Stomp,Tail Whip,Leer,Take Down,Toxic,Horn Drill,Body Slam,Double-Edge,Ice Beam,Blizzard,Hyper Beam,Thunderbolt,Thunder,Earthquake,Fissure,Mimic,Double Team,Fire Blast,Skull Bash,Rest,Strength
 129,Magikarp,Splash,Tackle
 130,Gyarados,Bite,Dragon Rage,Leer,Hydro Pump,Hyper Beam,Tackle
@@ -134,7 +134,7 @@
 134,Vaporeon,Tackle,Sand-Attack,Quick Attack,Water Gun,Tail Whip,Bite,Acid Armor,Hydro Pump,Aurora Beam
 135,Jolteon,Tackle,Sand-Attack,Quick Attack,Thunder Shock,Tail Whip,Thunder Wave,Double Kick,Agility,Pin Missile,Thunder
 136,Flareon,Tackle,Sand-Attack,Quick Attack,Ember,Tail Whip,Bite,Leer,Fire Spin,Flamethrower,Smog
-137,Porygon,Tackle,Sharpen,Psybeam,Recover,Agility,Tri Attack,Toxic,Take Down,Double-Edge,Ice Beam,Blizzard,Hyper Beam,Thunderbolt,Thunder,Psychic,Teleport,Mimic,Double Team,Reflect,Swift,Skull Bash,Rest,Thunder Wave,Psywave,Flash
+137,Porygon,Tackle,Sharpen,Psybeam,Recover,Agility,Tri Attack,Toxic,Take Down,Double-Edge,Ice Beam,Blizzard,Hyper Beam,Thunderbolt,Thunder,Psychic,Mimic,Double Team,Reflect,Swift,Skull Bash,Rest,Thunder Wave,Psywave,Flash
 138,Omanyte,Water Gun,Withdraw,Horn Attack,Leer,Spike Cannon,Hydro Pump,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Mimic,Double Team,Reflect,Rest,Surf
 139,Omastar,Water Gun,Withdraw,Horn Attack,Leer,Spike Cannon,Hydro Pump,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Ice Beam,Blizzard,Hyper Beam,Submission,Seismic Toss,Mimic,Double Team,Reflect,Skull Bash,Rest,Surf
 140,Kabuto,Scratch,Harden,Absorb,Slash,Leer,Hydro Pump,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Mimic,Double Team,Reflect,Rest,Surf
@@ -147,5 +147,5 @@
 147,Dratini,Wrap,Leer,Thunder Wave,Agility,Slam,Dragon Rage,Hyper Beam,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Thunderbolt,Thunder,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest,Surf
 148,Dragonair,Wrap,Leer,Thunder Wave,Agility,Slam,Dragon Rage,Hyper Beam,Toxic,Horn Drill,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Thunderbolt,Thunder,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest,Surf
 149,Dragonite,Wrap,Thunder Wave,Leer,Agility,Slam,Dragon Rage,Hyper Beam,Razor Wind,Toxic,Horn Drill,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Thunderbolt,Thunder,Mimic,Double Team,Reflect,Fire Blast,Swift,Skull Bash,Rest,Surf,Strength
-150,Mewtwo,Confusion,Swift,Psychic,Barrier,Recover,Amnesia,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Hyper Beam,Pay Day,Submission,Seismic Toss,Solar Beam,Thunderbolt,Thunder,Teleport,Mimic,Double Team,Reflect,Metronome,Self-Destruct,Fire Blast,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Strength,Flash
-151,Mew,Pound,Transform,Mega Punch,Metronome,Psychic,Razor Wind,Swords Dance,Mega Kick,Toxic,Horn Drill,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Hyper Beam,Pay Day,Submission,Seismic Toss,Mega Drain,Solar Beam,Dragon Rage,Thunderbolt,Thunder,Earthquake,Fissure,Dig,Teleport,Mimic,Double Team,Reflect,Self-Destruct,Egg Bomb,Fire Blast,Swift,Skull Bash,Soft-Boiled,Dream Eater,Sky Attack,Rest,Thunder Wave,Psywave,Explosion,Rock Slide,Tri Attack,Cut,Fly,Surf,Strength,Flash
+150,Mewtwo,Confusion,Swift,Psychic,Barrier,Recover,Amnesia,Mega Punch,Mega Kick,Toxic,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Hyper Beam,Pay Day,Submission,Seismic Toss,Solar Beam,Thunderbolt,Thunder,Mimic,Double Team,Reflect,Metronome,Self-Destruct,Fire Blast,Skull Bash,Rest,Thunder Wave,Psywave,Tri Attack,Strength,Flash
+151,Mew,Pound,Transform,Mega Punch,Metronome,Psychic,Razor Wind,Swords Dance,Mega Kick,Toxic,Horn Drill,Body Slam,Take Down,Double-Edge,Bubble Beam,Water Gun,Ice Beam,Blizzard,Hyper Beam,Pay Day,Submission,Seismic Toss,Mega Drain,Solar Beam,Dragon Rage,Thunderbolt,Thunder,Earthquake,Fissure,Dig,Mimic,Double Team,Reflect,Self-Destruct,Egg Bomb,Fire Blast,Swift,Skull Bash,Soft-Boiled,Dream Eater,Sky Attack,Rest,Thunder Wave,Psywave,Explosion,Rock Slide,Tri Attack,Cut,Fly,Surf,Strength,Flash
