@@ -1,6 +1,5 @@
 
 # MUST import from top-level or it gets a different instance from GUI scripts
-from Pokemon_Battle_Sim.Model import Model
 from Pokemon_Battle_Sim import use_gui
 from Pokemon_Battle_Sim import demo
 
